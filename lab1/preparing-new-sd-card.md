@@ -24,12 +24,12 @@ You will also need to download the Raspberry Pi OS image from [https://www.raspb
 To use Etcher to write an image to a micro SD card:
 
 * Open Etcher.
-* Click \keys{Select Image}
+* Click "Select Image"
 * Navigate to the download location.
 * Select the image file e.g. `2021-05-07-raspios-buster-armhf-full.zip`.
 * Insert your micro SD card into a USB-micro SD adapter, then plug it into your computer's USB port.
-* Click \keys{Select Target}, and make sure that Etcher has found the micro SD card to write to. (To be safe, you may want to make sure any other USB flash drives or portable drives are physically disconnected from your computer, so you can't accidentally overwrite them.)
-* Click \keys{Flash}.
+* Click "Select Target", and make sure that Etcher has found the micro SD card to write to. (To be safe, you may want to make sure any other USB flash drives or portable drives are physically disconnected from your computer, so you can't accidentally overwrite them.)
+* Click "Flash".
 * When it's finished, you can close Etcher. 
 
 ## Additional configuration for headless use
@@ -71,7 +71,7 @@ network={
 }
 ```
 
-To save (write **o**ut) the file, use \keys{Ctrl+O}, and hit \keys{Enter} when prompted (at the bottom) to accept the file name. Look for a message indicating "Wrote 8 lines" (or similar). Then, quit `nano` with \keys{Ctrl+X}.
+To save (write **o**ut) the file, use `Ctrl`+`O`, and hit `Enter` when prompted (at the bottom) to accept the file name. Look for a message indicating "Wrote 8 lines" (or similar). Then, quit `nano` with `Ctrl`+`X`.
 
 Make sure that the files have been created: run
 

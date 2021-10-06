@@ -37,12 +37,12 @@
 <p>To use Etcher to write an image to a micro SD card:</p>
 <ul>
 <li>Open Etcher.</li>
-<li>Click </li>
+<li>Click “Select Image”</li>
 <li>Navigate to the download location.</li>
 <li>Select the image file e.g. <code>2021-05-07-raspios-buster-armhf-full.zip</code>.</li>
 <li>Insert your micro SD card into a USB-micro SD adapter, then plug it into your computer’s USB port.</li>
-<li>Click , and make sure that Etcher has found the micro SD card to write to. (To be safe, you may want to make sure any other USB flash drives or portable drives are physically disconnected from your computer, so you can’t accidentally overwrite them.)</li>
-<li>Click .</li>
+<li>Click “Select Target”, and make sure that Etcher has found the micro SD card to write to. (To be safe, you may want to make sure any other USB flash drives or portable drives are physically disconnected from your computer, so you can’t accidentally overwrite them.)</li>
+<li>Click “Flash”.</li>
 <li>When it’s finished, you can close Etcher.</li>
 </ul>
 <h2 id="additional-configuration-for-headless-use">Additional configuration for headless use</h2>
@@ -67,7 +67,7 @@ network={
     ssid=&quot;ece4313&quot;
     psk=&quot;CompEDP1&quot;
 }</code></pre>
-<p>To save (write <strong>o</strong>ut) the file, use , and hit  when prompted (at the bottom) to accept the file name. Look for a message indicating “Wrote 8 lines” (or similar). Then, quit <code>nano</code> with .</p>
+<p>To save (write <strong>o</strong>ut) the file, use <code>Ctrl</code>+<code>O</code>, and hit <code>Enter</code> when prompted (at the bottom) to accept the file name. Look for a message indicating “Wrote 8 lines” (or similar). Then, quit <code>nano</code> with <code>Ctrl</code>+<code>X</code>.</p>
 <p>Make sure that the files have been created: run</p>
 <pre><code>ls</code></pre>
 <p>and check that both files (<code>ssh</code> and <code>wpa_supplicant.conf</code>) appear. Also check the file contents by running</p>
