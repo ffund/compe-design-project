@@ -1,9 +1,6 @@
 ---
 title: Preparing a new micro SD card
-author: Fraida Fund
 ---
-
-# Preparing a new micro SD card
 
 All students in the ECE-UY 4313 lab are given a micro SD card at the beginning of the semester. The micro SD card is prepared with a Raspberry Pi OS "disk image" that you can boot on a Raspberry Pi Zero W. It is also pre-configured to enable SSH and to connect to the `ece4313` network in the lab the first time it boots.
 
