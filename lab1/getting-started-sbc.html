@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Getting started with Raspberry Pi</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Getting started with Raspberry Pi</h1>
+</header>
+<p>This semester, we’ll use the Raspberry Pi for a series of lab exercises and to prototype your project design. In this lab exercise, we’ll practice connecting to the Pi using different configurations, so that you can work with your Pi both in the lab (if you attend in person) and at home.</p>
+<!--
+
+## By the end of this session...
+
+Students will be able to:
+
+* Locate the main components on the Pi Zero W board
+* Describe "headless" use of a Pi
+* Identify the components needed for "headless" use of a Pi, and for using a Pi with a local interface
+* Explain how the Pi boots its operating system from external SD card
+* Prepare an SD card for "first boot" in headless mode
+* Connect to a Pi in "headless" mode using SSH, using the lab network
+* Connect to a Pi GUI in "headless" mode using VNC
+* Connect to a Pi in "headless" mode over a personal WiFi network
+* Utilize the Linux operating system on the Pi for basic tasks including creating, editing, moving, renaming, deleting, and listing files and directories
+* Transfer files to and from a Pi using SCP or with VNC software
+* Run a basic browser-based interface on a Pi
+
+-->
+<h2 id="notes">Notes</h2>
+<ul>
+<li>Please be careful with lab equipment, and treat it gently. (For example: when removing the power supply from your Pi, don’t yank the cable out of the jack, since you may pull the jack right off the PCB. Instead, hold the jack against the board with one hand while removing the cable with the other hand.)</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="prepare-your-workstation">Prepare your workstation</h2>
+<p>In this lab session, you’ll practice two ways to connect to your Pi: using a terminal session over an SSH connection, and using a GUI session over VNC.</p>
+<p>Here’s what an SSH connection looks like. Note that you only have access to a terminal on the Pi when using SSH - you can’t run any applications that require a graphical interface. However, in most cases we’ll only need a terminal anyway, and a terminal-only connection is much faster and smoother.</p>
+<figure>
+<img src="images/pi-ssh.png" style="width:70.0%" alt="Connecting to a Pi over SSH." /><figcaption aria-hidden="true">Connecting to a Pi over SSH.</figcaption>
+</figure>
+<p>For SSH, you will need a terminal and an SSH client:</p>
+<ul>
+<li>If you are using a Mac or Linux device, the built-in terminal that comes with your operating system includes an SSH client. Make sure you know how to open the Terminal application that comes with your operating system.</li>
+<li>If you are using a Windows device and you do not already have an SSH client, you will have to download and install one. I recommend Git Bash, which you can download here: <a href="https://git-scm.com/downloads"><code>https://git-scm.com/downloads</code></a>. Once you have downloaded and installed this application, make sure you know how to open a Git Bash terminal.</li>
+</ul>
+<p>Once you have a terminal window open, run</p>
+<pre><code>ssh</code></pre>
+<p>You should see some usage information, like this (although not necessarily identical to this):</p>
+<pre><code>usage: ssh [-46AaCfGgKkMNnqsTtVvXxYy] [-B bind_interface]
+           [-b bind_address] [-c cipher_spec] [-D [bind_address:]port]
+           [-E log_file] [-e escape_char] [-F configfile] [-I pkcs11]
+           [-i identity_file] [-J [user@]host[:port]] [-L address]
+           [-l login_name] [-m mac_spec] [-O ctl_cmd] [-o option] [-p port]
+           [-Q query_option] [-R address] [-S ctl_path] [-W host:port]
+           [-w local_tun[:remote_tun]] destination [command]</code></pre>
+<p>This shows that you have an SSH client! If you aren’t able to run an SSH client and see usage information, stop and ask for help.</p>
+<p>While we’ll mostly work directly in the terminal using SSH, sometimes we’ll need to run an application on the Pi using a graphical user interface. We can establish a GUI connection using VNC.</p>
+<p>Here’s what a VNC connection looks like. Note that you have access to a graphical interface on the Pi when using VNC, but the connection may not be as smooth as an SSH session.</p>
+<figure>
+<img src="images/vnc-desktop.png" style="width:60.0%" alt="Connecting to a Pi with VNC." /><figcaption aria-hidden="true">Connecting to a Pi with VNC.</figcaption>
+</figure>
+<p>To use VNC to connect to your Pi, you will need to download the RealVNC viewer. It is available for most platforms at <a href="https://www.realvnc.com/en/connect/download/viewer/"><code>https://www.realvnc.com/en/connect/download/viewer/</code></a>.</p>
+<p>Make sure you know how to open VNC viewer. It will look like this when you run it for the first time:</p>
+<figure>
+<img src="images/vnc-nothing.png" style="width:60.0%" alt="VNC viewer." /><figcaption aria-hidden="true">VNC viewer.</figcaption>
+</figure>
+<h1 id="connecting-to-your-pi">Connecting to your Pi</h1>
+<h2 id="turn-on-your-pi-for-a-headless-session">Turn on your Pi for a headless session</h2>
+<p>Your lab kit includes a Raspberry Pi Zero Wireless, a micro USB power supply, and a micro SD card. Look at your Pi, and identify the location of important jacks and status LEDs. Pay special attention to the location of the micro USB power jack; note that there are two micro USB jacks right next to one another. One of these has the words <code>PWR IN</code> printed next to it on the PCB, and the other has the word <code>USB</code>.</p>
+<figure>
+<img src="images/pi-zero-buttons-leds.png" style="width:40.0%" alt="Annotated photo of the Pi Zero Wireless" /><figcaption aria-hidden="true">Annotated photo of the Pi Zero Wireless</figcaption>
+</figure>
+<p>Don’t connect the power supply yet - first, you’ll make sure the SD card is installed correctly. Put the micro SD card into the slot on the Pi. The gold contacts on the micro SD card will lie on the Pi and the writing on the micro SD card will face up, when it is seated properly.</p>
+<p>Finally, plug in the micro USB power supply, and then connect it to the power jack on your Pi. The disk activity LED will flash occasionally as the Pi boots.</p>
+<h2 id="establish-an-ssh-connection-over-the-ece4313-network">Establish an SSH connection over the ece4313 network</h2>
+<p>When you are working in the LC011 lab, you’ll use the <code>ece4313</code> network in the lab to connect to your Pi. For this to work, both your Pi and your laptop should be connected to the <code>ece4313</code> network, which is available in our lab space (LC011).</p>
+<p>Use the wireless network connection utility on your laptop to connect to the network <code>ece4313</code>, using <code>CompEDP1</code> as the password. Note that if your laptop is connected to the <code>nyu</code> network, you won’t be able to reach your Pi. If at any point you lose connectivity to the <code>ece4313</code> network, you’ll have to re-connect to the network in order to reach your Pi.</p>
+<p>Next, you’ll need to know the IP address that is assigned to your Pi on the <code>ece4313</code> network. Find the numbered sticker on your Pi. Your Pi will have address <code>192.168.0.N</code>, where <code>N</code> is the number written on the sticker. (This applies only to the <code>ece4313</code> network - on another network, your Pi will have a different address!)</p>
+<p>Now, in a terminal on your laptop, run</p>
+<pre><code>ssh pi@192.168.0.N</code></pre>
+<p>where <code>N</code> is the number written on the sticker. You may see a message like:</p>
+<pre><code>The authenticity of host &#39;192.168.0.N (192.168.0.N)&#39; can&#39;t be established.
+ECDSA key fingerprint is SHA256:l3xQS590+jnJ/8N9PC/nosB7tk0bTIvA099WCFlrjtA.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? </code></pre>
+<p>Type <code>yes</code> and hit <code>Enter</code>.Then, enter the password <code>raspberry</code> when prompted. You may not see anything appear in the terminal output when you type the password - this is a security feature, so that anyone eavesdropping over your shoulder can’t tell how many characters are in the password. It will look like you’re not typing anything, but that’s OK - just type the word out anyway, and hit <code>Enter</code>.</p>
+<p>Your terminal prompt should now look like this</p>
+<pre><code>pi@raspberrypi:~ $ </code></pre>
+<p>indicating that you are in a terminal session on the Pi, and any commands you run will run on the Pi, not your laptop.</p>
+<hr />
+<p><strong>Lab report</strong>: Prepare an instruction/checklist document for yourself to use in the future when you need to establish an SSH connection to your Pi over the <code>ece4313</code> network. Your list should include instructions specifically for <em>your</em> laptop, describing how to:</p>
+<ol type="1">
+<li>Connect your laptop to the <code>ece4313</code> network. Show a screenshot that demonstrates how you can tell you have done this step successfully.</li>
+<li>Power on the Pi and have it load the operating system from SD card. Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+<li>Open a terminal on your laptop. Show a screenshot that demonstrates how you can tell you have done this step successfully.</li>
+<li>Identify the address of your Pi on the <code>ece4313</code> network. Show a photo to demonstrate.</li>
+<li>Use SSH to connect to a terminal session on your Pi, with this address. Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+</ol>
+<hr />
+<h2 id="enable-vnc-and-establish-a-vnc-session-over-the-ece4313-network">Enable VNC and establish a VNC session over the ece4313 network</h2>
+<p>Now that you have a terminal session on the Pi, you can also enable VNC on the Pi, so that you can also establish a graphical connection. The Raspberry Pi OS includes a configuration tool called <code>raspi-config</code> that we can use to enable VNC. Run</p>
+<pre><code>sudo raspi-config</code></pre>
+<p>(<code>sudo</code> is a utility that lets you run any command with elevated privileges. To make changes to the system configuration, you will need elevated privileges.)</p>
+<p>Within <code>raspi-config</code>,</p>
+<ul>
+<li>Use the arrow keys to navigate to <code>Interface Options</code> and hit <code>Enter</code>.</li>
+<li>Navigate to <code>VNC</code> and hit <code>Enter</code> again.</li>
+<li>When asked “Would you like the VNC server to be enabled” use the <code>Tab</code> key to toggle the answer so that <code>Yes</code> is highlighted. Then hit <code>Enter</code> to accept your choice.</li>
+<li>After a few seconds, you should see a message saying that “The VNC Server is enabled.” Hit <code>Enter</code> to confirm.</li>
+</ul>
+<p>The intial default VNC screen resolution is too small, so while we are in <code>raspi-config</code> we can also change that.</p>
+<ul>
+<li>Use the arrow keys to navigate to <code>Display Options</code> and hit <code>Enter</code>.</li>
+<li>Navigate to <code>Resolution</code> and hit <code>Enter</code> again.</li>
+<li>Use the arrow keys to select <code>1024x768</code>. Then use the <code>Tab</code> key to select <code>OK</code> and hit <code>Enter</code>.</li>
+<li>When you see the confirmation that the resolution is set, select <code>OK</code> and then hit <code>Enter</code>.</li>
+<li>If prompted to reboot the Pi, you can accept the suggest by using the <code>Tab</code> key to select <code>Yes</code> and then hitting <code>Enter</code>. If you are not prompted to reboot, use <code>Esc</code> to close <code>raspi-config</code>.</li>
+</ul>
+<p>Then, you can close your SSH session with the following command:</p>
+<pre><code>exit</code></pre>
+<p>Now, open the RealVNC Viewer, and in the address bar at the top, type the address of <em>your</em> Pi. (It’s not necessarily the same as the address shown in my screenshot!) Then, hit <code>Enter</code>.</p>
+<figure>
+<img src="images/vnc-connect-pi.png" alt="Connecting to a Pi using VNC." /><figcaption aria-hidden="true">Connecting to a Pi using VNC.</figcaption>
+</figure>
+<p>On some occasions, you may see a message about the VNC server’s signature, and will have to press <code>Yes</code> or <code>Continue</code> to confirm that you want to connect. Then, in the Authentication dialog, enter <code>pi</code> as the username and <code>raspberry</code> as the password, and hit <code>OK</code>.</p>
+<p>The first time you connect using VNC, you may be prompted to set your time zone and keyboard configuration. Also, you may see a message warning you that “SSH is enabled and the default password for the ‘pi’ user has not been changed”. You can press <code>OK</code> to acknowledge the warning.</p>
+<p>You might be prompted to update the software on your Pi, but you <em>don’t have to do that</em>. (It will take a long time to run software updates, so you may not want to do that right now.)</p>
+<p>Then, you’ll see the Raspberry Pi OS desktop:</p>
+<figure>
+<img src="images/vnc-desktop.png" style="width:60.0%" alt="Connecting to a Pi with VNC." /><figcaption aria-hidden="true">Connecting to a Pi with VNC.</figcaption>
+</figure>
+<hr />
+<p><strong>Lab report</strong>: Prepare an instruction/checklist document for yourself to use in the future when you need to establish a VNC connection to your Pi over the <code>ece4313</code> network. Your list should include instructions specifically for <em>your</em> laptop, describing how to:</p>
+<ol type="1">
+<li>Connect your laptop to the <code>ece4313</code> network. Show a screenshot that demonstrates how you can tell you have done this step successfully. (You can copy your own answer from a previous section.)</li>
+<li>Power on the Pi and have it load the operating system from SD card. Show a photo that demonstrates how you can tell you have done this step successfully. (You can copy your own answer from a previous section.)</li>
+<li>Open the VNC viewer on your laptop. Show a screenshot that demonstrates how you can tell you have done this step successfully.</li>
+<li>Identify the address of your Pi on the <code>ece4313</code> network. Show a photo to demonstrate. (You can copy your own answer from a previous section.)</li>
+<li>Use VNC to connect to a GUI session on your Pi, with this address. Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+</ol>
+<hr />
+<h2 id="establish-a-connection-over-a-personal-network">Establish a connection over a personal network</h2>
+<p>Since you may sometimes need to attend lab sessions from home, you should make sure that you can connect to your Pi even outside the lab (when the <code>ece4313</code> network is not available to you.) It’s important that you are able to connect to your Pi outside of this lab:</p>
+<ul>
+<li>in case you have to attend a lab session from home because you have symptoms, or are quarantining due to potential exposure,</li>
+<li>in case we all have to attend a lab session from home, either because the University switches to remote learning or because the instructor has symptoms or is quarantining,</li>
+<li>in case you don’t finish a lab assignment during the lab session, and want to do the rest at home,</li>
+<li>for later in the semester - so that you can work on your project outside of scheduled lab sessions.</li>
+</ul>
+<p>You can use your mobile phone or laptop to create a WiFi hotspot, and configure your Pi to connect to this hotspot. However,</p>
+<ul>
+<li>The WiFi hotspot should be on the 2.4GHz WiFi band, not on 5GHz. The Pi Zero W only supports the 2.4GHz WiFi band.</li>
+<li>The WiFi hotspot should use an authentication method that is supported by the Pi. In these instructions, we assume standard home network authentication methods; enterprise authentication may be more complicated.</li>
+</ul>
+<p>The following links will show you how to create a hotspot on an Android or iPhone device, or on a Mac or Windows PC. Open the link for the platform that you have available to you, and start your hotspot!</p>
+<ul>
+<li><a href="https://support.google.com/android/answer/9059108?hl=en">Create a WiFi hotspot on your Android phone</a>. If your wireless carrier limits tethering, you can <a href="https://support.google.com/android/answer/9083864?hl=en">turn off mobile data</a> before you create the WiFi hotspot. If mobile data is turned off, the devices connected to your WiFi hotspot won’t have Internet access, but they will be able to connect to one another over the hotspot network.</li>
+<li><a href="https://support.apple.com/en-us/HT204023">Create a WiFi hotspot on your iPhone</a>. Note: The default SSID of the iPhone hotspot is set according to the name of the iPhone, for example, “Fraida’s iPhone”. It’s easier to work with an SSID that does not have any spaces or special characters, like the apostrophe. If you’re willing, you can change the iPhones name in the General settings tab to a name which does not contain any special characters, save, and enable the hotspot again.</li>
+<li><a href="https://support.apple.com/guide/mac-help/share-internet-connection-mac-network-users-mchlp1540/mac">Create a WiFi hotspot on your Mac</a></li>
+<li><a href="https://support.microsoft.com/en-us/help/4027762/windows-use-your-pc-as-a-mobile-hotspot">Create a WiFi hotspot on Windows 10</a>. There is an important caveat here: if you are connected to an existing WiFi network, this will <em>share</em> it on the same wireless frequency band that you are connected on. But, the Pi Zero W only supports the 2.4GHz WiFi band, not the 5GHz WiFi band. Before you start the hotspot, your Windows PC should be connected to a WiFi network on the 2.4GHz WiFi band.
+<ul>
+<li><a href="https://archive.codeplex.com/?p=virtualrouter">Create a WiFi hotspot on Windows 7 or 8</a> (third-party software, open source.) If you set it to share an existing WiFi connection, make sure your Windows PC is connected to a WiFi network that is on the 2.4GHz WiFi band, not the 5GHz WiFi band.</li>
+</ul></li>
+<li><a href="https://www.connectify.me/free-wifi-hotspot-software-app/">Create a WiFi hotspot on Windows with Connectify (third-party software, use free version)</a></li>
+</ul>
+<p>Identify the WiFi network name (SSID) and password that your mobile device or laptop uses for its WiFi hotspot. You will configure your Pi to connect to that network.</p>
+<p>First, you need your Pi and your laptop to still be connected to the <code>ece4313</code> network, so you can connect to your Pi using SSH. In a terminal session on your Pi, run</p>
+<pre><code>iwlist wlan0 scan</code></pre>
+<p>This will show you all of the WiFi networks visible to your Pi. Make sure you can see your personal hotspot! If not, try running</p>
+<pre><code>iwlist wlan0 scan</code></pre>
+<p>again - sometimes, it will only “see” the network it is currently connected to on the first try, but will find other networks in a subsequent scan.</p>
+<p>If your WiFi hotspot has spaces or special characters in it, you may have trouble configuring your Pi to connect to it using its human-readable name. Instead, you can <a href="https://www.convertstring.com/EncodeDecode/HexEncode">get its hex encoding</a>, and use that to connect. (But note the different instructions below - if you use the hex encoded version, you won’t enclose the SSID in quotes when adding it to the configuration file.)</p>
+<p>Once you are sure that your Pi can see your hotspot network, run</p>
+<pre><code>sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</code></pre>
+<p>This will open the network configuration file in <code>nano</code>, a terminal-based text editor. You should see the following file contents:</p>
+<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+    ssid=&quot;ece4313&quot;
+    psk=&quot;CompEDP1&quot;
+}</code></pre>
+<p>indicating that the Pi is configured to connect to the <code>ece4313</code> network with passphrase <code>CompEDP1</code>.</p>
+<p>Add a network with the SSID and password of your mobile hotspot. For example, if your SSID is <code>E71210</code> and the passphrase is <code>00934596</code>, the file will look like this:</p>
+<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+  ssid=&quot;ece4313&quot;
+  psk=&quot;CompEDP1&quot;
+}
+
+network={
+  ssid=&quot;E71210&quot;
+  psk=&quot;00934596&quot;
+}</code></pre>
+<p>If you are using a hex-encoded SSID, because your network name has spaces or special characters in it, don’t enclose the hex-encoded SSID in quotes. For example:</p>
+<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+  ssid=&quot;ece4313&quot;
+  psk=&quot;CompEDP1&quot;
+}
+
+network={
+  ssid=4537313231300A
+  psk=&quot;00934596&quot;
+}</code></pre>
+<p>Next, define priorities, so that if both networks are available your personal network will be preferred. Make sure to give your personal network a higher priority than the lab network - otherwise, the Pi will just connect to the lab network, and you won’t be able to test whether your personal network works!</p>
+<p>A higher value indicates higher priority - for example, the network with priority 2 is preferred over the network with priority 1:</p>
+<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+country=US
+
+network={
+  ssid=&quot;ece4313&quot;
+  psk=&quot;CompEDP1&quot;
+  priority=1
+}
+
+network={
+  ssid=&quot;E71210&quot;
+  psk=&quot;00934596&quot;
+  priority=2
+}</code></pre>
+<p>To save (write <strong>o</strong>ut) the file, use <code>Ctrl</code>+<code>O</code>, and hit <code>Enter</code> when prompted (at the bottom) to accept the file name. Look for a message indicating “Wrote N lines” (or similar). Then, quit <code>nano</code> with <code>Ctrl</code>+<code>X</code>.</p>
+<p>(Note: you can add as many networks as you like to this file. For example, if you have a home WiFi network that you want your Pi to connect to, you can add it, too.)</p>
+<p>Now, reboot your Pi. At your Pi’s terminal prompt, run:</p>
+<pre><code>sudo reboot</code></pre>
+<p>While you wait for your Pi to come back online, connect your laptop to your “personal” network - the mobile hotspot or WiFi connection shared from your laptop. Remember that your Pi and your laptop need to be on the same network, so if your Pi connects to your mobile hotspot, so should your laptop!</p>
+<p>When the Pi comes back online (it will take a few minutes to boot!), you may be able to reach it even without knowing its IP address. In a <em>local</em> terminal window on your laptop, run</p>
+<pre><code>ping raspberrypi.local</code></pre>
+<p>(if the <code>ping</code> process does not stop by itself, you can stop it with <code>Ctrl</code>+<code>C</code>.) If you received some response, great! Make sure you can SSH into your Pi with</p>
+<pre><code>ssh pi@raspberrypi.local</code></pre>
+<p>and use <code>raspberry</code> as the password.</p>
+<p>If not, you’ll have to find out the Pi’s IP address from your mobile phone:</p>
+<ul>
+<li>On Android devices, in the Mobile Hotspot menu, look for a Connected Devices section which lists the currently connected devices. If you see <code>raspberrypi</code> appear in this list, you can click on it to find out the IP address assigned to the Pi.</li>
+<li>On an iPhone, you can install the (free) Network Analyzer app. Open it, and select the LAN tab at the bottom of the screen. Tap the Scan button to see the IP address of every device currently connected to your network.</li>
+<li>On Windows 10, you should be able to see a list of connected devices and addresses from the Mobile Hotspot configuration page.</li>
+<li>With Connectify, the GUI should show you the list of connected devices and addresses.</li>
+<li>On a MAC, you can find out the IP address of your Pi by running <code>arp -a</code> and looking for the entry corresponding to the Pi.</li>
+</ul>
+<p>Then, make sure you can reach that address - in a terminal session, run</p>
+<pre><code>ping A.B.C.D</code></pre>
+<p>substituting the IP address you found in place of <code>A.B.C.D</code> above. (If the <code>ping</code> process does not stop by itself, you can stop it with <code>Ctrl</code>+<code>C</code>.) Make sure you get some response! Then, verify that you can SSH into your Pi with</p>
+<pre><code>ssh pi@A.B.C.D</code></pre>
+<p>again, substituting the IP address you found in place of <code>A.B.C.D</code>, and use <code>raspberry</code> as the password.</p>
+<p>On the Pi, run</p>
+<pre><code>iwconfig wlan0</code></pre>
+<p>to see the current network configuration.</p>
+<p><strong>Note</strong>: After you have finished this section, you can re-connect using the <code>ece4313</code> network in the lab for the rest of this assignment. The <code>ece4313</code> network may offer a better network connection than your personal hotspot.</p>
+<hr />
+<p><strong>Lab report</strong>: Prepare an instruction/checklist document for yourself to use in the future when you need to establish an SSH connection to your Pi over your personal network. Your list should include instructions specifically for <em>your</em> work environment, describing how to:</p>
+<ol type="1">
+<li>Start a personal (2.4GHz) WiFi network from your phone or laptop, and to connect your laptop to this network (if it’s a phone hotspot). Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+<li>Power on the Pi and have it load the operating system from SD card. Show a photo that demonstrates how you can tell you have done this step successfully. (You can copy your own answer from a previous section.)</li>
+<li>Identify the address of your Pi your <em>personal</em> network, and verify that it responds to a <code>ping</code> command at that address, OR confirm that your Pi responds to <code>ping</code> by name. Show a photo to demonstrate.</li>
+<li>Open a terminal and use SSH to connect to a terminal session on your Pi over your <em>personal</em> network. Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+<li>Open a VNC viewer and use VNC to connect to a GUI session on your Pi over your <em>personal</em> network. Show a photo that demonstrates how you can tell you have done this step successfully.</li>
+</ol>
+<p><strong>Lab report</strong>: Upload the contents of your final <code>wpa_supplicant.conf</code> file, with your personal network configuration. (In the event that you have to create a new SD card in the future, you will copy this configuration file onto your new SD card so that it can connect to your own <em>personal</em> network.)</p>
+<hr />
+<h1 id="using-your-pi">Using your Pi</h1>
+<h2 id="practice-using-the-pi-gui">Practice using the Pi GUI</h2>
+<p>Open a VNC session on your Pi, and explore the applications that come pre-installed on the Pi.</p>
+<p>Click on the Raspberry icon in the top left to see the application menu, and explore the available applications. You can also use the folder icon in the top left to explore the filesystem on the Pi, the globe icon to open a browser, or the terminal icon to open a terminal.</p>
+<hr />
+<p><strong>Lab report</strong>: Write instructions for yourself, describing how to open each of these applications on the Pi:</p>
+<ul>
+<li>a browser</li>
+<li>a text editor</li>
+<li>a terminal</li>
+<li>the file browser/manager</li>
+</ul>
+<p>Also show a screenshot of each application.</p>
+<hr />
+<h2 id="practice-using-the-linux-terminal">Practice using the Linux terminal</h2>
+<p>Open an SSH session on your Pi, and practice using the terminal prompt on the Pi.</p>
+<p>In this section, we’ll learn some basic commands for use on the Pi’s Linux-based operating system: <code>pwd</code>, <code>ls</code>, <code>mkdir</code>, <code>cd</code>, <code>nano</code>, <code>cat</code>, <code>mv</code>, <code>rm</code>, <code>sudo</code>, <code>shutdown</code>, <code>reboot</code>, <code>exit</code>. (Later, you’ll also learn how to use <code>scp</code>. )</p>
+<p>The first group of commands - <code>pwd</code>, <code>ls</code>, <code>mkdir</code>, <code>cd</code>, <code>mv</code>, <code>rm</code> - are useful for navigating and manipulating the filesystem.</p>
+<p>First, check where you are currently located in the filesystem with the <code>pwd</code> (“<strong>p</strong>rint <strong>w</strong>orking <strong>d</strong>irectory”) command:</p>
+<pre><code>pwd</code></pre>
+<p>Usually, when you open a new terminal window, it will be “in” your home directory - the directory allocated to your user account for storing files and configurations. In this case, the username we are logged in with is <code>pi</code> and our home directory is <code>/home/pi</code>.</p>
+<p>Next, <strong>l</strong>i<strong>s</strong>t the contents of the directory you are in:</p>
+<pre><code>ls</code></pre>
+<p>To create a new directory inside our current directory, run <code>mkdir</code> and specify a name for the new directory. Try it now; run</p>
+<pre><code>mkdir lab1</code></pre>
+<p>Run</p>
+<pre><code>ls</code></pre>
+<p>again and verify that you can see the new directory you have just created.</p>
+<p>You can <strong>c</strong>hange <strong>d</strong>irectory by running <code>cd</code> and specifying the directory you want to change to. For example, to change to the directory you’ve just created, run</p>
+<pre><code>cd lab1</code></pre>
+<p>and then use</p>
+<pre><code>pwd</code></pre>
+<p>again to verify your current working directory.</p>
+<p>You may have noticed that when you run the <code>pwd</code> command, it gives you a full path staring with <code>/</code>, followed by several directory names separated by a <code>/</code> character. Any path that starts with a <code>/</code> (the root of the filesystem) is a <em>full path</em> (or it may also be called an <em>absolute path</em>). For example, after running the commands above, I would see the following output for <code>pwd</code>:</p>
+<pre><code>/home/pi/lab1</code></pre>
+<p>When you run commands that involve a file or directory, you can always give a full path, which starts with a <code>/</code> and contains the entire directory tree up until the file or directory you are interested in.</p>
+<figure>
+<img src="images/pi-directory-tree.svg" style="width:80.0%" alt="Illustration of the filesystem hierarchy on the Pi, showing how it relates to the full path of the smile.png file located on the user’s Desktop." /><figcaption aria-hidden="true">Illustration of the filesystem hierarchy on the Pi, showing how it relates to the <em>full path</em> of the <code>smile.png</code> file located on the user’s Desktop.</figcaption>
+</figure>
+<p>For example, you can run</p>
+<pre><code>cd /home/pi/lab1</code></pre>
+<p>to navigate to the <code>lab1</code> directory . Alternatively, you can give a path that is <em>relative</em> to the directory you are in. For example, when I am inside my home directory (<code>/home/pi</code>), which has a directory called <code>lab1</code> inside it, I can navigate into the <code>lab1</code> directory with a relative path:</p>
+<pre><code>cd lab1</code></pre>
+<p>or the absolute path:</p>
+<pre><code>cd /home/pi/lab1</code></pre>
+<p>Next, we will create a file and edit its contents. Use <code>cd</code> to navigate to the <code>lab1</code> directory you created. Then we will create a <code>hello.txt</code> file and open it for editing in one command, using <code>nano</code>, a terminal-based text editor:</p>
+<pre><code>nano hello.txt</code></pre>
+<p>Type your name and net ID into this file, then use <code>Ctrl</code> + <code>O</code> to write it <strong>o</strong>ut to file, and hit <code>Enter</code> to confirm the file name to which to save. Near the bottom of the screen, it should say e.g. “[ Wrote 1 line ]”. Then use <code>Ctrl</code> + <code>X</code> to exit <code>nano</code> and return to your terminal prompt.</p>
+<p>To see the contents of a file, we can print the contents of the file to the terminal output with <code>cat</code>:</p>
+<pre><code>cat hello.txt</code></pre>
+<p>Instead of typing out the entire command, the terminal supports a useful feature known as tab auto-completion, in which you can start typing out a command or filename, and it will fill in the rest for you when you press the <code>Tab</code> key.</p>
+<p>Try it now - type</p>
+<pre><code>cat he</code></pre>
+<p>and then hit the <code>Tab</code> key. Does it fill in the rest of the filename for you? You can then hit <code>Enter</code> to see the contents of the file again.</p>
+<p>To copy a file, we use <code>cp</code>, and give the source and destination file names (or paths) as arguments. For example, if you want to put a copy of <code>hello.txt</code> in on your Desktop (<code>/home/pi/Desktop</code>), you can run</p>
+<pre><code>cp hello.txt /home/pi/Desktop/hello.txt</code></pre>
+<p>To move (or rename) a file, we use the <code>mv</code> command:</p>
+<pre><code>mv hello.txt hello-4313.txt</code></pre>
+<p>Note that we used a <code>-</code> in the file name - it’s better to use <code>-</code> or <code>_</code> characters rather than spaces in file names.</p>
+<p>We can use <code>rm</code> to delete a file - for example:</p>
+<pre><code>rm /home/pi/lab1/hello-4313.txt</code></pre>
+<p>With <code>rm</code>, there is no “Recycle Bin” and no getting back files you’ve deleted accidentally - so be very, very careful.</p>
+<p>You can also remove a directory with the <code>rm</code> command, although to remove a directory you’ll need to add the <code>-R</code> argument:</p>
+<pre><code>rm -R /home/pi/lab1</code></pre>
+<p>It’s often useful to be able to see and re-run commands you’ve previously run.</p>
+<p>You can use the up arrow and down arrow keys to scroll through your previous commands. For example, if you want to re-run the previous command with a small modification, you would:</p>
+<ul>
+<li>Use the up arrow key to see the previous command,</li>
+<li>Use the right and left arrow keys to position your cursor within the command, and make the desired changes,</li>
+<li>then hit <code>Enter</code> to run the modified version.</li>
+</ul>
+<p>Or, to see your command history all at once, run</p>
+<pre><code>history</code></pre>
+<p>The commands you have run so far did not require any special privileges. However, we’ll sometimes need to run commands that are available only to the administrator, called the “root” user. To run a command as the “root” user, we preface the command with <code>sudo</code>.</p>
+<p>For example, the <code>reboot</code> command, which performs a graceful (software) reboot, is only available to the “root” user. If you try to run</p>
+<pre><code>reboot</code></pre>
+<p>you will get a “Permission denied” error.</p>
+<p>However, you can reboot the Pi by running</p>
+<pre><code>sudo reboot</code></pre>
+<p>You’ll see the Pi reboot. Wait a few minutes for it to come up, then use SSH again to get a terminal on the Pi.</p>
+<p>(As a general tip, if you ever get a permission error on a Linux system, consider whether you should have prefaced the command you ran with <code>sudo</code>!)</p>
+<p>To end an SSH session without turning the board off, just run</p>
+<pre><code>exit</code></pre>
+<p>to disconnect from the board and return to your regular terminal prompt. Note that the Pi is still on and running!</p>
+<h2 id="transfer-files-to-and-from-your-pi-with-vnc">Transfer files to and from your Pi with VNC</h2>
+<p>Next, we will learn how to use VNC to transfer files between a laptop and the Pi.</p>
+<p>To send a file from your laptop to the Pi, move your mouse near the top of the VNC window, and when the VNC toolbar appears, click on the file transfer button:</p>
+<figure>
+<img src="images/vnc-transfer-to-pi.png" style="width:60.0%" alt="Opening the file transfer dialogue to copy a file from your laptop to your Pi." /><figcaption aria-hidden="true">Opening the file transfer dialogue to copy a file from your laptop to your Pi.</figcaption>
+</figure>
+<p>Then, click on “Send Files” and select the file you want to transfer to your Pi. Locate the file in the selected location on the Pi, using the file browser/manager.</p>
+<figure>
+<img src="images/vnc-send-files.png" style="width:40.0%" alt="Send file dialogue in VNC." /><figcaption aria-hidden="true">Send file dialogue in VNC.</figcaption>
+</figure>
+<p>To send a file <em>from</em> the Pi <em>to</em> your laptop, click on the VNC icon in the status bar on the Pi. Then, click the menu icon in the corner, and choose the “File Transfer” option.</p>
+<figure>
+<img src="images/vnc-file-transfer-from-pi.png" style="width:60.0%" alt="Opening the file transfer dialogue to copy a file from your Pi to your laptop." /><figcaption aria-hidden="true">Opening the file transfer dialogue to copy a file from your Pi to your laptop.</figcaption>
+</figure>
+<h2 id="transfer-files-to-and-from-your-pi-with-scp">Transfer files to and from your Pi with SCP</h2>
+<p>We will also learn how to use SCP - the SSH copy utility - to transfer files between a laptop and the Pi. This is useful for when you want to transfer files without opening a VNC session.</p>
+<p>In a <em>local</em> terminal on your <em>laptop</em> (NOT on the Pi - check the terminal prompt to be sure!), find an appropriate location in the filesystem to copy files to, and move to that location (such as your Documents or Desktop folder). (You can use the <code>pwd</code>, <code>ls</code>, and <code>cd</code> commands you just learned in the terminal on Linux, Mac, or Git Bash on Windows to help you locate yourself in the filesystem on your laptop!)</p>
+<p>After you have navigated to an appropriate location, you will run a command similar to the following, but replace values as indicated in the explanation below -</p>
+<pre><code>scp pi@192.168.0.5:/home/pi/hello.txt /Users/ffund/hello.txt</code></pre>
+<p>to copy the file from <code>/home/pi/hello.txt</code> on the Pi to the location <code>Users/ffund/hello.txt</code> on your laptop. Enter the password (<code>raspberry</code>) when prompted.</p>
+<p>Here’s a brief explanation of the different parts of the <code>scp</code> command:</p>
+<ul>
+<li><code>scp</code> is followed by a space, then its two arguments. The first argument is the source of the file you want to copy, and the second argument is the destination you want to copy to.</li>
+<li><code>pi</code> is your username on the system where the file you want to copy is located</li>
+<li><code>@</code> separates the username and hostname or address</li>
+<li><code>192.168.0.5</code> is the address of the system where the file you want to copy is located. (Alternatively, you can use the name, e.g. <code>raspberrypi.local</code>.)</li>
+<li><code>:</code> separates the hostname and the absolute path of the file you want to copy.</li>
+<li><code>/home/pi/hello.txt</code> is the absolute path of the file you want to copy.</li>
+<li>The last argument is the location you want to copy the file <em>to</em>. In this example, I used a path: <code>/Users/ffund/hello.txt</code>.Alternatively, instead of specifying a path, I could use the shorthand <code>.</code> which says “Copy to the directory that I’m running this command <em>from</em>.”</li>
+</ul>
+<p><strong>Note</strong>: If you get a “Permission denied” error at this point, make sure you have the necessary privileges to write to the location on your <em>laptop</em> that you specified!</p>
+<p>Make sure you can locate the files you’ve just transferred using the file explorer on your laptop.</p>
+<p>To transfer the file in the reverse direction, you would simply swap the two arguments to <code>scp</code>, e.g.</p>
+<pre><code>scp /Users/ffund/hello.txt pi@192.168.0.5:/home/pi/hello.txt </code></pre>
+<hr />
+<p><strong>Lab report</strong>: Create a file at <code>/home/pi/lab1/pi.txt</code> on your Pi, with your net ID as the file contents. Also create a file file <code>laptop.txt</code> at the location of your choice on your laptop, with your net ID as the file contents. Then, prepare an instruction/checklist document for yourself explaining:</p>
+<ol type="1">
+<li>how to transfer the file from <code>/home/pi/lab1/pi.txt</code> on your Pi, to a location of your choice on your laptop, using VNC. Then, explain how to open the file on your laptop and verify its contents. Show a screenshot of the file open on your laptop, with the contents displayed.</li>
+<li>how to transfer the file from <code>/home/pi/lab1/pi.txt</code> on your Pi, to a location of your choice on your laptop, using SCP. Then, explain how to open the file on your laptop and verify its contents. Show a screenshot of the file open on your laptop, with the contents displayed.</li>
+<li>how to transfer the <code>laptop.txt</code> file from your laptop, to the Desktop on your Pi, using VNC. Then, explain how to open the file in the GUI on your Pi and verify its contents. Show a screenshot of a GUI session on your Pi with the file contents displayed in the text editor.</li>
+<li>how to transfer the <code>laptop.txt</code> file from your laptop, to the Desktop on your Pi, using SCP. Then, explain how to open the file in a terminal-only SSH session on your Pi and verify its contents. Show a screenshot of a terminal session on your Pi with the file contents displayed.</li>
+</ol>
+<hr />
+<h2 id="safely-shut-down-your-pi">Safely shut down your Pi</h2>
+<p>It’s important to shut down your Pi “safely” - if you remove power while the Pi is still writing to the SD card, the SD card may become corrupted. Then it would need to be re-created (using the instructions in the Appendix).</p>
+<p>When you’re finished, use SSH to connect to your Pi again, then perform a graceful (software) shutdown - run</p>
+<pre><code>sudo shutdown now</code></pre>
+<p>Wait for the disk activity LED on your Pi to stop blinking completely. Then, carefully disconnect the micro USB power cable from your Pi. Don’t pull the micro USB power cable out of the Pi forcefully, since you may break the jack off the board. Instead, apply pressure to the micro USB jack with one hand while you gently remove the power cable with the other.</p>
+</body>
+</html>
