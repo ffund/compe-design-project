@@ -1,8 +1,7 @@
 ## Lab content
 
 * Getting started [md](lab1/getting-started-sbc.md) [pdf](lab1/getting-started-sbc.pdf) [html](https://ffund.github.io/compe-design-project/lab1/getting-started-sbc.html)
-* Creating a browser-based UI [md](lab1/browser-based-ui.md) [pdf](lab1/browser-based-ui.pdf) [html](https://ffund.github.io/compe-design-project/lab2/input-output.html)
-* Digital input and output [md](lab2/input-output.md) [pdf](lab2/input-output.pdf)
+* Digital input and output [md](lab2/input-output.md) [pdf](lab2/input-output.pdf) [html](https://ffund.github.io/compe-design-project/lab2/input-output.html)
 * Pulse width [md](lab3/pulse-width.md) [pdf](lab2/pulse-width.pdf)
 * Parallel communication [md](lab4/parallel.md) [pdf](lab4/parallel.pdf)
 * Serial communication: UART [md](lab5/serial.md) [pdf](lab5/serial.md)
