@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Digital input and output using pins</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Digital input and output using pins</h1>
+</header>
+<p>In this lab exercise, we’ll learn how to connect external parts to our Raspberry Pi using its pins, specifically:</p>
+<ul>
+<li>Using GPIO for digital output</li>
+<li>Using GPIO for digital input</li>
+</ul>
+<p>A major advantage of prototyping using single board computers is that we can take advantage of existing libraries to easily build attractive, user-friendly interfaces to our circuits. In this exercise, we’ll see an example of that.</p>
+<p>Finally, we’ll also practice using three measurement instruments - a digital multimeter, the Analog Disovery 2, and the <code>piscope</code> software logic analyzer - to understand the circuits we are building around the Raspberry Pi.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>This section contains some brief notes about the parts used in this lab.</p>
+<p>Find these parts, and set them aside until you need them:</p>
+<ul>
+<li>Digital multimeter. You can install the batteries if they’re not already installed</li>
+<li>Analog Discovery 2 with USB cable and 2x15 ribbon cable</li>
+<li>Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH</li>
+<li>Breadboard and jumper cables</li>
+<li>One 470 Ω resistor and one 10k Ω resistor</li>
+<li>5mm LED with 3.0V forward voltage</li>
+<li>Four-terminal push button switch</li>
+</ul>
+<h3 id="led">LED</h3>
+<p>A diode has two pins:</p>
+<ul>
+<li>the anode, or positive pin. (On an LED, this is the longer pin.)</li>
+<li>the cathode, or negative pin. (On an LED, this is the shorter pin.)</li>
+</ul>
+<p>When a positive voltage greater than a minimum <em>forward voltage</em> is applied across its pins, then current is conducted through the diode, from the anode to the cathode. Otherwise, no current is conducted.</p>
+<p>A light-emitting diode (LED) emits light when it is conducting current.</p>
+<p>The voltage drop across the LED will be equal to its <em>forward voltage</em> (listed in the datasheet). Typically, the voltage drop increases with the frequency of the light, so that a red LED usually has a voltage drop around 1.8-2.2V, but a blue or violet LED is likely to have a voltage drop around 3.0-3.4V.</p>
+<p>The LED datasheet describes the maximum <em>continuous forward current</em> that the LED can tolerate. A current limiting resistor should be used in series, to limit the current so that it does not exceed this value.</p>
+<h3 id="push-button">Push button</h3>
+<p>A push button is a kind of switch, with terminals that are either connected or not connected depending on whether the button is pressed. A <em>momentary</em> push button switch, like the one we’ll use today, does not maintain its state; it is <em>actuated</em> only while you are actively pressing it.</p>
+<p>The buttons we will use today are normally open buttons, with four pins. The four pins are arranged as shown below:</p>
+<figure>
+<embed src="images/push-button-four-pin.pdf" width="200" /><figcaption aria-hidden="true">Four-terminal push button switch</figcaption>
+</figure>
+<p>Pin 1 is always connected to pin 2, and pin 3 is always connected to pin 4. The switch is open and there is no current flow between the first pair of pins (1-2) and the second pair of pins (3-4), <em>unless</em> the button is being pressed. When the button is pressed, all of the pins are electrically connected and current can flow freely between them.</p>
+<p>When the pins on the switch are not marked, we can use a handheld multimeter with a continuity setting to identify which pins are internally connected, and which are only connected while the switch is actuated.</p>
+<h3 id="measurement-instruments">Measurement instruments</h3>
+<p>In this lab, we’ll practice using three measurement instruments -</p>
+<ul>
+<li>The <strong>handheld multimeter</strong> is a multi-purpose device that includes a voltmeter (for measuring voltage), ammeter (for measuring current), continuity meter (for measuring whether two points in a circuit are directly connected), and more. This is its major benefit - the other measurement instruments we’ll use are only capable of measuring voltage! The multimeter can be used to probe points anywhere in your circuit, but it only shows an instantaneous measurement - it doesn’t show you how a measurement varies in time. It only measures <em>one</em> point in your circuit at a time.</li>
+<li>The <strong>Analog Discovery 2</strong> is also a multi-purpose device - it includes a voltmeter (for measuring instantaneous voltage), an oscilloscope (for observing a voltage that varies in time), a logic analyzer (for observing a digital voltage that varies in time between a HIGH and LOW level), a protocol analyzer (for decoding certain digital communication protocols), and more. Like the multimeter, this device can be used to probe points anywhere in your circuit, but it <em>only</em> measures voltage. This device can simultaneously measure two analog inputs or up to 16 digital inputs.</li>
+<li><strong>piscope</strong> is a software application that runs on the Pi, and that works as a software logic analyzer (for observing a digital voltage that varies in time between a HIGH and LOW level). Unlike the other tools, it <em>only</em> measures the voltage at the Pi’s GPIO pins - you won’t use this for measuring other points in your circuit. Furthermore, it only tells you whether the voltage at a pin is considered HIGH or LOW by the Pi, rather than telling you the exact voltage level! However, it is very useful because it doesn’t require any extra tools or wiring, only the Pi itself. It is also convenient for watching <em>all</em> of the Pi’s GPIO pins at the same time.</li>
+</ul>
+<p>For more material about these measurement instruments:</p>
+<ul>
+<li><a href="http://www.mastech-group.com/download_s.php?id=75">MS8217 Digital Multimeter User Manual</a></li>
+<li><a href="https://digilent.com/reference/test-and-measurement/analog-discovery-2/reference-manual">Analog Discovery 2 Reference Manual</a> and <a href="https://www.youtube.com/watch?v=HUAy0J3XqaU&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;_ga=2.242067714.1044512044.1633657015-1499685186.1633657015">Quick Start Video Playlist</a></li>
+<li><a href="https://github.com/joan2937/piscope/blob/master/README.md">piscope documentation</a></li>
+</ul>
+<hr />
+<p><strong>Lab report</strong>: (<strong>Individual work</strong>) Which measurement instrument(s) could you use:</p>
+<ul>
+<li>to measure the current through the base and collector in a transistor circuit?</li>
+<li>to monitor whether voltage at a Pi input pin is HIGH or LOW over a period of about 30 seconds?</li>
+<li>to identify which is the “common” pin in a 5-way switch, and is connected to other pins when the switch is actuated?</li>
+<li>to observe the capacitor charging curve in an RC circuit?</li>
+<li>to watch input and output pins used to connect to a 4x4 membrane keypad?</li>
+</ul>
+<hr />
+<h2 id="pinout-diagrams">Pinout diagrams</h2>
+<p>This page is provided here for reference. For an interactive pinout diagram, see <a href="https://pinout.xyz">https://pinout.xyz</a>.</p>
+<figure>
+<img src="images/pi-pinout.png" alt="Pinout diagram for Pi and Pi Zero" /><figcaption aria-hidden="true">Pinout diagram for Pi and Pi Zero</figcaption>
+</figure>
+<h2 id="pre-work">Pre-work</h2>
+<h3 id="install-software-on-your-laptop">Install software on your laptop</h3>
+<p>For this lab, you’ll use the Digilent Analog Discovery 2 measurement instrument, which requires that some software be installed on your laptop.</p>
+<p>You can download and install Digilent Waveforms from <a href="https://mautic.digilentinc.com/waveforms-download">the Digilent website</a>, if you don’t mind sharing your information with them and letting them send you email. Or if you prefer, I have prepared some direct download links for you instead:</p>
+<ul>
+<li><a href="https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe">Windows 64 bit installer</a> and <a href="https://www.youtube.com/watch?v=Sz0nDa8TVYw&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=3&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
+<li><a href="https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe">Mac installer</a> and <a href="https://www.youtube.com/watch?v=4-O6-vTMIHg&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=4&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
+</ul>
+<h3 id="install-software-on-pi">Install software on Pi</h3>
+<p>You’ll also need to install some software libraries and applications on your Pi. Use SSH to connect to your Pi, and run these commands in the terminal on your Pi.</p>
+<p>This section requires Internet access on your Pi, and will download some software to your Pi. You may prefer to do this over a network connection that is not metered (e.g. you may not want to use your phone hotspot for this, if your cellular data is limited).</p>
+<p>First, we’ll make sure we have the latest versions of some software packages that are available through the Raspberry Pi OS package repositories. Start by making sure the package manager has an updated cache, so that it knows which package versions are available:</p>
+<pre><code>sudo apt update</code></pre>
+<p>Then, install or upgrade packages with</p>
+<pre><code>sudo apt -y install i2c-tools build-essential python3-dev \
+  python3-pip python3-rpi.gpio python3-pil \
+  python3-smbus python3-setuptools minicom git  </code></pre>
+<p>These may already be installed on your Pi, but if not, or if they’re not up to date, the latest versions will be installed now.</p>
+<p>Next, we’ll install Flask. In this lab, you’ll use Flask to host a browser-based user interface for a circuit connected to your Pi.</p>
+<p>Install Flask on your Pi with:</p>
+<pre><code>sudo pip3 install flask</code></pre>
+<p>(If it was already installed, that’s fine!)</p>
+<p>To make sure that Flask is ready to use, try to import it in Python - run</p>
+<pre><code>python3 -c &#39;import flask&#39;</code></pre>
+<p>If Flask is installed, you shouldn’t see any output from these commands. If you see an error message instead, ask for further guidance.</p>
+<p>Next, we’ll install <strong>piscope</strong>. Piscope is a software logic analyzer that shows the state (HIGH or LOW) of each of the Pi’s GPIO pins, in real time. We’ll install piscope now for use in this and future lab exercises.</p>
+<p>Install the <code>pigpio</code> package, which is used by piscope. In a terminal, run:</p>
+<pre><code>wget https://github.com/joan2937/pigpio/archive/master.zip
+unzip master.zip
+cd pigpio-master
+make
+sudo make install</code></pre>
+<p>This will download an archive containing the source code, extract the archive, change your current directory to the one you just extracted, compile the source code, and then install the compiled code on your system. It will take some time to compile, since the Pi Zero is not very powerful.</p>
+<p>To make sure that the installation was successful, run</p>
+<pre><code>pigpiod -v</code></pre>
+<p>This command should print the <code>pigpio</code> version number and then exit. If you see any error message instead, ask for further guidance.</p>
+<p>Then, use</p>
+<pre><code>cd</code></pre>
+<p>to return to your home directory, and install the <code>piscope</code> software:</p>
+<pre><code>wget http://abyz.me.uk/rpi/pigpio/piscope.tar
+tar xvf piscope.tar
+cd PISCOPE
+make hf
+make install</code></pre>
+<p>Then, return to your home directory again:</p>
+<pre><code>cd</code></pre>
+<h3 id="prepare-a-directory">Prepare a directory</h3>
+<p>On your Pi, create a new directory in which you’ll save all the code you use in this lab:</p>
+<pre><code>mkdir ~/lab-gpio</code></pre>
+<h3 id="check-default-inputoutput-configuration">Check default input/output configuration</h3>
+<p>On your Pi, run</p>
+<pre><code>gpio readall</code></pre>
+<p>This should show the pinout of the Pi, with Broadcom numbering, physical pin numbering, WiringPi numbering, and the current mode of each pin.</p>
+<p>Take a screenshot showing the full <code>gpio readall</code> output - this shows the default configuration of the pins on boot.</p>
+<p>Also try the</p>
+<pre><code>pinout</code></pre>
+<p>command. This is a useful reference that shows you a color-coded graphical representation of the Pi, with its pinout.</p>
+<h2 id="using-gpio-for-digital-input">Using GPIO for digital input</h2>
+<h3 id="preparing-your-circuit">Preparing your circuit</h3>
+<p>You will need:</p>
+<ul>
+<li>One breadboard</li>
+<li>One push button switch</li>
+<li>One 470 Ω resistor</li>
+<li>One 10k Ω resistor</li>
+<li>Jumper cables</li>
+</ul>
+<p><em>Don’t connect your Pi to your circuit yet - you’ll do that in the next section, <strong>Connect your Raspberry Pi</strong>.</em></p>
+<p>In the <em>next</em> section, you will construct a circuit as shown below, with a “normally open” push button connected to a GPIO input pin using two resistors:</p>
+<figure>
+<img src="images/schem-input.svg" width="150" alt="Connecting GPIO input to a push button switch. R1 is a 470 Ω current limiting resistor, and R2 is a 10k Ω pull down resistor." /><figcaption aria-hidden="true">Connecting GPIO input to a push button switch. R1 is a 470 Ω current limiting resistor, and R2 is a 10k Ω pull down resistor.</figcaption>
+</figure>
+<p>The 10kΩ resistor with one end connected to GND serves as a pull-down resistor. Without this connection to GND, the GPIO input pin would see a “floating” input when the push button is not pressed, with indeterminate results.</p>
+<figure>
+<img src="images/schem-floating.svg" width="150" alt="GPIO pin with “floating” input." /><figcaption aria-hidden="true">GPIO pin with “floating” input.</figcaption>
+</figure>
+<p>With the connection to GND through the 10kΩ resistor, the GPIO input sees a LOW voltage when the push button is not pressed. When the button is pressed (and the switch is closed), the input is HIGH.</p>
+<p>The 10kΩ value is large, to avoid pulling too much current when the switch is closed, but is small enough so that we can be sure it will actually pull the input down, even if there is a small leakage current.</p>
+<p>The 470Ω resistor between the GPIO pin and the rest of the circuit serves as a current-limiting resistor in case of user error. Suppose we were to accidentally configure the GPIO pin as output, with a LOW value, and press the button (closing the switch). This would create a short circuit between 3.3V and GND. The current-limiting resistor protects the GPIO pin from sinking too much current in this case (the current will be limited to 3.3V/470Ω = 7mA).</p>
+<p>Prepare the resistors and the push button on a breadboard, as in the following diagram. (Note that you only need the two pins of the push button that are on the left side; it’s OK if the other two pins are in the ravine, not actually plugged into the breadboard.)</p>
+<figure>
+<img src="images/breadboard-button_bb.svg" alt="Push button and two resistors on a breadboard." /><figcaption aria-hidden="true">Push button and two resistors on a breadboard.</figcaption>
+</figure>
+<p>Before you connect your Pi to this circuit, there is one more important step: you must make sure the push button is configured so that that two pins on the left side are <em>not</em> connected internally unless the push button is pressed. You’ll use the continuity mode on your multimeter to verify this.</p>
+<div style="max-width:1280px text-align: center;">
+<div style="position:relative;padding-bottom:56.25%">
+<iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;playerId=kaltura_player&amp;entry_id=1_zh0xc5mj&amp;flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&amp;wid=1_4ipgkpyh" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%">
+</iframe>
+</div>
+</div>
+<p>Follow along with <a href="https://stream.nyu.edu/media/Measuring+continuity+with+a+multimeter/1_zh0xc5mj">the demo video</a> as you:</p>
+<ul>
+<li>Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for continuity testing.</li>
+<li>Set the dial on the multimeter to the continuity testing setting. The icon for continuity testing mode usually looks like a soundwave.</li>
+<li>The dial setting for continuity testing is used for several multimeter modes. Use the mode select button (yellow button on the multimeter in our lab kit) to switch between modes until the continuity testing icon appears on the display.</li>
+<li>Then, connect the probes across two push button terminals, as shown in the figures on the following page. When there is continuity across the probes, the multimeter will beep.</li>
+</ul>
+<p>If necessary, rotate the push button and test again until you get the continuity results indicated in the figures below.</p>
+<figure>
+<img src="images/button-no-continuity_bb.svg" width="310" alt="Testing push button terminals for continuity." /><figcaption aria-hidden="true">Testing push button terminals for continuity.</figcaption>
+</figure>
+<figure>
+<img src="images/button-1continuity_bb.svg" width="310" alt="Testing push button terminals for continuity." /><figcaption aria-hidden="true">Testing push button terminals for continuity.</figcaption>
+</figure>
+<figure>
+<img src="images/button-2continuity_bb.svg" width="310" alt="Testing push button terminals for continuity." /><figcaption aria-hidden="true">Testing push button terminals for continuity.</figcaption>
+</figure>
+<hr />
+<p><strong>Lab report</strong>: Upload a photo of your breadboard, with the push button and resistors in place. Annotate the photo to indicate which pairs of pins on the push button are always connected internally, and which are only connected when the push button is pressed. (<em>Make sure that the colored sticker with your number on it is visible in the photo.</em>)</p>
+<p><strong>Lab report</strong> (<strong>Individual work</strong>): Draw a schematic of a circuit for the push button switch, but with a pull-up resistor instead of a pull-down resistor. Also answer the following questions about the circuit with the pull-up resistor:</p>
+<ul>
+<li>What is the reading at the input pin when the switch is open? What is the reading at the input pin when the switch is closed?</li>
+<li>The current-limiting resistor is intended to protect the board in case of a short circuit. Under what configuration could a short circuit occur? (Switch open or closed? GPIO pin in input mode, output HIGH, or output LOW?)</li>
+</ul>
+<hr />
+<h3 id="connect-your-raspberry-pi">Connect your Raspberry Pi</h3>
+<p>Now, you’re ready to connect your Pi to your breadboard circuit.</p>
+<figure>
+<embed src="images/pi-button_bb.pdf" /><figcaption aria-hidden="true">Pi configuration with the push button input (Use BCM pin 17).</figcaption>
+</figure>
+<p>Connect your Pi to your circuit as in the diagram:</p>
+<ul>
+<li>Connect any <strong>GND</strong> pin on the Pi, to the pull-down resistor. (By convention, it’s preferable to use a black or brown wire for connections to GND; this will make your circuit easier to debug.)</li>
+<li>Connect the <strong>3.3V</strong> power rail to the push button. (By convention, it’s preferable to use a red or orange wire for connections to the supply voltage; this will make your circuit easier to debug.)</li>
+<li>Connect the <strong>BCM 17</strong> pin on the Pi, to the current-limiting resistor.</li>
+</ul>
+<h3 id="use-gpio-to-read-input">Use <code>gpio</code> to read input</h3>
+<p>In a terminal on your Pi, run</p>
+<pre><code>gpio -g mode 17 in</code></pre>
+<p>to set this pin to input mode using the <code>gpio</code> utility. Then, you can read the pin value with</p>
+<pre><code>gpio -g read 17</code></pre>
+<p>Try pressing the button while your repeat this command.</p>
+<p>You can also see when the status of the pin changes using the <code>wfi</code> (<strong>w</strong>ait <strong>f</strong>or <strong>i</strong>nterrupt) command. Run</p>
+<pre><code>gpio -g wfi 17 rising</code></pre>
+<p>and observe how this command returns only when the pin changes from a LOW to HIGH value. Run</p>
+<pre><code>gpio -g wfi 17 falling</code></pre>
+<p>and observe how this command returns only when pin changes from a HIGH to LOW value. Run</p>
+<pre><code>gpio -g wfi 17 both</code></pre>
+<p>and observe how this command returns when the pin changes status in either direction.</p>
+<h3 id="use-python-to-read-input">Use Python to read input</h3>
+<p>We can also use the <code>RPi.GPIO</code> library in Python to read the value of the input pin.</p>
+<p>First, on your Pi, navigate to the directory you created earlier:</p>
+<pre><code>cd ~/lab-gpio</code></pre>
+<p>Then, create a new file and open it for editing:</p>
+<pre><code>nano gpio-input-1.py</code></pre>
+<p>Put the following code into this file, then save it and close <code>nano</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true"></a>    i <span class="op">=</span> GPIO.<span class="bu">input</span>(pin)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<p>Run the Python script with</p>
+<pre><code>python3 gpio-input-1.py</code></pre>
+<p>This script will read the value of the input pin every second, in an infinite loop, until you press . Try pressing the button while this script is running, and observe the output. Then, stop the script with .</p>
+<p>This script uses <em>polling</em> - it keeps on checking the value of the pin. If we just want to be notified when the button is pressed, it’s more effecient to use an <em>interrupt</em> approach instead. This will notify us when the button is pressed, but won’t keep using the CPU to check the value of the pin.</p>
+<p>To try the interrupt approach, create a new file and open it for editing:</p>
+<pre><code>nano gpio-input-2.py</code></pre>
+<p>Put the following code into this file, then save it and close <code>nano</code>:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true"></a>  GPIO.wait_for_edge(pin, GPIO.RISING)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button is pressed&quot;</span>)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true"></a>  sys.exit()</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<p>Run the Python script with</p>
+<pre><code>python3 gpio-input-2.py</code></pre>
+<p>and test it by pressing the button.</p>
+<p>This script will <em>block</em> execution of the program until the button is pressed. In other words, the line following the call to <code>wait_for_edge()</code> will only run after the button is pressed (and a rising edge is detected).</p>
+<p>Finally, we’ll try one more approach: when you want to use an <em>interrupt</em> to detect a change in state, but you also want your script to continue doing other things while waiting for the button press.</p>
+<p>In other words, you want to detect the button press in a <em>non-blocking</em> way.</p>
+<p>To try this third approach, create a new file and open it for editing:</p>
+<pre><code>nano gpio-input-3.py</code></pre>
+<p>Put the following code into this file, then save it and close <code>nano</code>:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM) </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a> </span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a><span class="kw">def</span> callback_fn(input_pin): </span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button press on pin&quot;</span>, input_pin)</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true"></a>GPIO.add_event_detect(pin, </span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true"></a>  GPIO.RISING,  </span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true"></a>  callback<span class="op">=</span>callback_fn)</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb26-17"><a href="#cb26-17" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb26-18"><a href="#cb26-18" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Hello!&quot;</span>)</span>
+<span id="cb26-19"><a href="#cb26-19" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb26-20"><a href="#cb26-20" aria-hidden="true"></a></span>
+<span id="cb26-21"><a href="#cb26-21" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb26-22"><a href="#cb26-22" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb26-23"><a href="#cb26-23" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<p>Run the Python script with</p>
+<pre><code>python3 gpio-input-3.py</code></pre>
+<p>and test it by pressing the button. Notice that in this case, the script can do other work (it prints “Hello!” every second), while still detecting the button press event whenever it occurs.</p>
+<hr />
+<p><strong>Lab report</strong>: Modify the <code>gpio-input-3.py</code> script to count the number of times a rising edge is detected (i.e. the number of button presses), and print this number each time the button is pressed. Test your modified script. Upload your modified code and a screenshot showing the output when your run this code in the terminal (and press the button a few times).</p>
+<p>Hint: In Python, if you want to modify a global variable inside a function, declare the variable as <code>global</code> inside the function before you use it.</p>
+<hr />
+<h3 id="observe-button-press-events-with-piscope">Observe button press events with Piscope</h3>
+<p>Next, we’re going to use Piscope to observe the button press events. Piscope is a GUI application, so you’ll need to open a VNC connection to your Pi. Then, from the application menu on the Pi (within VNC), open a terminal.</p>
+<p>To run <code>piscope</code> you need to have the <code>pigpiod</code> <em>daemon</em> (process that runs continuously in the background) running. In the terminal, run</p>
+<pre><code>sudo pigpiod</code></pre>
+<p>to start the background process. You’ll need this to be running any time you want to run <code>piscope</code>, so if you restart the Pi you’ll have to start <code>pigpiod</code> again.</p>
+<p><strong>Note</strong>: if you accidentally run <code>sudo pigpiod</code> when the daemon is <em>already</em> running, you’ll see a message:</p>
+<pre><code>2020-10-04 22:31:26 initInitialise: Can&#39;t lock /var/run/pigpio.pid
+Can&#39;t initialise pigpio library</code></pre>
+<p>This means that <code>pigpiod</code> is already running.</p>
+<p>Once <code>pigpiod</code> is running, run</p>
+<pre><code>piscope</code></pre>
+<p>(you can ignore non-fatal errors that appear in your terminal). A new window should open up. Move your mouse over the icons in the menu bar, to see the mouse-over text indicating their functionality. Use the menu to view real-time GPIO status and to pause and restart the view.</p>
+<figure>
+<img src="images/piscope.png" alt="Piscope interface" /><figcaption aria-hidden="true">Piscope interface</figcaption>
+</figure>
+<p>In your SSH terminal, run</p>
+<pre><code>python3 gpio-input-3.py</code></pre>
+<p>again, and press the button a few times. Use the buttons in the Piscope menu to find your button press event, and zoom in so that you can clearly see the rising and falling edge on the line.</p>
+<p>Then, carefully disconnect the Pi from the breadboard circuit.</p>
+<hr />
+<p><strong>Lab report</strong>: Include a screenshot of the button press event in <code>piscope</code>. Annotate the screenshot by drawing a circle or a box around the part where the button is pressed.</p>
+<hr />
+<h2 id="using-gpio-for-digital-output">Using GPIO for digital output</h2>
+<h3 id="preparing-your-circuit-1">Preparing your circuit</h3>
+<p>You will need:</p>
+<ul>
+<li>One breadboard</li>
+<li>One 5mm LED with approximately 3.0V forward voltage</li>
+<li>One 470 Ω resistor (current-limiting resistor)</li>
+<li>Jumper cables</li>
+</ul>
+<p>Place your LED and resistor on a breadboard:</p>
+<ul>
+<li>the (-) short end of the LED in on row,</li>
+<li>the (+) long end of the LED and one end of the 470Ω resistor in another row,</li>
+<li>the second end of the 470Ω resistor in another row.</li>
+</ul>
+<figure>
+<embed src="images/breadboard-led_bb.pdf" /><figcaption aria-hidden="true">Breadboard configuration for LED with current limiting resistor</figcaption>
+</figure>
+<h3 id="connect-your-raspberry-pi-1">Connect your Raspberry Pi</h3>
+<p>Now, you’re ready to connect your Pi to your breadboard circuit.</p>
+<figure>
+<embed src="images/pi-led_bb.pdf" /><figcaption aria-hidden="true">Using GPIO output to blink an LED with Raspberry Pi</figcaption>
+</figure>
+<p>Connect your Raspberry Pi or Pi Zero to your circuit:</p>
+<ul>
+<li>Use a M-F jumper cable to connect any <strong>GND</strong> pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)</li>
+<li>Use a M-F jumper cable to connect the <strong>BCM 17</strong> pin on the Pi, to the resistor.</li>
+</ul>
+<h3 id="use-gpio-for-output">Use <code>gpio</code> for output</h3>
+<p>Open a terminal on your Pi and run</p>
+<pre><code>gpio -g mode 17 out</code></pre>
+<p>to set this pin to output mode using the <code>gpio</code> utility.</p>
+<p>Set the pin to HIGH:</p>
+<pre><code>gpio -g write 17 1</code></pre>
+<p>and observe the LED turn on. Then set the pin to LOW:</p>
+<pre><code>gpio -g write 17 0</code></pre>
+<p>and observe the LED turn off.</p>
+<p>To set the pin back to input mode (its default state), run</p>
+<pre><code>gpio -g mode 17 input</code></pre>
+<h3 id="use-python-for-output">Use Python for output</h3>
+<p>We will also practice using Python to blink the LED.</p>
+<p>Open a new file called <code>gpio-out.py</code> for editing:</p>
+<pre><code>nano gpio-out.py</code></pre>
+<p>Put the following Python code in this file:</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true"></a>pin   <span class="op">=</span> <span class="dv">17</span>          <span class="co"># BCM17</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)    <span class="co"># Use BCM pin numbering</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.OUT) <span class="co"># set pin to work in output mode</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true"></a>    GPIO.output(pin, GPIO.HIGH)</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true"></a>    GPIO.output(pin, GPIO.LOW)</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true"></a></span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true"></a>  GPIO.output(pin, GPIO.LOW)</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true"></a>  GPIO.cleanup()  </span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<p>This script uses the RPi.GPIO library, sets the pin to output mode, then toggles between HIGH and LOW output every half second. It also includes logic to turn off the LED and exit gracefully in case of a keyboard interrupt (i.e. if  is pressed).</p>
+<p>Save the file and quit <code>nano</code>, then run</p>
+<pre><code>python3 gpio-out.py</code></pre>
+<p>to run your code. Observe as the LED turns on, then off.</p>
+<p>Use <code>piscope</code> to view GPIO pin status in real time. Observe the line for BCM pin 17; can you see it toggle on and off?</p>
+<p>Then, use  in the terminal window where your <code>pi-gpio-out.py</code> program is running, to stop it.</p>
+<hr />
+<p><strong>Lab report</strong>: Include a screenshot of your <code>piscope</code> output, showing BCM pin 17 toggling between HIGH and LOW.</p>
+<p><strong>Lab report</strong> (Individual work): Suppose we would run this experiment with a 10kΩ current-limiting resistor instead. How much current would be sourced from the GPIO pin when the output is HIGH? (Show your work.)</p>
+<p><strong>Lab report</strong> (Individual work): Suppose GPIO17 was not available, and we had to use another pin for the <code>gpio-out.py</code> program. Refer to the Pi pinout diagram and identify an alternative pin that would be suitabe for this application. Give its BCM, WiringPi, and physical pin number.</p>
+<hr />
+<h3 id="flask-ui-for-led-circuit">Flask UI for LED circuit</h3>
+<p>Finally, we’ll set up a browser-based UI for the LED circuit using Flask.</p>
+<p>Create a new directory called <code>flask-gpio</code> in your <code>lab-gpio</code> directory, then navigate to it:</p>
+<pre><code>mkdir ~/lab-gpio/flask-gpio
+cd ~/lab-gpio/flask-gpio</code></pre>
+<p>We’ll use the <code>virtualhat</code> library again - download and install it (for Python 2 and Python 3) with</p>
+<pre><code>git clone https://github.com/ffund/virtualhat
+cd virtualhat
+sudo python2 setup.py install
+sudo python3 setup.py install
+cd ~/lab-gpio/flask-gpio</code></pre>
+<p>Create an <code>index.html</code> file with the following contents:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+   &lt;head&gt;
+    &lt;title&gt;Hello Flask!&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot;&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+   &lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;Hello Flask&lt;/h1&gt;
+      &lt;a href=&quot;/led/0&quot; class=&quot;btn btn-primary&quot; role=&quot;button&quot;&gt;LED off&lt;/a&gt;
+      &lt;a href=&quot;/led/1&quot; class=&quot;btn btn-primary&quot; role=&quot;button&quot;&gt;LED on&lt;/a&gt;
+   &lt;/div&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Then, create a file <code>flask-led.py</code> with the following contents:</p>
+<pre><code>from flask import Flask, redirect
+import virtualhat
+
+app = Flask(__name__, static_folder=&#39;&#39;)
+
+@app.route(&quot;/&quot;)
+def hello():
+    return app.send_static_file(&#39;index.html&#39;)
+
+@app.route(&#39;/led/&lt;int:action&gt;&#39;)
+def blink_led(action):
+    if action==0:
+        virtualhat.led_off()
+    if action==1:
+        virtualhat.led_on()
+    return redirect(&quot;/&quot;)
+
+if __name__ == &quot;__main__&quot;:
+    virtualhat.setup()
+    app.run(host=&#39;0.0.0.0&#39;, port=80, debug=True, threaded=True)</code></pre>
+<p>Run your Flask app with</p>
+<pre><code>sudo python3 flask-led.py</code></pre>
+<p>Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi’s IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with .</p>
+<p>The Flask app calls functions from the <code>virtualhat</code> library to turn the “virtual” LED on and off. Your task is to <em>modify</em> the <code>virtualhat</code> library so that your Flask app will <em>actually</em> turn the LED on and off. (You won’t modify the HTML or Python source code of the Flask app.)</p>
+<p>Navigate to the directory where the source code of the <code>virtualhat</code> library is located:</p>
+<pre><code>cd ~/lab-gpio/flask-gpio/virtualhat</code></pre>
+<p>and then open the <code>virtualhat.py</code> file for editing.</p>
+<pre><code>nano virtualhat.py</code></pre>
+<p>All of the library functions are in this file.</p>
+<p>You will need to modify this file so that:</p>
+<ul>
+<li>When the <code>setup()</code> function is called (and <em>only</em> when this function is called), GPIO 17 will be configured in output mode.</li>
+<li>When the <code>led_on()</code> function is called, the LED connected to GPIO 17 will turn on if it is not already on.</li>
+<li>When the <code>led_off()</code> function is called, the LED connected to GPIO 17 will turn off if it is not already off.</li>
+</ul>
+<p>To test your modifications, install the modified library with</p>
+<pre><code>sudo python2 setup.py install
+sudo python3 setup.py install</code></pre>
+<p>Set the GPIO pin to input mode, so that you can make sure your <code>setup()</code> function works:</p>
+<pre><code>gpio -g mode 17 input</code></pre>
+<p>Then, go back to your Flask app directory and run your Flask app again:</p>
+<pre><code>cd ~/lab-gpio/flask-gpio
+sudo python3 flask-led.py</code></pre>
+<p>Open the page in your browser again. Click on the buttons and make sure your LED turns on and off as expected.</p>
+<hr />
+<p><strong>Lab report</strong>: Upload your modified <code>virtualhat.py</code>.</p>
+<hr />
+<h2 id="graceful-shutdown">Graceful shutdown</h2>
+<p>Finally, disconnect the Pi from the breadboard, and shut it down with</p>
+<pre><code>sudo shutdown now</code></pre>
+<p>Wait until the disk activity LED stops flashing completely before you disconnect the Pi from the power supply.</p>
+</body>
+</html>
