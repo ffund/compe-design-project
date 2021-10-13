@@ -66,7 +66,7 @@ does not maintain its state; it is *actuated* only while you are actively pressi
 
 The buttons we will use today are normally open buttons, with four pins. The four pins are arranged as shown below:
 
-![Four-terminal push button switch](images/push-button-four-pin.pdf){ width=200px}
+![Four-terminal push button switch](images/push-button-four-pin.svg){ width=200px}
 
 Pin 1 is always connected to pin 2, and pin 3 is always connected to pin 4. The switch is open and there is no current flow between the first pair of pins (1-2) and the second pair of pins (3-4), _unless_ the button is being pressed. When the button is pressed, all of the pins are electrically connected and current can flow freely between them.
 
@@ -331,7 +331,7 @@ If necessary, rotate the push button and test again until you get the continuity
 
 Now, you're ready to connect your Pi to your breadboard circuit.
 
-![Pi configuration with the push button input (Use BCM pin 17).](images/pi-button_bb.pdf)
+![Pi configuration with the push button input (Use BCM pin 17).](images/pi-button_bb.svg){ width=300px }
 
 Connect your Pi to your circuit as in the diagram:
 
@@ -341,6 +341,76 @@ Connect your Pi to your circuit as in the diagram:
 
 \newpage
 
+
+### Observe button press events with Piscope
+
+We're going to use Piscope to observe button press events as they appear on the input pin. You can follow along with [this demo video](https://stream.nyu.edu/media/Using+the+piscope+logic+analyzer/1_x3v7mxs6) as you work on this section.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_x3v7mxs6&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_a0oeu9ak" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
+
+Piscope is a GUI application, so you'll need to open a VNC connection to your Pi. Then, from the application menu on the Pi (within VNC), open a terminal.
+
+
+To run `piscope` you need to have the `pigpiod` _daemon_ (process that runs continuously 
+in the background) running. In the terminal, run
+
+```
+sudo pigpiod
+```
+
+to start the background process. You'll need this to be running any time you 
+want to run `piscope`, so if you restart the Pi you'll have to start `pigpiod` again.
+
+
+**Note**: if you accidentally run `sudo pigpiod` when the daemon is _already_ running, 
+you'll see a message:
+
+```
+2020-10-04 22:31:26 initInitialise: Can't lock /var/run/pigpio.pid
+Can't initialise pigpio library
+```
+
+This means that `pigpiod` is already running.
+
+
+Once `pigpiod` is running, run
+
+```
+piscope
+```
+
+(you can ignore non-fatal errors that appear in your terminal). A new window should open up. Move your mouse over the icons in the menu bar, to see the mouse-over text indicating their functionality. Use the menu to view real-time GPIO status and to pause and restart the view. 
+
+
+![Piscope interface](images/piscope.png)
+
+In your SSH terminal, run 
+
+
+```
+python3 gpio-input-3.py
+```
+
+
+again, and press the button a few times. Use the buttons in the Piscope menu to find your button press event, and zoom in so that you can clearly see the rising and falling edge on the line.
+
+Then, carefully disconnect the Pi from the breadboard circuit.
+
+---
+
+**Lab report**: Include a screenshot of the button press event in `piscope`. Annotate the screenshot by drawing a circle or a box around the part where the button is pressed.
+
+---
+
+
+### Observe button press events with the Analog Discovery 2
+
+You can follow along with [this video](https://stream.nyu.edu/media/Using+the+Analog+Discovery+2+scope/1_s6ea7u42) as you work on this section.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_s6ea7u42&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_u851l0uc" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
+
+
+\newpage
 ### Use `gpio` to read input
 
 In a terminal on your Pi, run
@@ -424,7 +494,7 @@ Run the Python script with
 python3 gpio-input-1.py
 ```
 
-This script will read the value of the input pin every second, in an infinite loop, until you press \keys{Ctrl+C}. Try pressing the button while this script is running, and observe the output. Then, stop the script with \keys{Ctrl+C}.
+This script will read the value of the input pin every second, in an infinite loop, until you press `Ctrl`+`C`. Try pressing the button while this script is running, and observe the output. Then, stop the script with `Ctrl`+`C`.
 
 This script uses *polling* - it keeps on checking the value of the pin. If we just want to be notified when the button is pressed, it's more effecient to use an *interrupt* approach instead. This will notify us when the button is pressed, but won't keep using the CPU to check the value of the pin.
 
@@ -526,61 +596,6 @@ Hint: In Python, if you want to modify a global variable inside a function, decl
 
 \newpage
 
-### Observe button press events with Piscope
-
-Next, we're going to use Piscope to observe the button press events. Piscope is a GUI application, so you'll need to open a VNC connection to your Pi. Then, from the application menu on the Pi (within VNC), open a terminal.
-
-
-To run `piscope` you need to have the `pigpiod` _daemon_ (process that runs continuously 
-in the background) running. In the terminal, run
-
-```
-sudo pigpiod
-```
-
-to start the background process. You'll need this to be running any time you 
-want to run `piscope`, so if you restart the Pi you'll have to start `pigpiod` again.
-
-
-**Note**: if you accidentally run `sudo pigpiod` when the daemon is _already_ running, 
-you'll see a message:
-
-```
-2020-10-04 22:31:26 initInitialise: Can't lock /var/run/pigpio.pid
-Can't initialise pigpio library
-```
-
-This means that `pigpiod` is already running.
-
-
-Once `pigpiod` is running, run
-
-```
-piscope
-```
-
-(you can ignore non-fatal errors that appear in your terminal). A new window should open up. Move your mouse over the icons in the menu bar, to see the mouse-over text indicating their functionality. Use the menu to view real-time GPIO status and to pause and restart the view. 
-
-
-![Piscope interface](images/piscope.png)
-
-In your SSH terminal, run 
-
-
-```
-python3 gpio-input-3.py
-```
-
-
-again, and press the button a few times. Use the buttons in the Piscope menu to find your button press event, and zoom in so that you can clearly see the rising and falling edge on the line.
-
-Then, carefully disconnect the Pi from the breadboard circuit.
-
----
-
-**Lab report**: Include a screenshot of the button press event in `piscope`. Annotate the screenshot by drawing a circle or a box around the part where the button is pressed.
-
----
 
 
 \newpage
@@ -603,19 +618,65 @@ Place your LED and resistor on a breadboard:
 * the (+) long end of the LED and one end of the 470Ω resistor in another row, 
 * the second end of the 470Ω resistor in another row.
 
-![Breadboard configuration for LED with current limiting resistor](images/breadboard-led_bb.pdf)
+![Breadboard configuration for LED with current limiting resistor](images/breadboard-led_bb.svg){ width=300px }
+
+### Measuring current and voltage with a multimeter
+
+Before we connect this circuit to a GPIO pin on the Pi, let's first measure the voltage drop across the LED and the current through it, using a multimeter.
+
+You can follow along with [this video](https://stream.nyu.edu/media/Measuring+current+and+voltage+with+a+multimeter/1_9zkk3yrb) while you work on this section.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_9zkk3yrb&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_w8mj3uio" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
+
+Connect the Pi to the breadboard circuit so that the LED is *on*:
+
+
+* Use a M-F jumper cable to connect any **GND** pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)
+* Use a M-F jumper cable to connect any **3.3V** pin on the Pi, to the "free" end of the current-limiting resistor.
+
+You should see the LED turn on, and stay on.
+
+First, measure the voltage drop across the LED:
+
+* Connect the probes to the appropriate ports on the multimeter for measuring *voltage*.
+* Set the dial on the multimeter to the appropriate setting for measuring *voltage*.
+* Touch one multimeter probe to the negative leg of the LED, and touch the second multimeter probe to the positive leg of the LED.
+* Observe the measurement on the display.
+
+Then, turn the multimeter dial back to the **off** setting.
+
+Next, measure the current through the LED:
+
+* Connect the probes to the appropriate ports on the multimeter for measuring *current*.
+* Set the dial on the multimeter to the appropriate setting for measuring *current*.
+* Break your circuit - for example, you can disconnect one leg of the current limiting resistor.
+* Insert your multimeter probes into the part of the circuit that you disconnected, completing the circuit with the multimeter in series.
+* Observe the measurement on the display.
+
+Then, turn the multimeter dial back to the **off** setting.
+
+
+
+### Measuring voltage with the Analog Discovery 2
+
+The Analog Discovery 2 can also be used to measure voltage at any point in the circuit, using its voltmeter tool.
+
+You can follow along with [this video](https://stream.nyu.edu/media/Using+the+voltmeter+on+the+Analog+Discovery+2/1_sn7wyb91) as you work on this section.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_sn7wyb91&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_xu8h97gf" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
 ### Connect your Raspberry Pi
 
 
-Now, you're ready to connect your Pi to your breadboard circuit.
+Now, you're ready to connect your Pi's GPIO pin to your breadboard circuit.
 
-![Using GPIO output to blink an LED with Raspberry Pi](images/pi-led_bb.pdf)
+![Using GPIO output to blink an LED with Raspberry Pi](images/pi-led_bb.svg){ width=300px }
+
 
 Connect your Raspberry Pi or Pi Zero to your circuit:
 
 * Use a M-F jumper cable to connect any **GND** pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)
-* Use a M-F jumper cable to connect the **BCM 17** pin on the Pi, to the resistor.
+* Disconnect the cable that previously connected the "free" end of the current-limiting resistor to the **3.3V** pin on the Pi. Instead, connect the "free" end of the current-limiting resistor to the **BCM 17** pin on the Pi.
 
 ### Use `gpio` for output
 
@@ -686,7 +747,7 @@ except KeyboardInterrupt:
 ```
 
 
-This script uses the RPi.GPIO library, sets the pin to output mode, then toggles between HIGH and LOW output every half second. It also includes logic to turn off the LED and exit gracefully in case of a keyboard interrupt (i.e. if \keys{Ctrl+C} is pressed). 
+This script uses the RPi.GPIO library, sets the pin to output mode, then toggles between HIGH and LOW output every half second. It also includes logic to turn off the LED and exit gracefully in case of a keyboard interrupt (i.e. if `Ctrl`+`C` is pressed). 
 
 Save the file and quit `nano`, then run
 
@@ -698,7 +759,7 @@ to run your code. Observe as the LED turns on, then off.
 
 Use `piscope` to view GPIO pin status in real time. Observe the line for BCM pin 17; can you see it toggle on and off?
 
-Then, use \keys{Ctrl+C} in the terminal window where your `pi-gpio-out.py` program is running, to stop it. 
+Then, use `Ctrl`+`C` in the terminal window where your `pi-gpio-out.py` program is running, to stop it. 
 
 ---
 
@@ -786,7 +847,7 @@ Run your Flask app with
 sudo python3 flask-led.py
 ```
 
-Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with \keys{Ctrl+C}.
+Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with `Ctrl`+`C`.
 
 The Flask app calls functions from the `virtualhat` library to turn the "virtual" LED on and off. Your task is to *modify* the `virtualhat` library so that your Flask app will *actually* turn the LED on and off. (You won't modify the HTML or Python source code of the Flask app.)
 
