@@ -122,7 +122,7 @@ For this lab, you'll use the Digilent Analog Discovery 2 measurement instrument,
 You can download and install Digilent Waveforms from [the Digilent website](https://mautic.digilentinc.com/waveforms-download), if you don't mind sharing your information with them and letting them send you email. Or if you prefer, I have prepared some direct download links for you instead:
 
 * [Windows 64 bit installer](https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe) and [video of install process](https://www.youtube.com/watch?v=Sz0nDa8TVYw&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=3&ab_channel=Digilent%2CInc.)
-* [Mac installer](https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe) and [video of install process](https://www.youtube.com/watch?v=4-O6-vTMIHg&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=4&ab_channel=Digilent%2CInc.)
+* [Mac installer](https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3.dmg) and [video of install process](https://www.youtube.com/watch?v=4-O6-vTMIHg&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=4&ab_channel=Digilent%2CInc.)
 
 
 ### Install software on Pi
