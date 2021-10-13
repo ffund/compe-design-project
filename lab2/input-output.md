@@ -36,7 +36,7 @@ Find these parts, and set them aside until you need them:
 * Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH
 * Breadboard and jumper cables
 * One 470 Ω resistor and one 10k Ω resistor 
-* 5mm LED with 3.0V forward voltage
+* 5mm LED with 2.5-3.0V forward voltage
 * Four-terminal push button switch
 
 
@@ -321,7 +321,7 @@ If necessary, rotate the push button and test again until you get the continuity
 
 **Lab report** (**Individual work**): Draw a schematic of a circuit for the push button switch, but with a pull-up resistor instead of a pull-down resistor. Also answer the following questions about the circuit with the pull-up resistor:
 
-* What is the reading at the input pin when the switch is open? What is the reading at the input pin when the switch is closed?
+* What will be the reading at the input pin when the switch is open? What will be the reading at the input pin when the switch is closed?
 * The current-limiting resistor is intended to protect the board in case of a short circuit. Under what configuration could a short circuit occur? (Switch open or closed? GPIO pin in input mode, output HIGH, or output LOW?)
 
 ---
@@ -382,23 +382,23 @@ piscope
 (you can ignore non-fatal errors that appear in your terminal). A new window should open up. Move your mouse over the icons in the menu bar, to see the mouse-over text indicating their functionality. Use the menu to view real-time GPIO status and to pause and restart the view. 
 
 
-![Piscope interface](images/piscope.png)
+![Piscope interface](images/piscope.png){ width=90% }
 
-In your SSH terminal, run 
+Press the button a few times. Use the buttons in the Piscope menu to find your button press event, and zoom in so that you can clearly see the rising and falling edge on the line.
 
-
-```
-python3 gpio-input-3.py
-```
-
-
-again, and press the button a few times. Use the buttons in the Piscope menu to find your button press event, and zoom in so that you can clearly see the rising and falling edge on the line.
-
-Then, carefully disconnect the Pi from the breadboard circuit.
 
 ---
 
-**Lab report**: Include a screenshot of the button press event in `piscope`. Annotate the screenshot by drawing a circle or a box around the part where the button is pressed.
+**Lab report**: Take a screenshot of the `piscope` window showing one button press + release, and **annotate** it to clearly mark:
+
+* The pin number that the button press was observed on (on the "pin number axis")
+* The rising edge in a button press event
+* The falling edge in the same button press event
+* The duration (in time) for which the button is pressed
+* The setting you would use to start and stop measuring
+* The setting you would use to adjust the horizontal (time axis) zoom
+* The setting you would use to move the display *back* on the time axis
+* The setting you would use to move the display *forward* on the time axis
 
 ---
 
@@ -409,8 +409,34 @@ You can follow along with [this video](https://stream.nyu.edu/media/Using+the+An
 
 <div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_s6ea7u42&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_u851l0uc" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
+Connect your Analog Discovery 2 to your circuit as follows:
+
+* Put any GND pin on the Analog Discovery 2 (marked with a down arrow) into the breadboard row that is connected to GND on the Pi. (You'll always connect the GND pin on the Discovery 2 to the GND in the external circuit you want to measure, so that they have a **common ground**.)
+* Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row that is connected to the Pi's GPIO input pin. Connect the 1- pin to the breadboard row that is at GND.
+* Open the Waveforms application on your laptop. From the Welcome screen, click on the Scope button.
+* Set the Mode setting to Shift or Screen.
+* Press the Run button to start measuring the voltage. 
+* Adjust the horizontal and vertical zoom settings so that you can see button press events as you actuate the switch.
+* Press the Stop button to stop measuring.
+
+
+---
+
+**Lab report**: Take a screenshot of the Scope window showing one button press + release, and **annotate** it to clearly mark:
+
+* The rising edge in a button press event
+* The falling edge in the same button press event
+* The duration (in time) for which the button is pressed
+* The voltage level when the button is not pressed
+* The voltage level when the button is pressed
+* The setting you would use to start and stop measuring
+* The setting you would use to adjust the horizontal (time axis) zoom
+* The setting you would use to adjust the vertical (voltage axis) zoom
+
+---
 
 \newpage
+
 ### Use `gpio` to read input
 
 In a terminal on your Pi, run
@@ -588,15 +614,21 @@ and test it by pressing the button. Notice that in this case, the script can do 
 
 ---
 
-**Lab report**: Modify the `gpio-input-3.py` script to count the number of times a rising edge is detected (i.e. the number of button presses), and print this number each time the button is pressed. Test your modified script. Upload your modified code and a screenshot showing the output when your run this code in the terminal (and press the button a few times).
+**Lab report**: Modify the `gpio-input-3.py` script to count the number of times a rising edge is detected (i.e. the number of button presses), and print this number each time the button is pressed. Test your modified script. Upload
+
+* your modified code and 
+* a screenshot showing the output when your run this code in the terminal (and press the button a few times).
 
 Hint: In Python, if you want to modify a global variable inside a function, declare the variable as `global` inside the function before you use it.
 
+Note: your code should be "clean" and well-organized, in addition to being *correct*.
+
 ---
 
-\newpage
 
+### Disconnect your circuit
 
+Carefully disconnect your Pi from the push button circuit.
 
 \newpage
 
@@ -607,7 +639,7 @@ Hint: In Python, if you want to modify a global variable inside a function, decl
 You will need:
 
 * One breadboard
-* One 5mm LED with approximately 3.0V forward voltage
+* One 5mm LED with approximately 2.5-3.0V forward voltage
 * One 470 Ω resistor (current-limiting resistor)
 * Jumper cables
 
@@ -628,7 +660,7 @@ You can follow along with [this video](https://stream.nyu.edu/media/Measuring+cu
 
 <div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_9zkk3yrb&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_w8mj3uio" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
-Connect the Pi to the breadboard circuit so that the LED is *on*:
+Connect the Pi to the breadboard circuit so that the LED is *always on*:
 
 
 * Use a M-F jumper cable to connect any **GND** pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)
@@ -638,23 +670,28 @@ You should see the LED turn on, and stay on.
 
 First, measure the voltage drop across the LED:
 
-* Connect the probes to the appropriate ports on the multimeter for measuring *voltage*.
-* Set the dial on the multimeter to the appropriate setting for measuring *voltage*.
-* Touch one multimeter probe to the negative leg of the LED, and touch the second multimeter probe to the positive leg of the LED.
+* Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for measuring *voltage*. 
+* Set the dial on the multimeter to the setting for measuring *voltage*.
+* Touch the black multimeter probe to the negative leg of the LED, and touch the red multimeter probe to the positive leg of the LED.
 * Observe the measurement on the display.
 
-Then, turn the multimeter dial back to the **off** setting.
+Then, remove the probes and turn the multimeter dial back to the **off** setting.
 
 Next, measure the current through the LED:
 
-* Connect the probes to the appropriate ports on the multimeter for measuring *current*.
-* Set the dial on the multimeter to the appropriate setting for measuring *current*.
+* Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for measuring *current*. 
+* Set the dial on the multimeter to the setting for measuring *current*.
 * Break your circuit - for example, you can disconnect one leg of the current limiting resistor.
 * Insert your multimeter probes into the part of the circuit that you disconnected, completing the circuit with the multimeter in series.
 * Observe the measurement on the display.
 
-Then, turn the multimeter dial back to the **off** setting.
+Then, remove the probes and turn the multimeter dial back to the **off** setting. Re-connect the LED circuit (without the multimeter) so that the LED is **on**.
 
+---
+
+**Lab report**: What was the voltage drop across the LED when the LED was on? What was the current through the LED in this circuit? Show how you would compute the *expected* current range based on the nominal LED FV (2.5-3.0V) - is your measured current similar?
+
+---
 
 
 ### Measuring voltage with the Analog Discovery 2
@@ -665,10 +702,29 @@ You can follow along with [this video](https://stream.nyu.edu/media/Using+the+vo
 
 <div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_sn7wyb91&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_xu8h97gf" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
+Connect your Analog Discovery 2 to your circuit as follows:
+
+* Put any GND pin on the Analog Discovery 2 (marked with a down arrow) into the breadboard row that is connected to GND on the Pi. (You'll always connect the GND pin on the Discovery 2 to the GND in the external circuit you want to measure, so that they have a **common ground**.)
+* Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row with the positive leg of the LED, and connect the 1- pin to the breadboard row with the negative leg of the LED.
+* Open the Waveforms application on your laptop. From the Welcome screen, click on the Voltmeter button.
+* Press the Run button to start measuring the voltage. (If you press the same button, now labeled Stop, again, it will stop measuring. There is also a "Single" button that will acquire a single measurement and then stop.)
+* Observe the DC voltage measurement on Channel 1. (Three values are calculated automatically: DC, True RMS, AC RMS. We are measuring a DC voltage, so we will ignore the other values.)
+
+---
+
+**Lab report**: Take a screenshot showing the Analog Discovery 2 Voltmeter display while measuring the voltage drop across the LED. Circle the value that shows the measured voltage drop. Also:
+
+* show which control you would use to start and stop measuring
+* show where you would find the measured value for Channel 2 inputs, if you were using Channel 2
+
+---
+
 ### Connect your Raspberry Pi
 
 
 Now, you're ready to connect your Pi's GPIO pin to your breadboard circuit.
+
+First, disconnect the cable that previously connected the "free" end of the current-limiting resistor to the **3.3V** pin on the Pi. 
 
 ![Using GPIO output to blink an LED with Raspberry Pi](images/pi-led_bb.svg){ width=300px }
 
@@ -676,7 +732,7 @@ Now, you're ready to connect your Pi's GPIO pin to your breadboard circuit.
 Connect your Raspberry Pi or Pi Zero to your circuit:
 
 * Use a M-F jumper cable to connect any **GND** pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)
-* Disconnect the cable that previously connected the "free" end of the current-limiting resistor to the **3.3V** pin on the Pi. Instead, connect the "free" end of the current-limiting resistor to the **BCM 17** pin on the Pi.
+* Use a M-F jumper cable to connect the "free" end of the current-limiting resistor to the **BCM 17** pin on the Pi.
 
 ### Use `gpio` for output
 
@@ -763,11 +819,15 @@ Then, use `Ctrl`+`C` in the terminal window where your `pi-gpio-out.py` program 
 
 ---
 
-**Lab report**: Include a screenshot of your `piscope` output, showing BCM pin 17 toggling between HIGH and LOW.
+**Lab report**: Include a screenshot of your `piscope` output, showing BCM pin 17 toggling between HIGH and LOW. Annotate it to show
 
-**Lab report** (Individual work): Suppose we would run this experiment with a 10kΩ current-limiting resistor instead. How much current would be sourced from the GPIO pin when the output is HIGH? (Show your work.)
-
-**Lab report** (Individual work): Suppose GPIO17 was not available, and we had to use another pin for the `gpio-out.py` program. Refer to the Pi pinout diagram and identify an alternative pin that would be suitabe for this application. Give its BCM, WiringPi, and physical pin number.
+* The pin number that the output signal is observed on (on the "pin number axis")
+* The duration (in time) for which the LED is on, for one instance of the LED turning on
+* The duration (in time) for which the LED is off, for one instance of the LED being off
+* The setting you would use to start and stop measuring
+* The setting you would use to adjust the horizontal (time axis) zoom
+* The setting you would use to move the display *back* on the time axis
+* The setting you would use to move the display *forward* on the time axis
 
 ---
 
@@ -776,7 +836,7 @@ Then, use `Ctrl`+`C` in the terminal window where your `pi-gpio-out.py` program 
 
 ### Flask UI for LED circuit
 
-Finally, we'll set up a browser-based UI for the LED circuit using Flask.
+One of the major advantages of using a single board computer is that it runs a full operating system, with existing libraries and software. In this section, you will learn how to use that to create a browser-based interface through which users can interact with a Pi-based product. 
 
 Create a new directory called `flask-gpio` in your `lab-gpio` directory, then navigate to it:
 
@@ -785,19 +845,34 @@ mkdir ~/lab-gpio/flask-gpio
 cd ~/lab-gpio/flask-gpio
 ```
 
-We'll use the `virtualhat` library again - download and install it (for Python 2 and Python 3) with
+We'll use a `virtualhat` library as "scaffolding". The VirtualHat library includes the following "dummy" functions:
+
+* `setup()` initializes all of the peripherals and sensors in the VirtualHat
+* `led_on()` turns on a virtual LED
+* `led_off()` turns off a virtual LED
+* `read_light_level()` reads the current light level from a virtual sensor
+
+In the current implementation, these functions don't actually do anything - you'll have to actually implement the interactions with the hardware.
+
+Download and install the library with
 
 ```
 git clone https://github.com/ffund/virtualhat
 cd virtualhat
-sudo python2 setup.py install
 sudo python3 setup.py install
 cd ~/lab-gpio/flask-gpio
 ```
 
-\newpage
+Read and then try running the `demo.py` file included with the library to see how these are used. To run the `demo.py` file, use
 
+```
+python3 demo.py
+```
 
+The `virtualhat` library is responsible for the low-level interactions with the hardware. Now, we'll create a couple of files that will be responsible for the visual user interface:
+
+* The HTML file is responsible for the layout and appearance of the interface
+* The Python file is responsible for the behavior of the interface
 
 Create an `index.html` file with the following contents:
 
@@ -816,7 +891,32 @@ Create an `index.html` file with the following contents:
    </body>
 </html>
 ```
+
 Then, create a file `flask-led.py` with the following contents:
+
+
+```
+from flask import Flask
+
+app = Flask(__name__, static_folder='')
+
+@app.route("/")
+def hello():
+    return app.send_static_file('index.html')
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
+
+```
+
+In this code, we did some basic "Flask" housekeeping:
+
+* imported the `Flask` class from the `flask` library
+* created an instance of the `Flask` class, calling it `app`
+* set up a "route" that will be triggered when the user visits `/`, which is the root of the app; this is the route that is triggered when the user visits the home page of a site. We will run the function `hello()` when the route is triggered; this function just sends the static web page called "index.html" to the user. 
+* set up the Flask app to run when this file is called as a Python script (not when it is imported as a library). 
+
+Now, modify this file to integrate the LED functionality:
 
 ```
 from flask import Flask, redirect
@@ -841,13 +941,38 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
 ```
 
+
+In this update,
+
+* we imported our `virtualhat` library, and made sure that its `setup()` function will run before we interact with the virtual LED or light sensor. 
+* we added another route which will be triggered any time the user clicks on the buttons we added above, which will navigate to `/led/0` or `/led/1`. This route calls a `function blink_led()`, which, depending on whether `/led/0` or `/led/1` was visited, will call the `virtualhat` library function to turn the LED on or off. 
+* finally, we use a `redirect()` (which we imported from the `flask` library) to redirect the user back to the home page at `/` after turning the LED on or off.
+
 Run your Flask app with
 
 ```
 sudo python3 flask-led.py
 ```
 
-Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with `Ctrl`+`C`.
+
+You should see some output similar to the following;
+
+```
+ * Serving Flask app "flask-led-app" (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 237-595-907
+```
+
+Copy and paste the Pi's address into the address bar of a browser, then hit Enter to load the site. You should see the following page:
+
+
+Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. then hit Enter to load the site. When the page loads, you can press `Ctrl` + `C` in your Pi terminal to stop Flask.
 
 The Flask app calls functions from the `virtualhat` library to turn the "virtual" LED on and off. Your task is to *modify* the `virtualhat` library so that your Flask app will *actually* turn the LED on and off. (You won't modify the HTML or Python source code of the Flask app.)
 
@@ -875,7 +1000,6 @@ You will need to modify this file so that:
 To test your modifications, install the modified library with
 
 ```
-sudo python2 setup.py install
 sudo python3 setup.py install
 ```
 
@@ -897,7 +1021,7 @@ Open the page in your browser again. Click on the buttons and make sure your LED
 
 ---
 
-**Lab report**: Upload your modified `virtualhat.py`.
+**Lab report**: Upload your modified `virtualhat.py`. Note: your code should be "clean" and organized, in addition to being correct.
 
 ---
 
