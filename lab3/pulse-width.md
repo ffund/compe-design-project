@@ -11,6 +11,8 @@ In this lab exercise, we'll practice using pulse width:
 and we will also practice debugging circuits that use pulse width.
 
 
+\newpage 
+
 ## Notes
 
 * In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn't be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.
@@ -20,7 +22,6 @@ and we will also practice debugging circuits that use pulse width.
 * For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner's data, code, screenshots, or photos.
 * For any question in the lab report that is marked "Individual work", you should *not* collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.
 
-\newpage
 
 ## Parts
 
@@ -255,6 +256,7 @@ When we are finished with the hardware PWM, we can set the pin mode back to inpu
 gpio -g mode 13 in
 ```
 
+\newpage
 
 ### Use Software PWM in Python
 
@@ -319,7 +321,7 @@ to see the overall CPU usage (in a bar graph near the top) and a list of the pro
 
 Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by `htop`) as you increase the frequency? Take a screenshot for your lab report. (Make sure to give it a moment to "settle" after opening `htop`!)
 
-Now, open `piscope` again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Do you notice that the high-frequency signal is less "clean"?
+Now, open `piscope` again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the `piscope` display showing about 10-20 cycles of PWM pulses. Do you notice that the high-frequency signal is less "clean"?
 
 
 When you are finished with this section, exit `piscope` using the X in the top right corner, and *then* close your VNC session. (In a later section, when we measure CPU usage, we want `piscope` to *not* be running so that we can more accurately measure the CPU usage of other processes.)
@@ -396,7 +398,7 @@ and note the state of BCM pin 13 - it should now be in alternate functionality m
 Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ.  Use `htop` again to check the CPU usage for each frequency (make sure to give it a moment to "settle" after opening `htop`!). However, since the `pigpio` library also uses the `pigpiod` daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both `python` and `pigpiod` while your Python script is running.
 
 
-Now, open `piscope` again. For each frequency you considered, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Is the high-frequency signal also less "clean" in the hardware PWM case?
+Now, open `piscope` again. For each frequency you considered, take a screenshot of the `piscope` display showing about 10-20 cycles of PWM pulses. Is the high-frequency signal also less "clean" in the hardware PWM case?
 
 ---
 
@@ -409,6 +411,8 @@ Now, open `piscope` again. For each frequency you considered, take a screenshot 
 **Lab report**: For the hardware PWM script: is the PWM signal still generated on the output line when the script finishes running?
 
 ---
+
+\newpage
 
 
 ### PWM signal to control RGB LED
@@ -429,17 +433,19 @@ The RGB LED is a common cathode 10mm LED with a diffused bulb, and forward volta
 
 Use the following diagram to carefully identify the pins on your RGB LED. The longest pin is the common cathode (negative LED terminal for all three colors), and from there, you can identify the other pins (one positive LED terminal for each color):
 
-![Pins on the RGB LED.)](images/rgb-led.jpg){ width=400px }
+![Pins on the RGB LED.)](images/rgb-led.jpg){ width=250px }
 
 
 Configure the LED and current-limiting resistors in the breadboard, as shown in the diagram.
 
-![Breadboard diagram for RGB LED](images/breadboard-rgb_bb.svg){ width=550px }
+![Breadboard diagram for RGB LED](images/breadboard-rgb_bb.svg){ width=450px }
 
+
+\newpage 
 
 Next, connect your Raspberry Pi to the RGB LED:
 
-![Connection diagram for RGB LED connection to the Pi.](images/pi-rgb_bb.svg){ width=550px }
+![Connection diagram for RGB LED connection to the Pi.](images/pi-rgb_bb.svg){ width=450px }
 
 * Connect **GND** to the common cathode pin. Use a brown or black wire for the GND connection (if you have one), to make it easier to "read" your breadboard circuit.
 * Connect the red pin to **BCM 18** (through the series resistor). Use a red wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
@@ -465,6 +471,8 @@ and in this file, write Python code to make the RGB LED gradually change its col
 **Lab report**: Show your `pwm-rgb.py` script. Also upload a short (less than 30 seconds) video of your LED while the script is running.
 
 ---
+
+\newpage
 
 ### PWM signal to control servo motor
 
@@ -560,9 +568,11 @@ Repeat this procedure, but:
 Prepare your circuit using the small orange ceramic capacitor (which has capacitance in the range 10-100nF) and 1kΩ fixed resistors, following this schematic:
 
 
-![Schematic for analog input using capacitor discharge timing.](images/schematic-rc.svg){ width=500px }
+![Schematic for analog input using capacitor discharge timing.](images/schematic-rc.svg){ width=300px }
 
 You can use any two available GPIO pins on your Pi *except* GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.
+
+\newpage
 
 
 ### Prepare your Analog Discovery 2 scope view
@@ -658,7 +668,7 @@ Repeat this procedure, but with different fixed resistors (try 470Ω and then 10
 **Lab report**: Show one screenshot of the Scope display (for the circuit with 1kΩ resistors and ceramic capacitor) under ambient light conditions, bright light conditions, and dark conditions. Annotate each screenshot to mark:
 
 * the time when you start to charge the capacitor
-* the time when the voltage across the capacitor is high enough that the GPIO input pin registers it as HIGH
+* the time when the voltage across the capacitor is enough for the GPIO input pin to read it as HIGH
 * the time when you start to dischange the capacitor
 
 Make sure each screenshot is clearly labeled!

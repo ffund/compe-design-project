@@ -235,7 +235,7 @@ time.sleep(60)</code></pre>
 <pre><code>htop</code></pre>
 <p>to see the overall CPU usage (in a bar graph near the top) and a list of the processes using CPU - look for the Python process and the <code>pigpiod</code> processes, in particular. How much CPU (expressed as a percent) is used overall, and how much by the Python process? Take a screenshot for your lab report. (Make sure the screenshot reflects a “typical” value and not an extreme but transient value.) Use <code>q</code> to quit the <code>htop</code> process when you are finished.</p>
 <p>Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by <code>htop</code>) as you increase the frequency? Take a screenshot for your lab report. (Make sure to give it a moment to “settle” after opening <code>htop</code>!)</p>
-<p>Now, open <code>piscope</code> again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the <code>piscope</code> display showing about ten cycles of PWM pulses. Do you notice that the high-frequency signal is less “clean”?</p>
+<p>Now, open <code>piscope</code> again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the <code>piscope</code> display showing about 10-20 cycles of PWM pulses. Do you notice that the high-frequency signal is less “clean”?</p>
 <p>When you are finished with this section, exit <code>piscope</code> using the X in the top right corner, and <em>then</em> close your VNC session. (In a later section, when we measure CPU usage, we want <code>piscope</code> to <em>not</em> be running so that we can more accurately measure the CPU usage of other processes.)</p>
 <hr />
 <p><strong>Lab report</strong>: As you increase the frequency of a software PWM signal, the CPU usage increases. Use screenshots of <code>htop</code> output to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
@@ -270,7 +270,7 @@ sudo pigpiod</code></pre>
 <pre><code>gpio readall</code></pre>
 <p>and note the state of BCM pin 13 - it should now be in alternate functionality mode.</p>
 <p>Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ. Use <code>htop</code> again to check the CPU usage for each frequency (make sure to give it a moment to “settle” after opening <code>htop</code>!). However, since the <code>pigpio</code> library also uses the <code>pigpiod</code> daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both <code>python</code> and <code>pigpiod</code> while your Python script is running.</p>
-<p>Now, open <code>piscope</code> again. For each frequency you considered, take a screenshot of the <code>piscope</code> display showing about ten cycles of PWM pulses. Is the high-frequency signal also less “clean” in the hardware PWM case?</p>
+<p>Now, open <code>piscope</code> again. For each frequency you considered, take a screenshot of the <code>piscope</code> display showing about 10-20 cycles of PWM pulses. Is the high-frequency signal also less “clean” in the hardware PWM case?</p>
 <hr />
 <p><strong>Lab report</strong>: As you increase the frequency of a hardware PWM signal, the CPU usage is not affected. Use screenshots of <code>htop</code> output to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
 <p><strong>Lab report</strong>: As you increase the frequency of a hardware PWM signal, the PWM peripheral is still able to produce a “clean” output signal despite the tighter time constraints. Use screenshots of the <code>piscope</code> window to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
@@ -284,15 +284,15 @@ sudo pigpiod</code></pre>
 <p>The RGB LED is a common cathode 10mm LED with a diffused bulb, and forward voltage of around 2.0V on the red pin and 3.0V on the blue and green pins.</p>
 <p>Use the following diagram to carefully identify the pins on your RGB LED. The longest pin is the common cathode (negative LED terminal for all three colors), and from there, you can identify the other pins (one positive LED terminal for each color):</p>
 <figure>
-<img src="images/rgb-led.jpg" width="400" alt="Pins on the RGB LED.)" /><figcaption aria-hidden="true">Pins on the RGB LED.)</figcaption>
+<img src="images/rgb-led.jpg" width="250" alt="Pins on the RGB LED.)" /><figcaption aria-hidden="true">Pins on the RGB LED.)</figcaption>
 </figure>
 <p>Configure the LED and current-limiting resistors in the breadboard, as shown in the diagram.</p>
 <figure>
-<img src="images/breadboard-rgb_bb.svg" width="550" alt="Breadboard diagram for RGB LED" /><figcaption aria-hidden="true">Breadboard diagram for RGB LED</figcaption>
+<img src="images/breadboard-rgb_bb.svg" width="450" alt="Breadboard diagram for RGB LED" /><figcaption aria-hidden="true">Breadboard diagram for RGB LED</figcaption>
 </figure>
 <p>Next, connect your Raspberry Pi to the RGB LED:</p>
 <figure>
-<img src="images/pi-rgb_bb.svg" width="550" alt="Connection diagram for RGB LED connection to the Pi." /><figcaption aria-hidden="true">Connection diagram for RGB LED connection to the Pi.</figcaption>
+<img src="images/pi-rgb_bb.svg" width="450" alt="Connection diagram for RGB LED connection to the Pi." /><figcaption aria-hidden="true">Connection diagram for RGB LED connection to the Pi.</figcaption>
 </figure>
 <ul>
 <li>Connect <strong>GND</strong> to the common cathode pin. Use a brown or black wire for the GND connection (if you have one), to make it easier to “read” your breadboard circuit.</li>
@@ -370,7 +370,7 @@ gpio -g pwm 13 15 # 1.5ms out of 20ms</code></pre>
 <h3 id="prepare-your-circuit-and-connect-your-pi">Prepare your circuit and connect your Pi</h3>
 <p>Prepare your circuit using the small orange ceramic capacitor (which has capacitance in the range 10-100nF) and 1kΩ fixed resistors, following this schematic:</p>
 <figure>
-<img src="images/schematic-rc.svg" width="500" alt="Schematic for analog input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for analog input using capacitor discharge timing.</figcaption>
+<img src="images/schematic-rc.svg" width="300" alt="Schematic for analog input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for analog input using capacitor discharge timing.</figcaption>
 </figure>
 <p>You can use any two available GPIO pins on your Pi <em>except</em> GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.</p>
 <h3 id="prepare-your-analog-discovery-2-scope-view">Prepare your Analog Discovery 2 scope view</h3>
@@ -441,7 +441,7 @@ except KeyboardInterrupt:
 <p><strong>Lab report</strong>: Show one screenshot of the Scope display (for the circuit with 1kΩ resistors and ceramic capacitor) under ambient light conditions, bright light conditions, and dark conditions. Annotate each screenshot to mark:</p>
 <ul>
 <li>the time when you start to charge the capacitor</li>
-<li>the time when the voltage across the capacitor is high enough that the GPIO input pin registers it as HIGH</li>
+<li>the time when the voltage across the capacitor is enough for the GPIO input pin to read it as HIGH</li>
 <li>the time when you start to dischange the capacitor</li>
 </ul>
 <p>Make sure each screenshot is clearly labeled!</p>
