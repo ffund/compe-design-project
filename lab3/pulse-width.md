@@ -1,16 +1,23 @@
-# Pulse width
+---
+title: Pulse width
+---
 
-In this lab, we'll practice using pulse width:
+
+In this lab exercise, we'll practice using pulse width:
 
 * in an output signal, to control the average output voltage
 * in an input signal, to read a resistive sensor using an RC circuit 
 
+and we will also practice debugging circuits that use pulse width.
+
+
 ## Notes
 
 * In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn't be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.
+* You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.) 
 * Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.
-* Although you may work with a partner, this collaboration is limited to discussion. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner. (You *are* encouraged to collaborate by screen-sharing or showing video of your circuit to debug and discuss problems together.)
-* For your lab report, you must submit data, code, and screenshots from your own experiment. You are not allowed to use your lab partner's data, code, or screenshots.
+* Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner. 
+* For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner's data, code, screenshots, or photos.
 * For any question in the lab report that is marked "Individual work", you should *not* collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.
 
 \newpage
@@ -18,18 +25,19 @@ In this lab, we'll practice using pulse width:
 ## Parts
 
 
-Find these parts in your kit, and set them aside until you need them:
+Find these parts, and set them aside until you need them:
 
-* Digital multimeter.
 * Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH.
 * Breadboard and jumper cables
-* Assorted resistors (in a plastic bag)
+* Digital multimeter
+* Analog Discovery 2
 * 10mm RGB LED
-* Two push button switches, with red, green, or blue colored covers. You have four of these switches with colored covers in your kit - choose two that are red, green, or blue.
+* Three 470Ω resistors and three 220Ω resistors
 * Micro servo motor
 * Photoresistor
-
-Note that you'll need these parts again, including small parts like cables and resistors, so carefully return everything to their bags when you're finished.
+* One capacitor in the range 1-10μF
+* One capacitor in the range 10-100nF
+* Two 1kΩ resistors and two 10kΩ resistors
 
 
 ### RGB LED
@@ -78,26 +86,15 @@ The datasheet for a photoresistor will typically include the following key detai
 
 \newpage
 
+## Preparation
 
-## Prepare a directory
+### Prepare a directory
 
 On your Pi, create a new directory in which you'll save all the code you use in this lab:
 
 ```
 mkdir ~/lab-pulse-width
 ```
-
-
-## Pinout diagrams
-
-This page is provided here for reference. For an interactive pinout diagram, see [https://pinout.xyz](https://pinout.xyz).
-
-![Pinout diagram for Pi and Pi Zero](images/pi-pinout.png)
-
-
-
-\newpage
-
 
 ## Using PWM output
 
@@ -110,51 +107,67 @@ You willl need:
 * Three 470Ω resistors (you may change the resistor values later, but use these to start)
 * Jumper cables
 
-The RGB LED in your kit is a common cathode 10mm LED with a diffused bulb, and forward voltage of around 2.0V on the red pin and 3.0V on the blue and green pins.
-
-Use the following diagram to identify the pins on your RGB LED. The longest pin is the common cathode, and from there, you can identify the other pins:
-
-![Pins on the RGB LED.)](images/rgb-led.jpg){ width=35% }
 
 
-Configure the LED and current-limiting resistors in the breadboard, as shown in the diagram.
+### Use `gpio` utility to configure PWM 
 
-![Breadboard diagram for RGB LED](images/breadboard-rgb_bb.pdf)
+First, we'll practice using the `gpio` utility to configure hardware PWM. 
 
-
-\newpage
-
-### Connect your Raspberry Pi - RGB LED
-
-Next, connect your Raspberry Pi to the RGB LED:
-
-![Connection diagram for RGB LED connection to the Pi.](images/pi-rgb_bb.pdf)
-
-* Connect **GND** to the common cathode pin. Use a brown or black wire for the GND connection (if you have one), to make it easier to "read" your breadboard circuit.
-* Connect the red pin to **BCM 18** (PWM0) (through the series resistor). Use a red wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
-* Connect the green pin to **BCM 12** (PWM0) (through the series resistor). Use a green wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
-* Connect the blue pin to **BCM 13** (PWM1) (through the series resistor). Use a blue wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
-
-(Note: you will soon add more parts to this circuit. You may find it convenient to keep the RGB LED near the top of your breadboard, so that you have plenty of space to add things later.)
-
-Test your circuit by configuring the three GPIO pins to output mode. Then, write HIGH or LOW values to turn the RGB LED red, then green, then blue.
-
-
-### Use `gpio` utility to configure PWM for RGB LED
-
-First, we'll practice using the `gpio` utility to configure PWM. In this exercise, we'll only use the red part of the RGB LED.
-
-Open a terminal, and set BCM 13 to PWM mode:
+Open a terminal, and set BCM 13 to hardware PWM mode:
 
 ```
 gpio -g mode 13 pwm
 ```
 
-(Using the `-g` flag allows us to use BCM pin numbering instead of WiringPi numbering.)
+(Using the `-g` flag specifies BCM pin numbering.)
 
-Run `gpio readall` and inspect the output. Verify that the pin used for PWM is now in an "alternate" mode. Take a screenshot for your lab report.
+When you configure a pin to be in hardware PWM mode, the `gpio readall` output will reflect that it is neither in input mode, nor output mode - it will be in "alternate" functionality mode. This is a good way to check your current pin settings! 
 
-Next, we will set up the PWM units. The frequency of the PWM output will be: 19.2MHz/(PWM Clock)/(PWM Range). To set the frequency to 50Hz (PWM cycle is 20ms), we will run:
+Run `gpio readall` and verify that the pin used for PWM is now in an "alternate" mode. Take a screenshot for your lab report.
+
+---
+
+**Lab report**: Show the `gpio readall` output when BCM pin 13 is configured in PWM mode. Annotate your screenshot - circle the part that indicates the mode of BCM pin 13.
+
+
+<!---
+
+   +-----+-----+---------+------+---+-Pi ZeroW-+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ |     |     |    3.3v |      |   |  1 || 2  |   |      | 5v      |     |     |
+ |   2 |   8 |   SDA.1 |   IN | 1 |  3 || 4  |   |      | 5v      |     |     |
+ |   3 |   9 |   SCL.1 |   IN | 1 |  5 || 6  |   |      | 0v      |     |     |
+ |   4 |   7 | GPIO. 7 |   IN | 1 |  7 || 8  | 0 | IN   | TxD     | 15  | 14  |
+ |     |     |      0v |      |   |  9 || 10 | 1 | IN   | RxD     | 16  | 15  |
+ |  17 |   0 | GPIO. 0 |   IN | 0 | 11 || 12 | 0 | IN   | GPIO. 1 | 1   | 18  |
+ |  27 |   2 | GPIO. 2 |   IN | 0 | 13 || 14 |   |      | 0v      |     |     |
+ |  22 |   3 | GPIO. 3 |   IN | 0 | 15 || 16 | 0 | IN   | GPIO. 4 | 4   | 23  |
+ |     |     |    3.3v |      |   | 17 || 18 | 0 | IN   | GPIO. 5 | 5   | 24  |
+ |  10 |  12 |    MOSI |   IN | 0 | 19 || 20 |   |      | 0v      |     |     |
+ |   9 |  13 |    MISO |   IN | 0 | 21 || 22 | 0 | IN   | GPIO. 6 | 6   | 25  |
+ |  11 |  14 |    SCLK |   IN | 0 | 23 || 24 | 1 | IN   | CE0     | 10  | 8   |
+ |     |     |      0v |      |   | 25 || 26 | 1 | IN   | CE1     | 11  | 7   |
+ |   0 |  30 |   SDA.0 |   IN | 1 | 27 || 28 | 1 | IN   | SCL.0   | 31  | 1   |
+ |   5 |  21 | GPIO.21 |   IN | 1 | 29 || 30 |   |      | 0v      |     |     |
+ |   6 |  22 | GPIO.22 |   IN | 1 | 31 || 32 | 0 | IN   | GPIO.26 | 26  | 12  |
+ |  13 |  23 | GPIO.23 | ALT0 | 0 | 33 || 34 |   |      | 0v      |     |     |
+ |  19 |  24 | GPIO.24 |   IN | 0 | 35 || 36 | 0 | IN   | GPIO.27 | 27  | 16  |
+ |  26 |  25 | GPIO.25 |   IN | 0 | 37 || 38 | 0 | IN   | GPIO.28 | 28  | 20  |
+ |     |     |      0v |      |   | 39 || 40 | 0 | IN   | GPIO.29 | 29  | 21  |
+ +-----+-----+---------+------+---+----++----+---+------+---------+-----+-----+
+ | BCM | wPi |   Name  | Mode | V | Physical | V | Mode | Name    | wPi | BCM |
+ +-----+-----+---------+------+---+-Pi ZeroW-+---+------+---------+-----+-----+
+
+---> 
+
+---
+
+### Configure PWM and observe PWM signal in `piscope`
+
+Next, we will set up the PWM clock. The frequency of the PWM output will be: 19.2MHz/(PWM Clock)/(PWM Range). (The range of allowed values for PWM clock is 0-4096.)
+
+To set the PWM frequency to 50Hz (PWM cycle is 20ms), run:
 
 ```
 gpio pwm-ms   
@@ -162,53 +175,98 @@ gpio pwmc 1920  # Set the PWM clock to 1920
 gpio pwmr 200   # Set the "range" to 200 
 ```
 
-Finally, we can set the duty cycle. We set the duty cycle by indicating how many units of time (out of `pwmr` units) the output should be set to HIGH.
+Finally, we can set the duty cycle and start the PWM signal. We set the duty cycle by indicating how many units of time (out of `pwmr` units) the output should be set to HIGH.
 
-To set PWM1 (on BCM pin 13) to 50% duty cycle, we can run:
+To set PWM1 (on BCM pin 13) to 50% duty cycle (100 out of 200), we can run:
 
 ```
 gpio -g pwm 13 100
 ```
 
-Run `piscope` to see the PWM output:
 
-* Open a VNC conenction to your Pi
+The best way to debug PWM signals is to look at them, so let's do that now! Run `piscope` to see the PWM output:
+
+* Open a VNC connection to your Pi
 * In the terminal in the VNC session, run `sudo pigpiod`
 * In the terminal in the VNC session, run `piscope`
-
-Try setting a 10% duty cycle and a 90% duty cycle. Zoom in on the `piscope` output so that you can accurately measure the timing on each pin, and take a screenshot for your lab report. 
-
-Also try increasing the frequency (decreasing the period) of the PWM signal.  Zoom in on the `piscope` output so that you can accurately measure the timing on each pin, and take a screenshot for your lab report. Make a note of the PWM parameters: PWM clock, PWM range, and PWM duty cycle.
-
-When you are finished, reset the PWM pin to input mode, and verify with `gpio readall`:
-
-```
-gpio -g mode 13 input
-```
+* Find the PWM line on BCM pin 13
 
 
----
+Zoom in on the `piscope` output so that you can accurately measure the timing on each pin, and take a screenshot for your lab report. Annotate the screenshot to show how you would measure the PWM parameters: period, duty cycle, and pulse width.
+
+Also, try setting
+
+* a 10% duty cycle with 20ms period 
+* a 90% duty cycle with 20ms period
+* a 50% duty cycle with 2ms period
+
+and for each, take a `piscope` screenshot. Annotate each screenshot to show the period, duty cycle, and pulse width.
 
 
-**Lab report**: Include the `gpio readall` output in your lab report. Annotate the screenshot; circle the pins in "alternate" mode.
-
-**Lab report**: Show a screenshot of the `piscope` output with the PWM output set to a 10% duty cycle. Annotate the diagram to show: 
-
-* a complete PWM cycle on the pin. How long does it last (in units of time)?
-* the duration for which the pin is set to HIGH
-* the duration for which the pin is set to LOW
-
-**Lab report**: Show a screenshot of the `piscope` output with a higher frequency (smaller period) PWM signal. Annotate the diagram to show a complete PWM cycle, the duration for which the pin is set to HIGH, and the duration for which the pin is set to LOW.
-
-Also show the commands you ran to configure this signal, and explain how to compute the PWM period and duty cycle using the PWM clock and range that you selected. 
+When you are finished with this section, exit `piscope` using the X in the top right corner, and *then* close your VNC session. (In a later section, when we measure CPU usage, we want `piscope` to *not* be running so that we can more accurately measure the CPU usage of other processes.)
 
 ---
 
-\newpage
+**Lab report**: Show a screenshot of the `piscope` display, annotated to show how you measure the period, duty cycle, and pulse width, in each case:
 
-### Use Python with software PWM
+* 50% duty cycle with 20ms period
+* 10% duty cycle with 20ms period 
+* 90% duty cycle with 20ms period
+* 50% duty cycle with 2ms period
 
-Next, we'll practice using software PWM. With software PWM, we configure the pin as a regular GPIO output, but toggle it high and low to create a PWM signal.
+<!--
+
+
+50% duty cycle with 20ms period:
+
+gpio -g mode 13 pwm
+gpio pwm-ms   
+gpio pwmc 1920  
+gpio pwmr 200   
+gpio -g pwm 13 100
+
+10% duty cycle with 20ms period:
+
+gpio -g pwm 13 20
+
+90% duty cycle with 20ms period:
+
+gpio -g pwm 13 180
+
+
+50% duty cycle with 2ms period:
+
+gpio -g mode 13 pwm
+gpio pwm-ms   
+gpio pwmc 1920  
+gpio pwmr 20   
+gpio -g pwm 13 10
+
+
+--> 
+
+---
+
+### Set pin mode back to input
+
+When we are finished with the hardware PWM, we can set the pin mode back to input (its default state):
+
+```
+gpio -g mode 13 in
+```
+
+
+### Use Software PWM in Python
+
+Next, we
+
+Next, we'll practice using PWM in Python. We'll try two "types" of PWM:
+
+* Software PWM, which uses the pin in output mode and requires the CPU to toggle it on and off at the desired times
+* Hardware PWM, which uses the PWM peripheral built in to the Raspberry Pi (but only on supported pins)
+
+
+With software PWM, we configure the pin as a regular GPIO output, but toggle it high and low to create a PWM signal.
 
 
 Create a new file inside the `lab-pulse-width` directory:
@@ -218,38 +276,22 @@ cd ~/lab-pulse-width
 nano pwm-soft.py
 ```
 
-Put the following code in this file:
+Put the following code in this file. This code will start a software PWM signal on BCM pin 13, with a 50 Hz frequency and a 50% duty cycle:
 
 ```
 import RPi.GPIO as GPIO
 import time
-import sys
 
 GPIO.setmode(GPIO.BCM)
 
-GPIO.setup(18, GPIO.OUT)
-pwm_red = GPIO.PWM(18, 50)
-pwm_red.start(50)
-
-GPIO.setup(12, GPIO.OUT)
-pwm_green = GPIO.PWM(12, 50)
-pwm_green.start(50)
-
 GPIO.setup(13, GPIO.OUT)
-pwm_blue = GPIO.PWM(13, 50)
-pwm_blue.start(50)
+# first arg is pin number, second is frequency in Hz
+pwm_out = GPIO.PWM(13, 50)
+# argument is duty cycle, out of 100 parts
+pwm_out.start(50)
 
-try:
-  while True:
-    time.sleep(10)
-
-except KeyboardInterrupt:
-  pwm_red.stop()
-  pwm_green.stop()
-  pwm_blue.stop()
-  GPIO.cleanup()
-  sys.exit()
-
+# observe output for 60 seconds
+time.sleep(60)
 ```
 
 Run it with
@@ -258,39 +300,52 @@ Run it with
 python3 pwm-soft.py
 ```
 
-and observe the output in `piscope`. Change the duty cycle on each pin, and observe the difference in the LED color. You may want to adjust the resistor values so that the color is close to white when all three LEDs have the same duty cycle - just make sure the resistance is at least 220Ω on each anode.
-
-The RPi.GPIO library uses **software PWM** - i.e. rapidly toggling GPIO outputs on and off to create a PWM-like signal. While this enables us to use any GPIO pin for PWM output, it also uses a lot of CPU. Run
+While your `pwm-soft.py` script is running, open a second terminal window on the Pi and run
 
 ```
-top
+gpio readall
 ```
 
-to see a list of the processes using CPU, and look for the Python process. How much CPU (expressed as a percent) is it using? (Use \keys{q} to quit the `top` process.) You may also notice visible flickering with the software PWM, since the signal is not very "clean" - observe the PWM signal in `piscope` to verify.
+and note the state of BCM pin 13 - it should now be in output mode, rather than alternate functionality mode.
 
-Modify the Python script to increase the PWM frequency. What do you observe (in terms of CPU usage as measured by `top` and the PWM signal as seen in `piscope`) as you increase the PWM frequency?
+The RPi.GPIO library used **software PWM** - i.e. rapidly toggling GPIO outputs on and off to create a PWM signal. While this enables us to use *any* GPIO pin for PWM output, it also uses a lot of CPU. Run
+
+```
+htop
+```
+
+to see the overall CPU usage (in a bar graph near the top) and a list of the processes using CPU - look for the Python process and the `pigpiod` processes, in particular. How much CPU (expressed as a percent) is used overall, and how much by the Python process? Take a screenshot for your lab report. (Make sure the screenshot reflects a "typical" value and not an extreme but transient value.) Use `q` to quit the `htop` process when you are finished.
+
+
+Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by `htop`) as you increase the frequency? Take a screenshot for your lab report.  
+
+Now, open `piscope` again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Do you notice that the high-frequency signal is less "clean"?
+
+
+When you are finished with this section, exit `piscope` using the X in the top right corner, and *then* close your VNC session. (In a later section, when we measure CPU usage, we want `piscope` to *not* be running so that we can more accurately measure the CPU usage of other processes.)
+
 
 ---
 
-**Lab report**: As you increase the frequency of a software PWM signal, its performance starts to degrade. Use screenshots of `top` output and `piscope` to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from).
+**Lab report**: As you increase the frequency of a software PWM signal, the CPU usage increases. Use screenshots of `htop` output to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.
 
-Describe your observations (with specific reference to the screenshots), and explain.
+**Lab report**: As you increase the frequency of a software PWM signal, the CPU is no longer able to satisfy the specific timing requests as precisely, and so the PWM output becomes more "messy". Use screenshots of the `piscope` window to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.
 
+**Lab report**: Show the `gpio readall` output while the software PWM script is running. What mode is BCM pin 13 in?
+
+**Lab report**: For the software PWM script: is the PWM signal still generated on the output line when the script finishes running?
 
 ---
 
-### Use Python with hardware PWM
+### Use Hardware PWM in Python
 
 Alternatively, we can use the `pigpio` library in Python to configure hardware PWM on the Pi.
-
-However, we only have two hardware PWM pins.
 
 Create a new file:
 
 ```
 cd ~/lab-pulse-width
 nano pwm-hard.py
-
 ```
 
 with the following contents: 
@@ -298,14 +353,14 @@ with the following contents:
 ```
 import pigpio
 import time
-import sys
+
 pi = pigpio.pi()
 # first arg is pin number,
 # second arg is frequency in Hz,
 # third arg is number of ON units out of 1000000
-pi.hardware_PWM(13, 50, 500000) # blue
-pi.hardware_PWM(12, 50, 500000) # green
-pi.hardware_PWM(18, 50, 500000) # red
+pi.hardware_PWM(13, 50, 500000) 
+
+time.sleep(60)
 ```
 
 
@@ -329,73 +384,91 @@ sudo killall pigpiod
 sudo pigpiod
 ```
 
-Try to change the duty cycle on the PWM pins. Are you able to set three *different* duty cycles on the three PWM pins?
+While your `pwm-hard.py` script is running, open a second terminal window on the Pi and run
 
-Change the frequency of the PWM signal, to the same values you tested in the previous section. Run `piscope` again, and observe the output on the PWM lines. 
+```
+gpio readall
+```
 
-Also use `top` to check the CPU usage. However, since the `pigpio` library, also uses the `pigpiod` daemon, to check CPU usage with hardware PWM you should:
+and note the state of BCM pin 13 - it should now be in alternate functionality mode.
 
-* stop `piscope`, since it also uses `pigpiod`
-* look at the CPU usage of both `python` and `pigpiod` while your Python script is running.
+
+Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ.  Use `htop` again to check the CPU usage for each frequency. However, since the `pigpio` library also uses the `pigpiod` daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both `python` and `pigpiod` while your Python script is running.
+
+
+Now, open `piscope` again. For each frequency you considered, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Is the high-frequency signal also less "clean" in the hardware PWM case?
 
 ---
 
-**Lab report**: Are you able to set three *different* duty cycles on the three PWM pins with hardware PWM - for example, set an 80% duty cycle on the blue pin, a 40% duty cycle on the red pin, and a 10% duty cycle on the green pin at the same time? Show the `piscope` output when you try to configure this, and explain.
+**Lab report**: As you increase the frequency of a hardware PWM signal, the CPU usage is not affected. Use screenshots of `htop` output to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.
 
-**Lab report**: Compare the performance of hardware PWM and software PWM as you increase the PWM frequency. Use output of `piscope` and `top` to support your answer. (Make sure you capture `top` output when `piscope` is *not* running!) Explain your observations.
+**Lab report**: As you increase the frequency of a hardware PWM signal, the PWM peripheral is still able to produce a "clean" output signal despite the tighter time constraints. Use screenshots of the `piscope` window to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.
+
+**Lab report**: Show the `gpio readall` output while the hardware PWM script is running. What mode is BCM pin 13 in?
+
+**Lab report**: For the hardware PWM script: is the PWM signal still generated on the output line when the script finishes running?
 
 ---
 
-### Use push buttons to set LED color
 
-In a previous lab, you learned how to read in the state of a push button switch. Now, you'll build on that knowledge. You are going to construct a circuit in which you change the color of the LED using two push button switches.
-
-First, add the two colored push button switches to your breadboard (but don't connect them to your Pi yet!). As in the previous lab,
-
-* use the connectivity mode on your multimeter to identify which pins on the switch are always connected internally, so that you can place the switch correctly in your circuit.
-* use a 10kΩ pull-down or a pull-up resistor to make sure that the input is not floating when the button is not pressed.
-* use a 470Ω or 1kΩ current-limiting resistor to protect your Pi from a short circuit, in case the GPIO pin is configured in output mode.
-
-If you're not sure about your circuit, you can ask for help and an instructor or TA will help you check it. Make sure everything is correct *before* you connect the push-button switches to the supply voltage or to the Pi's GPIO pins.
-
-Then, carefully connect the push-button switches to your Pi.
-
-On your RGB LED, you will use only the two colors that match your buttons (red and green, red and blue, or green and blue). Disconnect the other color. Make sure your two colors are connected to two *independent* hardware PWM outputs.
+### PWM signal to control RGB LED
 
 
-Next, create a new Python script inside the `~/lab-pulse-width` directory:
+Set the pin mode back to input (its default state):
+
+
+```
+gpio -g mode 13 in
+```
+
+
+Now that we understand how to configure a PWM output, we can use it to set the color of an RGB LED.
+
+
+The RGB LED is a common cathode 10mm LED with a diffused bulb, and forward voltage of around 2.0V on the red pin and 3.0V on the blue and green pins.
+
+Use the following diagram to carefully identify the pins on your RGB LED. The longest pin is the common cathode (negative LED terminal for all three colors), and from there, you can identify the other pins (one positive LED terminal for each color):
+
+![Pins on the RGB LED.)](images/rgb-led.jpg){ width=400px }
+
+
+Configure the LED and current-limiting resistors in the breadboard, as shown in the diagram.
+
+![Breadboard diagram for RGB LED](images/breadboard-rgb_bb.svg){ width=550px }
+
+
+Next, connect your Raspberry Pi to the RGB LED:
+
+![Connection diagram for RGB LED connection to the Pi.](images/pi-rgb_bb.svg){ width=550px }
+
+* Connect **GND** to the common cathode pin. Use a brown or black wire for the GND connection (if you have one), to make it easier to "read" your breadboard circuit.
+* Connect the red pin to **BCM 18** (through the series resistor). Use a red wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
+* Connect the green pin to **BCM 12** (through the series resistor). Use a green wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
+* Connect the blue pin to **BCM 13** (through the series resistor). Use a blue wire for this connection (if you have one), to make it easier to "read" your breadboard circuit.
+
+Test your circuit by configuring the three GPIO pins to output mode. Then, write HIGH or LOW values to turn the RGB LED red, then green, then blue in turn.
+
+
+
+Create a new file:
 
 ```
 cd ~/lab-pulse-width
-nano led-button.py
+nano pwm-rgb.py
 ```
 
-Use the code you have seen in this lab and the code you have seen in the previous lab to write a Python script that will:
+and in this file, write Python code to make the RGB LED gradually change its color from red, to purple, to blue, to purple, and back to red. Make sure the transition appears smooth!
 
-* Noticeably increase the intensity of the LED color each time you press the push button with the matching color.
-* Minimize CPU usage (and make the LED color smoother and the button more responsive) by using an interrupt-drive callback function to read the button press, and by using the hardware PWM on the Pi to set the LED color.
-* Keep your code organized, by using variables to set pin numbers, and defining all of these variables in one place near the top of your script.
-* Do something reasonable when you press the button after the PWM duty cycle is already at 100%.
-
-Test your Python script with
-
-```
-python3 led-button.py
-``` 
-
-When you are finished, *carefully* disconnect your Pi from your RGB LED circuit.
 
 ---
 
-**Lab report**: Show your `led-button.py` script.
-
-Explain your script. How did you decide how much to increase the duty cycle when the button is pressed? What does your code do when the button is pressed, but the duty cycle for that color is already at 100%? What decisions did you make to keep the code "clean" and to improve performance?
+**Lab report**: Show your `pwm-rgb.py` script. Also upload a short (less than 30 seconds) video of your LED while the script is running.
 
 ---
 
-### Control a servo motor
+### PWM signal to control servo motor
 
-Finally, we'll practice using PWM to control the position of a servo motor.
+Some components use a very specific PWM signal as a control signal. For example, a servo motor is typically controlled by sending a PWM signal with 20ms period, and pulse width between 1-2ms to set the position of the servo. A standard servo can rotate from 0 to 180 degrees (i.e. 90 degrees in each direction). 
 
 First, make sure that pin 13 is turned "off", by setting it to input mode:
 
@@ -407,14 +480,14 @@ Your servo will have come in a small bag with a variety of plastic attachments, 
 
 Then, connect your servo to your Pi. You can connect it directly using jumper cables from the servo to the Pi, without a breadboard. But, be very carefully when connecting or disconnecting these cables so that you do not accidentally create a short circuit! Always disconnect the end that's plugged in to your Pi *first*; only then disconnect the end that's plugged in to the servo.
 
-* The brown wire on your servo should be connected to GND on you Pi.
+* The brown wire on your servo should be connected to GND on your Pi.
 * The red (supply voltage) wire on your servo should be connected to 5V on your Pi. (The servo may move a little when you first connect it.)
 * The orange (control signal) wire on your servo should be connected to BCM 13 (PWM 1) on your Pi. 
 
-Note that even though the servo runs on 5V, the 3.3V signal from your Pi will be sufficient to configure its position.
+Note that even though the servo runs on 5V power, the 3.3V signal from your Pi should be sufficient for the control signal.
 
 
-Then, configure pin 13 in PWM mode, with a 20ms period and 1.5ms pulse width:
+Next, configure pin 13 in PWM mode, with a 20ms period and 1.5ms pulse width:
 
 
 ```
@@ -432,79 +505,83 @@ gpio pwmr 200  # Set the "range" to 200
 gpio -g pwm 13 15 # 1.5ms out of 20ms
 ```
 
-Open `piscope`, and adjust the zoom so that you can see a complete PWM cycle. Use the cursors to measure the pulse width (the top right corner of the `piscope` window should show the position of each cursor, and the distance between them.)
-
 Then, vary the PWM duty cycle so that the pulse width varies from 1ms to 2ms. Observe the position of the servo "horn" as you change the pulse width. 
 
 **Note**: if your servo is buzzing or clicking when you set a pulse width close to either extreme (1 or 2ms), it's struggling to get to a position that it can't quite reach. Don't let it run like this for too long, or you could damage it; set the pulse width to a more moderate value.
 
-Take screenshots of the PWM signal and photographs of the position of the horn for several different pulse widths between 1 and 2ms.
-
----
-
-**Lab report** (individual work): You are designing a password-protected box. You have the following parts available to you:
-
-* Pi 
-* Assorted resistors and wires (same resistor values as in your kit)
-* 4x4 membrane keypad (just like the one in the lecture slides on "Digital input and output using pins". Note: the resistors shown on these slides are not built in to the keypad, they are added as part of the external circuit that connects the keypad to the GPIO pins.)
-* Micro servo motor (just like the one in this lab)
-
-Users will open the box by entering a code into a 4x4 membrane keypad. Entering the correct code should trigger the servo motor to move to a position that allows the box to be opened. Otherwise, the servo should be in a position that does not allow the box to be opened.
-
-Draw a schematic showing how you would connect the membrane keypad and the servo motor to your Pi. Use resistors where required for safe operation, and specify appropriate resistor values. Make sure to label each pin on the keypad, each pin on the servo motor, and each pin that you use on the Pi.
-
-Also draw a diagram showing how you would use the servo motor to control whether the box can be opened. Where would you attach the servo? How would it manipulate the box? Show the position of all parts when the box can be opened, and when the box is locked.
-
-Draw the control signal that you would send to the servo in order to keep the box locked, and draw the control signal that you would send to the servo in order to allow the box to be opened.
-
-Show a photograph of the servo horn from your experiment along with the corresponding signal (`piscope` screenshot) you would send when the box is locked. Annotate the `piscope` screenshot to indicate the pulse width.
-
-Show a photograph of the servo horn from your experiment along with the corresponding signal (`piscope` screenshot) you would send when the box is unlocked. Annotate the `piscope` screenshot to indicate the pulse width.
-
----
 
 \newpage
 
 ## Reading resistive sensor using RC timing circuit 
 
-In this experiment, we will use the discharge time of a capacitor to read values from an analog sensor as a digital pulse width. 
+In this experiment, we will use the discharge time of a capacitor to read values from an *analog* sensor as a *digital* pulse width. 
 
 You will need:
 
 * Pi
 * One capacitor in the range 1-10μF
 * One capacitor in the range 10-100nF
-* Two 1kΩ resistors and two 10kΩ resistors
+* Two 470Ω resistors, two 1kΩ resistors, and two 10kΩ resistors
 * One photoresistor
 
 
-Use the resistance mode on your multimeter to measure the resistance of the photoresistor in three scenarios:
+### Get to know your resistive sensor
 
-* When you cover the resistor (dark mode)
-* When you shine a light on the resistor, e.g. your phone flashlight (light mode)
-* when you do neither (ambient light)
+When working with a resistive sensor, a good starting point is to use a multimeter to understand the range of resistance values you are likely to see.
+
+Configure your multimeter in ohmmeter mode:
+
+* Put the black probe in the common port
+* Put the red probe in the port with the Ω symbol
+* Turn the dial to the setting with the Ω symbol
+
+Then, touch the probes of the multimeter to each end of your photoresistor. It may take a moment for the value to settle; make a note of the resistance. This is the resistance under your current ambient light conditions.
+
+Repeat this procedure, but:
+
+* measure "light mode" resistance - shine a light (e.g. your phone flashlight) on the photoresistor while measuring its resistance
+* measure "dark mode" resistance - cover the photoresistor with your hand while measuring its resistance
+
 
 ---
 
-**Lab report**: Report the resistance of your photoresistor:
+**Lab report**: Report the resistance of your photoresistor (make sure to include units!):
 
-* When you cover the resistor (dark mode)
-* When you shine a light on the resistor, e.g. your phone flashlight (light mode)
-* when you do neither (ambient light)
+* In your current ambient light settings
+* In "light mode"
+* In "dark mode"
 
 ---
+
 
 ### Prepare your circuit and connect your Pi
 
 
-Prepare your circuit using 10kΩ resistors as fixed resistors and the capacitor in the range 1-10μF. You can use any two available GPIO pins on your Pi, just modify the pin number in the code to reflect the GPIO pins you choose.
-
-![Schematic for analog input using capacitor discharge timing.](images/schematic-rc.svg){ width=40% }
+Prepare your circuit using the small orange ceramic capacitor (which has capacitance in the range 10-100nF) and 1kΩ fixed resistors, following this schematic:
 
 
-\newpage
+![Schematic for analog input using capacitor discharge timing.](images/schematic-rc.svg){ width=500px }
 
-### Read light levels using pulse width
+You can use any two available GPIO pins on your Pi *except* GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.
+
+
+### Prepare your Analog Discovery 2 scope view
+
+Connect your Analog Discovery 2 to your computer. We will use this measurement instrument to simultaneously monitor two signals: the analog voltage across the capacitor, and the digital signal at the GPIO pin used to charge the capacitor.
+
+
+Connect the Analog Discovery 2 to your breadboard circuit as follows:
+
+* GND on the Discovery 2 (black wire) to GND on your circuit
+* Analog Channel 1 on the Discovery 2 across the capacitor: 1- (orange and white striped wire) to the GND side of the capacitor, and 1+ (solid orange striped wire) to the positive side of the capacitor
+* DIO 0 (pink wire labeled 0) to the GPIO charge pin.
+
+Then, open the Waveforms application on your computer and click on Scope to open the scope tool. Configure it to monitor these signals:
+
+* First, click on Digital in the Scope window toolbar. The Digital window will open at the bottom of the display.
+* Click the + button on the Digital window to add a digital channel. Choose Signal, then DIO 0 and click Add.
+
+### Procedure for reading light levels using pulse width
 
 To read the ambient light levels from the photoresistor, we will use the following approach:
 
@@ -531,8 +608,11 @@ import sys
 
 # Use BCM pin numbering
 GPIO.setmode(GPIO.BCM)
-GPIO_A = 27
-GPIO_B = 22
+
+# Set these values yourself
+GPIO_A =       # pin number for charging pin
+GPIO_B =       # pin number for discharging pin
+TIMEOUT =      # timeout after which to return, if no rising edge is seen (ms)
 
 try:
   while True:
@@ -547,7 +627,7 @@ try:
     GPIO.setup(GPIO_A, GPIO.OUT)
     start = time.time()
     GPIO.output(GPIO_A, GPIO.HIGH)
-    GPIO.wait_for_edge(GPIO_B, GPIO.RISING, timeout=2000)
+    GPIO.wait_for_edge(GPIO_B, GPIO.RISING, timeout=TIMEOUT)
     end = time.time()
     print("%f seconds, %f us" % (end-start, 1000000*(end-start)))
 
@@ -565,6 +645,17 @@ python3 input-pulse-width.py
 and observe how the time measurement changes as you change the ambient lighting conditions (cover the photoresistor, shine a light on the photoresistor, etc).
 
 Use `piscope` to capture the signal on the GPIO\_A and GPIO\_B lines as you run this script, and zoom in so that your display shows one measurement. Use the cursors (gold and blue vertical lines) in `piscope` to measure the time interval from when GPIO\_A goes HIGH, until GPIO\_B reads HIGH. To measure time using the cursors, click on the part of the signal where you  want to start measuring, then move your mouse to the part where you want to stop. Check the top right corner of the `piscope` GUI to see the time difference between the two points.
+
+TODO: 
+
+When you change the RC constant, you may also need to change the timeout value!
+
+Why is the timeout value important? What would be an appropriate timeout value for each combination:
+
+* small capacitor and 1k resistors
+* small capacitor and 10k resistors
+* large capacitor and 1k resistors
+* large capacitor and 10k resistors
 
 
 ![Use the cursors in `piscope` to measure the time interval from when GPIO\_A goes HIGH, until GPIO\_B reads HIGH (here, 46400μsec.)](images/cursor-adc-capacitor.png)
@@ -611,12 +702,11 @@ mkdir ~/lab-pulse-width/flask-photo
 cd ~/lab-pulse-width/flask-photo
 ```
 
-We'll use the `virtualhat` library again - download and install it (for Python 2 and Python 3) with
+We'll use the `virtualhat` library again - download and install it with
 
 ```
 git clone https://github.com/ffund/virtualhat
 cd virtualhat
-sudo python2 setup.py install
 sudo python3 setup.py install
 cd ~/lab-pulse-width/flask-photo
 ```
@@ -640,7 +730,9 @@ Create an `index.html` file with the following contents:
 </html>
 ```
 
-We'll create a new HTML page that will load when the user presses the "Light level" button. This file will be a template, which means that it contains a variable whose value will be filled in by the Flask app. Create a new directory called templates
+We'll create a new HTML page that will load when the user presses the "Light level" button. This file will be a *template*, which means that it contains a variable whose value will be filled in by the Flask app. 
+
+By default, Flask looks for templates in a `templates` subdirectory (relative to where the Flask app is), so let's make that now:
 
 ```
 mkdir ~/lab-pulse-width/flask-photo/templates
@@ -709,7 +801,7 @@ Run your Flask app with
 sudo python3 flask-light.py
 ```
 
-Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with \keys{Ctrl+C}.
+Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with `Ctrl`+`C`.
 
 
 The Flask app calls functions from the `virtualhat` library to check the "virtual" sensor level. Your task is to *modify* the `virtualhat` library so that your Flask app will *actually* read the sensor value. (You won't modify the HTML or Python source code of the Flask app.)
@@ -737,7 +829,6 @@ You will need to modify this file so that:
 To test your modifications, install the modified library with
 
 ```
-sudo python2 setup.py install
 sudo python3 setup.py install
 ```
 
@@ -749,7 +840,7 @@ cd ~/lab-pulse-width/flask-photo
 sudo python3 flask-light.py
 ```
 
-Open the page in your browser again. Click on the buttons and make sure your LED turns on and off as expected.
+Open the page in your browser again. Read the sensor value several times - try to cover and uncover the light and make sure the readings (on a scale of 0 to 100) are consistent with the actual ambient light levels.
 
 
 ---
