@@ -317,7 +317,7 @@ htop
 to see the overall CPU usage (in a bar graph near the top) and a list of the processes using CPU - look for the Python process and the `pigpiod` processes, in particular. How much CPU (expressed as a percent) is used overall, and how much by the Python process? Take a screenshot for your lab report. (Make sure the screenshot reflects a "typical" value and not an extreme but transient value.) Use `q` to quit the `htop` process when you are finished.
 
 
-Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by `htop`) as you increase the frequency? Take a screenshot for your lab report.  
+Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by `htop`) as you increase the frequency? Take a screenshot for your lab report. (Make sure to give it a moment to "settle" after opening `htop`!)
 
 Now, open `piscope` again. Repeat the procedure above with increasing PWM frequency, and in each case, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Do you notice that the high-frequency signal is less "clean"?
 
@@ -393,7 +393,7 @@ gpio readall
 and note the state of BCM pin 13 - it should now be in alternate functionality mode.
 
 
-Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ.  Use `htop` again to check the CPU usage for each frequency. However, since the `pigpio` library also uses the `pigpiod` daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both `python` and `pigpiod` while your Python script is running.
+Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ.  Use `htop` again to check the CPU usage for each frequency (make sure to give it a moment to "settle" after opening `htop`!). However, since the `pigpio` library also uses the `pigpiod` daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both `python` and `pigpiod` while your Python script is running.
 
 
 Now, open `piscope` again. For each frequency you considered, take a screenshot of the `piscope` display showing about ten cycles of PWM pulses. Is the high-frequency signal also less "clean" in the hardware PWM case?
@@ -581,6 +581,8 @@ Then, open the Waveforms application on your computer and click on Scope to open
 * First, click on Digital in the Scope window toolbar. The Digital window will open at the bottom of the display.
 * Click the + button on the Digital window to add a digital channel. Choose Signal, then DIO 0 and click Add.
 
+You will see the analog signal across the capacitor at the top of the display, and the digital signal from the GPIO pin used to charge the capacitor at the bottom of the display.
+
 ### Procedure for reading light levels using pulse width
 
 To read the ambient light levels from the photoresistor, we will use the following approach:
@@ -610,9 +612,9 @@ import sys
 GPIO.setmode(GPIO.BCM)
 
 # Set these values yourself
-GPIO_A =       # pin number for charging pin
-GPIO_B =       # pin number for discharging pin
-TIMEOUT =      # timeout after which to return, if no rising edge is seen (ms)
+GPIO_A =       # pin number for charging capacitor
+GPIO_B =       # pin number for discharging capacitor
+TIMEOUT =      # timeout (ms) after which to return, if no rising edge
 
 try:
   while True:
@@ -620,7 +622,7 @@ try:
     GPIO.setup(GPIO_A,GPIO.IN)
     GPIO.setup(GPIO_B,GPIO.OUT)
     GPIO.output(GPIO_B, GPIO.LOW)
-    time.sleep(1) # let it discharge allll the way
+    time.sleep(TIMEOUT/1000.0) # let it discharge, time in seconds
 
     # charge through variable resistor
     GPIO.setup(GPIO_B,GPIO.IN)
@@ -636,57 +638,35 @@ except KeyboardInterrupt:
   sys.exit()
 ```
 
-Then, run it with
+Add values for the `GPIO_A`, `GPIO_B`, and `TIMEOUT` variables. For the initial `TIMEOUT` value, use 4xRC of the discharge circuit. (The ceramic capacitor has a small number printed on it; look this up online to find out its capacitance.)
+
+Then, run your script with
 
 ```
 python3 input-pulse-width.py
 ```
 
-and observe how the time measurement changes as you change the ambient lighting conditions (cover the photoresistor, shine a light on the photoresistor, etc).
+Observe how the time measurement printed in the terminal changes as you change the ambient lighting conditions (cover the photoresistor, shine a light on the photoresistor, etc).
 
-Use `piscope` to capture the signal on the GPIO\_A and GPIO\_B lines as you run this script, and zoom in so that your display shows one measurement. Use the cursors (gold and blue vertical lines) in `piscope` to measure the time interval from when GPIO\_A goes HIGH, until GPIO\_B reads HIGH. To measure time using the cursors, click on the part of the signal where you  want to start measuring, then move your mouse to the part where you want to stop. Check the top right corner of the `piscope` GUI to see the time difference between the two points.
+In the Scope window, zoom in so that your display shows one charge and discharge cycle. Take a screenshot for your lab report.
 
-TODO: 
+Repeat this procedure, but with different fixed resistors (try 470Ω and then 10kΩ) and with the larger electrolytic capacitor (be careful about polarity - this capacitor has a positive and negative side)! Record your observations in each case. (You may have to adjust the timeout value in your code.)
 
-When you change the RC constant, you may also need to change the timeout value!
-
-Why is the timeout value important? What would be an appropriate timeout value for each combination:
-
-* small capacitor and 1k resistors
-* small capacitor and 10k resistors
-* large capacitor and 1k resistors
-* large capacitor and 10k resistors
-
-
-![Use the cursors in `piscope` to measure the time interval from when GPIO\_A goes HIGH, until GPIO\_B reads HIGH (here, 46400μsec.)](images/cursor-adc-capacitor.png)
-
-
-For your lab report: 
-
-* Take screenshots of `piscope` with the cursor measurement for the maximum and minimum readings you can get. (Make sure to label your screenshots so that you know what the light conditions were for each!)
-* Test your circuit with 1kΩ fixed resistors for the charge and discharge resistors, and then with 10kΩ fixed resistors.
-* Change the capacitor from one in the range of 1-10μF, to one in the range 10-100nF, and test your circuit again, with both fixed resistor values.
-
-\newpage
 
 ---
 
-**Lab report**: Show one screenshot of the `piscope` output, with the cursors measuring the time interval when GPIO\_A goes HIGH, until GPIO\_B reads HIGH. Annotate the screenshot to mark:
+**Lab report**: Show one screenshot of the Scope display (for the circuit with 1kΩ resistors and ceramic capacitor) under ambient light conditions, bright light conditions, and dark conditions. Annotate each screenshot to mark:
 
 * the time when you start to charge the capacitor
 * the time when the voltage across the capacitor is high enough that the GPIO input pin registers it as HIGH
 * the time when you start to dischange the capacitor
 
-**Lab report**: Show screenshots of the light level reading (in the Python terminal) and the pulse width (in `piscope`) under dark and light conditions. (Make sure to clearly label which screenshot is which.) Explain how you can use the pulse width to measure the light level.
+Make sure each screenshot is clearly labeled!
 
-**Lab report** Show screenshots of the light level reading (in the Python terminal) and the pulse width (in `piscope`) under ambient light conditions, for four different circuits:
+**Lab report** Show screenshots of the light level reading (in the Python terminal) and the pulse width (in the Scope display) under dark and light conditions, for the circuits with different capacitor and resistor combinations. Explain the advantages and disadvantages of a large capacitor/large fixed resistor vs. a small capacitor/small fixed resistor.
 
-* Small capacitor and 1kΩ fixed resistors
-* Small capacitor and 10kΩ fixed resistors
-* Large capacitor and 1kΩ fixed resistors
-* Large capacitor and 10kΩ fixed resistors
+Make sure each screenshot is clearly labeled!
 
-Explain the advantages and disadvantages of a large capacitor/large fixed resistor vs. a small capacitor/small fixed resistor.
 
 ---
 
@@ -823,7 +803,7 @@ All of the library functions are in this file.
 
 You will need to modify this file so that:
 
-* When the `setup()` function is called, your GPIO pins will be configured so as to discharge the capacitor.
+* When the `setup()` function is called, your GPIO pins will be configured.
 * When the `read_light_level()` function is called, you will read the light level from the sensor by measuring the pulse width. Then, you'll discharge the capacitor again. Calibrate your readings to that the `read_light_level()` function returns a value close to 0 when the sensor is covered, and a value close to 100 when you shine a light on it.
 
 To test your modifications, install the modified library with
@@ -847,8 +827,6 @@ Open the page in your browser again. Read the sensor value several times - try t
 
 **Lab report**: Upload your modified `virtualhat.py`. Also show a screenshot of your browser window with the photoresistor covered and with the photoresistor exposed to bright light.
 
-
-**Lab report**: What capacitor and fixed resistor values did you use? Explain the advantages and disadvantages of a large capacitor/large fixed resistor vs. a small capacitor/small fixed resistor, *for this specific application*.
 
 ---
 
