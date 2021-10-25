@@ -1,4 +1,6 @@
-# Parallel communication
+---
+title: Parallel communication
+---
 
 In this lab, we'll learn how to connect external parts to a single board computer using a digital communication bus, specifically: using parallel communication. At the end of this lab, you should be able to:
 
