@@ -374,7 +374,7 @@ cd ~/lab-parallel</code></pre>
 </figure>
 <p>However, nothing will appear on the display (yet) because we haven’t initialized it properly. We’ll do that in the next section!</p>
 <hr />
-<p><strong>Lab report</strong>: Change call to the <code>send_byte</code> function - send the first character of your net ID (in lowercase), instead of the capital <code>N</code>. Take a screenshot of your <code>piscope</code> display showing the byte. Annotate this display as follows:</p>
+<p><strong>Lab report</strong>: Change the call to the <code>send_byte</code> function - send the first character of your net ID (in lowercase), instead of the capital <code>N</code>. Take a screenshot of your <code>piscope</code> display showing the byte. Annotate this screenshot as follows:</p>
 <ul>
 <li>Label each line: E, RS, DB7 (MSB), DB6, DB5, DB4 (LSB)</li>
 <li>Each time E is high, indicate the four-bit nibble that is sent (as e.g. <code>0100</code> and <code>1110</code>)</li>
@@ -452,7 +452,7 @@ cd ~/lab-parallel</code></pre>
 <li>calls <code>lcd_init</code> to initialize the display</li>
 <li>makes several calls to <code>lcd_char</code> to send your net ID (e.g. xx123) to the display</li>
 </ul>
-<p>Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this screenshot, and your final <code>lcd-send.py</code>.</p>
+<p>Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this photo, and your final <code>lcd-send.py</code>. (Note: for full credit, your code should be clean, organized, and well documented.)</p>
 <hr />
 <h2 id="flask-ui-for-the-lcd-display">Flask UI for the LCD display</h2>
 <p>Finally, we’ll develop a browser-based UI to send text and commands to the display. You can follow along with <a href="https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+task+description/1_7p71bmfv">this video</a> as we set up the task.</p>
@@ -603,11 +603,11 @@ sudo python3 flask-lcd.py</code></pre>
 </div>
 </div>
 <hr />
-<p><strong>Lab report</strong> Upload your modified <code>virtualhat.py</code> file. (Note: you shouldn’t have any changes in <code>flask-lcd.py</code>! Use exactly the <code>flask-lcd.py</code> I provided here.)</p>
+<p><strong>Lab report</strong> Upload your modified <code>virtualhat.py</code> file. (Note: you shouldn’t have any changes in <code>flask-lcd.py</code>! Use exactly the <code>flask-lcd.py</code> I provided here.) (For full credit, your code should be clean, organized, and well documented.)</p>
 <p><strong>Lab report</strong>: Show a photograph of your LCD display after you enter the following message in the web form (substitute your own net ID):</p>
-<pre><code>Welcome DP Corp employee (net ID)</code></pre>
+<pre class="text"><code>Welcome DP Corp employee (net ID)</code></pre>
 <p>Also show a photograph of your LCD display after you enter the following message in the web form:</p>
-<pre><code>The quick brown fox jumps over the lazy dog</code></pre>
+<pre class="text"><code>The quick brown fox jumps over the lazy dog</code></pre>
 <hr />
 </body>
 </html>

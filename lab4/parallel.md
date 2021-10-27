@@ -442,7 +442,7 @@ However, nothing will appear on the display (yet) because we haven't initialized
 
 ---
 
-**Lab report**: Change call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` display showing the byte. Annotate this display as follows:
+**Lab report**: Change the call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` display showing the byte. Annotate this screenshot as follows:
 
 * Label each line: E, RS, DB7 (MSB), DB6, DB5, DB4 (LSB)
 * Each time E is high, indicate the four-bit nibble that is sent (as e.g. `0100` and `1110`) 
@@ -544,7 +544,7 @@ To fill in the `lcd_char` function, note that the `ord` function in Python accep
 * calls `lcd_init` to initialize the display
 * makes several calls to `lcd_char` to send your net ID (e.g. xx123) to the display
 
-Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this screenshot, and your final `lcd-send.py`.
+Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this photo, and your final `lcd-send.py`. (Note: for full credit, your code should be clean, organized, and well documented.)
 
 
 ---
@@ -777,18 +777,18 @@ You can refer to the [demo video](https://stream.nyu.edu/media/16x2+LCD+Display+
 
 ---
 
-**Lab report** Upload your modified `virtualhat.py` file.  (Note: you shouldn't have any changes in `flask-lcd.py`! Use exactly the `flask-lcd.py` I provided here.)
+**Lab report** Upload your modified `virtualhat.py` file.  (Note: you shouldn't have any changes in `flask-lcd.py`! Use exactly the `flask-lcd.py` I provided here.) (For full credit, your code should be clean, organized, and well documented.)
 
 **Lab report**: Show a photograph of your LCD display after you enter the following message in the web form (substitute your own net ID):
 
-```
+```text
 Welcome DP Corp employee (net ID)
 ```
 
 Also show a photograph of your LCD display after you enter the following message in the web form:
 
 
-```
+```text
 The quick brown fox jumps over the lazy dog
 ```
 
