@@ -12,6 +12,68 @@
     div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../style/pandoc.css" />
   <!--[if lt IE 9]>
@@ -22,18 +84,19 @@
 <header id="title-block-header">
 <h1 class="title">Parallel communication</h1>
 </header>
-<p>In this lab, we’ll learn how to connect external parts to a single board computer using a digital communication bus, specifically: using parallel communication. At the end of this lab, you should be able to:</p>
+<p>In this lab exercise, we’ll learn how to connect external parts using a parallel communication vus. At the end of this lab, you should be able to:</p>
 <ul>
-<li>Connect a peripheral device or sensor to a Raspberry Pi for parallel communication.</li>
+<li>Connect a peripheral device or sensor to a Raspberry Pi using a parallel communication bus.</li>
 <li>Use a datasheet to identify the registers, and values to write to those registers, to configure and use a peripheral device or sensor.</li>
 <li>Inspect the digital waveform transmitted over a bus, and identify important features (most and least significant bits, start condition, address, clock, etc.)</li>
 </ul>
 <h2 id="notes">Notes</h2>
 <ul>
 <li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
 <li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
-<li>Although you may work with a partner, this collaboration is limited to discussion. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner. (You <em>are</em> encouraged to collaborate by screen-sharing or showing video of your circuit to debug and discuss problems together.)</li>
-<li>For your lab report, you must submit data, code, and screenshots from your own experiment. You are not allowed to use your lab partner’s data, code, or screenshots.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
 <li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
 </ul>
 <h2 id="parts">Parts</h2>
@@ -41,15 +104,14 @@
 <ul>
 <li>Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH.</li>
 <li>Breadboard and jumper cables</li>
-<li>Assorted resistors (in a plastic bag)</li>
+<li>220Ω resistor</li>
 <li>Trimmer potentiometer (with blue plastic knob)</li>
 <li>16x2 character LCD</li>
 </ul>
-<p>Note that you’ll need these parts again, including small parts like cables and resistors, so carefully return everything to their bags when you’re finished.</p>
 <h3 id="trimmer-potentiometer">Trimmer potentiometer</h3>
-<p>A trimpot or trimmer potentiometer is a potentiometer that is used to make adjustments in a circuit. For example, you might use a trimpot to tune the sensitivity of a passive infrared sensor, or to adjust the volume in an audio circuit.</p>
+<p>A trimpot or trimmer potentiometer is a potentiometer that is often used to make adjustments in a circuit. For example, you might use a trimpot to tune the sensitivity of a passive infrared sensor, or to adjust the volume in an audio circuit. Today, we’ll use it to adjust the contrast of an LCD display.</p>
 <figure>
-<img src="images/potentiometer.svg" style="width:30.0%" alt="Potentiomer" /><figcaption aria-hidden="true">Potentiomer</figcaption>
+<img src="images/potentiometer.svg" width="150" alt="Potentiomer" /><figcaption aria-hidden="true">Potentiomer</figcaption>
 </figure>
 <p>The potentiometer has a strip of resistive material connected across the two outer terminals. The total resistance of this material is fixed.</p>
 <p>The middle terminal is connected to a “wiper”, that divides the resistive material into two parts. When you turn the knob, you adjust the position of the wiper, and in turn, how much of the total resistance is between the first pin and middle pin vs. how much is between the middle pin and outer pin.</p>
@@ -74,7 +136,7 @@
 <figure>
 <img src="images/lcd1602.jpg" style="width:80.0%" alt="Disassembled LCD panel and backlight. (Image source)" /><figcaption aria-hidden="true">Disassembled LCD panel and backlight. (<a href="http://www.efton.sk/curious/lcd1602.htm">Image source</a>)</figcaption>
 </figure>
-<p>The backlight is powered by providing power across the positive and negative pins of the LED, which are connected to pins 15 and 16 on the header.</p>
+<p>The backlight is powered across the positive and negative pins of the LED, which are connected to pins 15 and 16 on the header.</p>
 <p>On some boards, a series resistor may be connected between pin 15 and the positive terminal of the backlight LED, to limit current to the LED. For example, in the following image, you can see that there is a PCB trace connecting pin 15 in the header to the resistor labeled R8 (and with a 101 marking on it, indicating 100Ω resistance), and a trace connecting the other end of the resistor to the pin marked “A” - the anode of the backlight LED.</p>
 <figure>
 <img src="images/lcdback.jpg" style="width:80.0%" alt="Image of back of LCD module." /><figcaption aria-hidden="true">Image of back of LCD module.</figcaption>
@@ -89,14 +151,20 @@
 <p>The two ICs are located underneath the black epoxy “blobs” that you can see on the back of the module.</p>
 <p>We mentioned that the “brain” of the module is the control IC. A popular control IC for these modules is the HD44780. You may also see LCD modules as being “HD44780-compatible”, which means that they use the same command set as the HD44780 IC, and the same parallel communication interface. We’ll discuss the HD44780 IC in more detail in the rest of this document.</p>
 <hr />
-<p><strong>Variations on the 16x2 character LCD</strong>: There are a couple of widely available LCD modules that are very similar to the one used in this lab:</p>
+<p><strong>Variations on the 16x2 character LCD</strong>: There are a couple of widely available LCD modules that are very similar to the one we just described:</p>
 <ul>
 <li>20x4 character LCD. This also has 16 pins, but has a larger display area. The 20x4 character LCD can be used as a drop-in replacement for the 16x2 character LCD, although code written for the 16x2 LCD may not make full use of the display area.</li>
-<li>A 16x2 character LCD with an RGB backlight, with 18 pins. These have a common anode RGB LED for the backlight, where the positive voltage is applied to one anode, and the color of the light can be controlled by applying LOW voltage signal to one or more of the cathodes. You can use an RGB-backlit as a drop-in replacement for a regular 16x2 character LCD; just don’t use pin 17 and pin 18.</li>
+<li>A 16x2 character LCD with an RGB backlight, with 18 pins. These have a common anode RGB LED for the backlight, where the positive voltage is applied to one anode, and the color of the light can be controlled by applying LOW voltage signal to one or more of the cathodes. You can use an RGB-backlit as a drop-in replacement for a regular 16x2 character LCD; just don’t use pins 17-18.</li>
 </ul>
 <hr />
 <h2 id="parallel-communication-with-16x2-character-lcd">Parallel communication with 16x2 character LCD</h2>
 <p>In this exercise, we will practice using a parallel communication interface with the 16x2 character LCD.</p>
+<p>You will need to follow along with two datasheets:</p>
+<ul>
+<li>Overall LCD module datasheet(<a href="resources/LCD-SPLC780D1.pdf">LCD-SPLC780D1.pdf</a>)</li>
+<li>SPLC780 driver IC datasheet (<a href="resources/SPLC780.pdf">SPLC780.pdf</a>)</li>
+</ul>
+<p>The most common driver IC for these character LCDs is the HD44780, however, there are many HD44780-compatible ICs that use the same parallel communication bus and have the same instruction set. The SPLC780 driver IC has a much more readable datasheet, so we’ll use that as our reference.</p>
 <h3 id="pinout-of-16x2-character-lcd">Pinout of 16x2 character LCD</h3>
 <p>The standard 16x2 character LCD has 16 pins. Page 5 of the LCD module datasheet has the following table, which lists the pins and their functions:</p>
 <figure>
@@ -124,28 +192,28 @@
 <ul>
 <li>Pin 1 (VSS) and pin 16 (BL- or K) are connected to the ground rail.</li>
 <li>Pin 2 (VDD) is connected to the 5V power rail.</li>
-<li>Pin 16 (BL+/A) is connected to the 5V power rail through a 220Ω series resistor.</li>
+<li>Pin 16 (BL+ or A) is connected to the 5V power rail through a 220Ω series resistor.</li>
 </ul>
 <p>Then, you can connect a GND pin from your Pi to the GND rail, and a 5V pin from your Pi to the 5V power rail. Be careful to avoid accidental short circuits!</p>
 <h3 id="contrast-adjust">Contrast adjust</h3>
 <p>Next, we’ll add the contrast adjust circuit. This circuit is used to control the voltage level to the LCD glass, which determines the contrast between the liquid crystal and the transparent surroundings.</p>
-<p>Page 6 in the LCD module datasheet shows how to connect a variable resistor (a potentiometer) in order to adjust the contrast of the LCD display. (Although the image shows a 20-50kΩ potentiometer, our 10kΩ potentiometer will also work - it will just draw a little more current. Add your potentiometer to the breadboard circuit as shown in the diagram.)</p>
+<p>Page 6 in the LCD module datasheet shows how to connect a variable resistor (a potentiometer) in order to adjust the contrast of the LCD display. (Although the image shows a 20-50kΩ potentiometer, our 10kΩ potentiometer will also work.) Add your potentiometer to the breadboard circuit as shown in the diagram.)</p>
 <figure>
 <img src="images/contrast-adjust-datasheet.svg" style="width:84.0%" alt="Contrast adjust circuit, from page 6 of the datasheet." /><figcaption aria-hidden="true">Contrast adjust circuit, from page 6 of the datasheet.</figcaption>
 </figure>
-<p>The diagram shows the potentiometer connected to the VDD and VSS pins on the LCD module, but it doesn’t have to be directly connected - it just has to be connected to the same supply voltage and GND reference as the LCD module. Turn the knob on the potentiometer to a middle position, to start. Connect the outside pins of the potentiometer to the ground rail and 5V power rail, respectively. (It doesn’t matter which of the two outside pins is at GND and which is at 5V - the trimpot is symmetric.) The middle pin of the potentiometer is connected to LCD pin 3 (V0).</p>
+<p>The diagram shows the potentiometer’s outer pins connected to the same VDD and VSS reference as the LCD display, i.e. the same supply voltage and GND reference. (It doesn’t matter which of the two outside pins is at GND and which is at 5V - the trimpot is symmetric.) The middle pin of the potentiometer is connected to LCD pin 3 (V0).</p>
 <figure>
 <img src="images/parallel-lcd-contrast.svg" style="width:40.0%" alt="16x2 character LCD display - contrast adjust." /><figcaption aria-hidden="true">16x2 character LCD display - contrast adjust.</figcaption>
 </figure>
-<p>Carefully turn the knob on the trimpot until you see a row of white squares appear on your LCD display, as illustrated. You can further adjust the contrast later, after you write some text to the display.</p>
+<p>Carefully turn the knob on the trimpot until you see <em>one</em> row of white squares appear on your LCD display, as illustrated. You can further adjust the contrast later, after you write some text to the display.</p>
 <figure>
-<img src="images/contrast-adjust.jpg" style="width:45.0%" alt="Contrast adjust: a row of white squares will appear on the LCD." /><figcaption aria-hidden="true">Contrast adjust: a row of white squares will appear on the LCD.</figcaption>
+<img src="images/contrast-adjust.png" style="width:90.0%" alt="Contrast adjust: when adjusted properly, a row of white squares will appear on the LCD, as in the example with the green check mark." /><figcaption aria-hidden="true">Contrast adjust: when adjusted properly, a row of white squares will appear on the LCD, as in the example with the green check mark.</figcaption>
 </figure>
 <h3 id="parallel-communication-interface">Parallel communication interface</h3>
 <p>Now, we are ready to connect the Pi to the parallel communication interface on the LCD. We’ll use the Pi as the “controller”, to send commands and data over the parallel communication interface.</p>
 <p>Page 6 of the datasheet shows how the LCD is meant to be connected to the controller (“MCU” is an abbreviation of “microcontroller unit”). Although it shows the remaining pins connected to the controller, we’re not going to connect it like this just yet!</p>
 <figure>
-<img src="images/connection-with-mcu.svg" style="width:70.0%" alt="Connection with MCU, from page 6 of datasheet." /><figcaption aria-hidden="true">Connection with MCU, from page 6 of datasheet.</figcaption>
+<img src="images/connection-with-mcu.svg" style="width:60.0%" alt="Connection with MCU, from page 6 of datasheet." /><figcaption aria-hidden="true">Connection with MCU, from page 6 of datasheet.</figcaption>
 </figure>
 <p>We know that the pins on the Pi are not 5V tolerant - we can’t connect a 5V signal to the GPIO pins. The LCD module is powered at 5V, and any output from the module will also be 5V. To safely connect the Pi, we need to either:</p>
 <ul>
@@ -153,9 +221,7 @@
 <li>make sure that the Pi only <em>writes</em> to the LCD module’s control and data pins and never <em>reads</em> from them. (The Pi can write 3.3V signals to the LCD if a 3.3V signal is enough to register as HIGH at the LCD module, which it usually is.)</li>
 </ul>
 <p>Since we only need to <em>write</em> to the LCD for our application, not <em>read</em> from it, we’ll use the second approach. To make sure that the LCD module only receives from the Pi, we’ll tie the R/W control pin on the LCD module to GND. According to the “Pin functions” table shown earlier, this will keep the LCD module in “write” mode, i.e. the controller outputs to the LCD module but never the reverse.</p>
-<figure>
-<img src="images/parallel-lcd-rw.svg" style="width:40.0%" alt="16x2 character LCD - tie R/W to GND." /><figcaption aria-hidden="true">16x2 character LCD - tie R/W to GND.</figcaption>
-</figure>
+<!-- ![16x2 character LCD - tie R/W to GND.](images/parallel-lcd-rw.svg){width=40%} -->
 <p>On your breadboard circuit, connect the R/W pin to the GND rail. Now, we can safely connect the rest of the parallel communication interface. The remaining control pins, RS and E, should be connected to GPIO pins on the Pi. We’ll use pin 6 and pin 5, respectively.</p>
 <figure>
 <img src="images/parallel-lcd-control.svg" style="width:40.0%" alt="16x2 character LCD - connect control pins." /><figcaption aria-hidden="true">16x2 character LCD - connect control pins.</figcaption>
@@ -163,14 +229,9 @@
 <p>From the “Pin functions” table shown earlier, we know what each of the control pins do:</p>
 <ul>
 <li><strong>RS</strong> is used to select whether we are writing data to be displayed on the LCD (HIGH), or a command/instruction to the control IC (LOW). We will connect this to <strong>GPIO6</strong> on the Pi, and then we’ll configure it as a GPIO output pin so that we can toggle between data and command mode.</li>
-<li><strong>RW</strong> is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can’t read from the device on the Pi or BBB GPIO pins, because its 5V signal would damage the GPIO and the SBC - we will permanently connect this pin to <strong>GND</strong> on our breadboard.</li>
+<li><strong>RW</strong> is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can’t read from the device on the Pi or BBB GPIO pins, because its 5V signal would damage the Pi - we will permanently connect this pin to <strong>GND</strong> on our breadboard.</li>
 <li><strong>E</strong> is an enable signal used whenever we read or write data. We will connect this to <strong>GPIO5</strong> on the Pi, and then we’ll configure it as a GPIO output pin.</li>
 </ul>
-<p>The timing diagram for write operations, on page 7 of the LCD module datasheet, further clarifies the role of these control pins:</p>
-<figure>
-<embed src="images/splc780-write-diagram.pdf" style="width:80.0%" /><figcaption aria-hidden="true">Timing diagram for write operations to the LCD module. (Note: although the datasheet refers to the SPLC780 IC, this IC uses the same instruction set and the same parallel communication interface as the HD44780.)</figcaption>
-</figure>
-<p>We can see that <strong>E</strong> acts as a clock signal, pulsing each time a new bit is transmitted on the data lines.</p>
 <p>Finally, we need to set up the data pins. The module supports two modes of operation:</p>
 <ul>
 <li>8-bit mode, where 8 of the data lines are used. Each byte (8 bits) is sent in parallel, one bit on each of the 8 lines.</li>
@@ -178,9 +239,10 @@
 </ul>
 <p>as explained at the bottom of page 6 in the LCD module datasheet:</p>
 <figure>
-<img src="images/mpu-4bit.svg" style="width:88.0%" alt="4-bit operation, from page 6 of the LCD module datasheet." /><figcaption aria-hidden="true">4-bit operation, from page 6 of the LCD module datasheet.</figcaption>
+<img src="images/mpu-4bit.svg" style="width:80.0%" alt="4-bit operation, from page 6 of the LCD module datasheet." /><figcaption aria-hidden="true">4-bit operation, from page 6 of the LCD module datasheet.</figcaption>
 </figure>
-<p>This further clarifies that for 4-bit mode, we use the four data pins labeled <strong>DB4</strong>, <strong>DB5</strong>, <strong>DB6</strong>, <strong>DB7</strong>. We’ll connect these as follows:</p>
+<p>This further clarifies that for 4-bit mode, we use the four data pins labeled <strong>DB4</strong>, <strong>DB5</strong>, <strong>DB6</strong>, <strong>DB7</strong>.</p>
+<p>We’ll connect these as follows:</p>
 <ul>
 <li><strong>DB4</strong> to <strong>GPIO25</strong></li>
 <li><strong>DB5</strong> to <strong>GPIO24</strong></li>
@@ -189,20 +251,138 @@
 </ul>
 <p>Data lines <strong>DB0</strong>, <strong>DB1</strong>, <strong>DB2</strong>, and <strong>DB3</strong> should be left unconnected. Now our Pi should be connected to the LCD module as shown in the diagram.</p>
 <figure>
-<img src="images/parallel-lcd-complete.svg" alt="16x2 character LCD display - with control and data pins connected to Pi." /><figcaption aria-hidden="true">16x2 character LCD display - with control and data pins connected to Pi.</figcaption>
+<img src="images/parallel-lcd-complete.svg" style="width:40.0%" alt="16x2 character LCD display - with control and data pins connected to Pi." /><figcaption aria-hidden="true">16x2 character LCD display - with control and data pins connected to Pi.</figcaption>
 </figure>
 <h3 id="prepare-source-code-directories-on-your-pi">Prepare source code directories on your Pi</h3>
 <p>Open an SSH session on your Pi, and create a directory for the source code you’ll use in this lab:</p>
 <pre><code>mkdir ~/lab-parallel
 cd ~/lab-parallel</code></pre>
-<h3 id="write-commands-and-characters-to-the-display">Write commands and characters to the display</h3>
-<p>To use the LCD module, we’ll need to send commands and characters to the display:</p>
-<ul>
-<li>Commands affect the operation of the display - for example, should the display be enabled or disabled, should there be a visible cursor or not, where should the next characters be written.</li>
-<li>Characters will appear on the display module.</li>
-</ul>
-<p>To learn about the commands available, we’ll refer to the datasheet heavily. I will use the SPLC780 datasheet - it’s a HD44780-compatible IC, and has a much more readable datasheet.</p>
-<p>Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:</p>
+<h3 id="write-code-to-send-a-byte-over-the-bus">Write code to send a byte over the bus</h3>
+<p>Now, we’re going to write a basic Python script that sends data to the display.</p>
+<p>Create a new file named <code>lcd-send.py</code> and open it for editing:</p>
+<pre><code>nano lcd-send.py</code></pre>
+<p>We’ll build up this script together. First, import some libraries:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="im">import</span> time, sys</span></code></pre></div>
+<p>Then set up your GPIO pin to LCD pin mapping. It’s conventional to define these as constant variables (with all-caps names) near the top of the file.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># GPIO pin to LCD pin mapping</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>LCD_RS <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>LCD_E  <span class="op">=</span> <span class="dv">5</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>LCD_D4 <span class="op">=</span> <span class="dv">22</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>LCD_D5 <span class="op">=</span> <span class="dv">23</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>LCD_D6 <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>LCD_D7 <span class="op">=</span> <span class="dv">25</span></span></code></pre></div>
+<p>You may be wondering why we used the <code>LCD_</code> prefix for each variable name - isn’t it obvious what <code>RS</code> is, even without the <code>LCD_</code> prefix? However, in most projects we will have more than one peripheral connected to the Pi, so it’s helpful to prefix all of the constants and functions related to a particular peripheral, with that peripheral’s name.</p>
+<p>We’ll add more constant variables to this section later. For now, though, we’ll define a few functions. To make it easier to debug, we’ll define them as “dummy” functions (empty functions that don’t do anything), so that we can immediately use them and test their integration in the overall program - then we’ll fill them in gradually.</p>
+<p>Add three “dummy” function definitions and set up the <code>main</code> function:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="co"># Function for sending one byte of data to the display, </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="co"># in either LCD_CMD (command) or LCD_CHR (data character) mode.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co"># Takes care of setting the RS line (HIGH for data, LOW for instructions), </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co"># pulsing the E line, and sending the data one parallel &#39;nibble&#39; at a time. </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="kw">def</span> lcd_byte(bits, mode):</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="co"># Function for initializing the display when it is </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co"># first powered on</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="kw">def</span> lcd_init():</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="co"># Function for sending a single ASCII character to the display</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a><span class="kw">def</span> lcd_char(c):</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co"># This function is executed when the script runs</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a><span class="kw">def</span> main():</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a>    lcd_init()</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a>    lcd_char(<span class="st">&#39;A&#39;</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a>  <span class="cf">try</span>:</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a>    main()</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true"></a>  <span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true"></a>    GPIO.cleanup()</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true"></a>    sys.exit()</span></code></pre></div>
+<p>Test your “dummy” functions by running the script:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>python3 lcd<span class="op">-</span>send.py</span></code></pre></div>
+<p>It won’t do anything, but at least it should run without raising any errors! Now, we can gradually build it up, running it again to test it after each change.</p>
+<h3 id="write-the-lcd_byte-function">Write the <code>lcd_byte</code> function</h3>
+<p>Let’s fill in the <code>lcd_byte</code> function, which we worked on together in class.</p>
+<p>Add some constant variables near the top, just after your GPIO pin-to-LCD pin mapping. These make it easier to write code about the state of the RS line, and to time the write operation:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="co"># Define state of RS pin in character and command mode</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a>LCD_CHR <span class="op">=</span> GPIO.HIGH   <span class="co"># High in data (character) mode</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true"></a>LCD_CMD <span class="op">=</span> GPIO.LOW    <span class="co"># Low in instruction (command) mode</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true"></a><span class="co"># Timing constants</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true"></a>LCD_E_HI <span class="op">=</span> <span class="fl">0.0005</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true"></a>LCD_E_LO <span class="op">=</span> <span class="fl">0.0005</span></span></code></pre></div>
+<p>The datasheet for the SPLC80 driver clarifies how to send data in 4 bit mode - we send the higher “nibble” first, then the lower “nibble”:</p>
+<figure>
+<img src="images/splc780-interfacing-4bit.svg" style="width:50.0%" alt="Interfacing in 4 bit mode." /><figcaption aria-hidden="true">Interfacing in 4 bit mode.</figcaption>
+</figure>
+<p>The timing diagram for write operations, on page 25 of the SPLC780 driver datasheet, further clarifies exactly what happens on the bus during each write operation. We can see that <strong>E</strong> acts as a clock signal, pulsing each time a new bit is transmitted on the data lines. The datasheet also specifies the minimum time that each data and control line must be “held” at its desired value before, during, and after the pulse. (We’ll be extra conservative, and hold the line longer.) With that in mind, let’s fill in the <code>lcd_byte</code> function.</p>
+<figure>
+<embed src="images/splc780-write-diagram.pdf" style="width:80.0%" /><figcaption aria-hidden="true">Timing diagram for write operations to the LCD module.</figcaption>
+</figure>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># Function for sending one byte of data to the display, </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="co"># in either LCD_CMD (command) or LCD_CHR (data character) mode.</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a><span class="co"># Takes care of setting the RS line (HIGH for data, LOW for instructions), </span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a><span class="co"># pulsing the E line, and sending the data one parallel &#39;nibble&#39; at a time. </span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a><span class="kw">def</span> lcd_byte(bits, mode):</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a>  <span class="co"># Set RS line to whatever we passed in &quot;mode&quot;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a>  GPIO.output(LCD_RS, mode)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Sending </span><span class="sc">%s</span><span class="st"> in mode </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> (<span class="st">&#39;</span><span class="sc">{:08b}</span><span class="st">&#39;</span>.<span class="bu">format</span>(bits), mode))</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true"></a>  <span class="co"># Send high (leftmost) bits</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true"></a>  GPIO.output(LCD_D7, (bits <span class="op">&gt;&gt;</span> <span class="dv">7</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true"></a>  GPIO.output(LCD_D6, (bits <span class="op">&gt;&gt;</span> <span class="dv">6</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true"></a>  GPIO.output(LCD_D5, (bits <span class="op">&gt;&gt;</span> <span class="dv">5</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true"></a>  GPIO.output(LCD_D4, (bits <span class="op">&gt;&gt;</span> <span class="dv">4</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true"></a>  <span class="co"># Pulse &quot;E&quot; line</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.LOW)</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true"></a>  time.sleep(LCD_E_LO)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.HIGH)</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true"></a>  time.sleep(LCD_E_HI)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.LOW)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true"></a>  time.sleep(LCD_E_LO)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true"></a>  <span class="co"># Send low (rightmost) bits</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true"></a>  GPIO.output(LCD_D7, (bits <span class="op">&gt;&gt;</span> <span class="dv">3</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true"></a>  GPIO.output(LCD_D6, (bits <span class="op">&gt;&gt;</span> <span class="dv">2</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true"></a>  GPIO.output(LCD_D5, (bits <span class="op">&gt;&gt;</span> <span class="dv">1</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true"></a>  GPIO.output(LCD_D4, (bits <span class="op">&gt;&gt;</span> <span class="dv">0</span>) <span class="op">&amp;</span> <span class="dv">1</span>)</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true"></a></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true"></a>  <span class="co"># Pulse &quot;E&quot; line</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.LOW)</span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true"></a>  time.sleep(LCD_E_LO)</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.HIGH)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true"></a>  time.sleep(LCD_E_HI)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.LOW)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true"></a>  time.sleep(LCD_E_LO)</span></code></pre></div>
+<p>To test it, let’s temporarily add an <code>lcd_byte</code> call to our <code>main</code> function. Send an easily recognizable pattern so that we can see how the bus works (this is the letter <code>N</code>, send to the data register on the display):</p>
+<pre><code>lcd_byte(0b01001110, LCD_CHR)</code></pre>
+<p>Let’s inspect this signal in piscope. In a VNC session, run</p>
+<pre><code>sudo pigpiod</code></pre>
+<p>if it is not already running, and open piscope:</p>
+<pre><code>piscope</code></pre>
+<p>Watch the LCD control lines (GPIO 5, 6) and data lines (GPIO 22, 23, 24, 25) and run <code>lcd-send.py</code> again. You should see the following signal appear on the bus when you run your script:</p>
+<figure>
+<img src="images/piscope-pattern.png" width="300" alt="Sending the letter N to the data register." /><figcaption aria-hidden="true">Sending the letter <code>N</code> to the data register.</figcaption>
+</figure>
+<p>However, nothing will appear on the display (yet) because we haven’t initialized it properly. We’ll do that in the next section!</p>
+<hr />
+<p><strong>Lab report</strong>: Change call to the <code>send_byte</code> function - send the first character of your net ID (in lowercase), instead of the capital <code>N</code>. Take a screenshot of your <code>piscope</code> display showing the byte. Annotate this display - each time E is high, indicate the four-bit nibble that is sent (as e.g. <code>0100</code> and <code>1110</code>) and then across the two-nibble sequence, indicate the ASCII character. Also annotate the RS line - indicate whether it is HIGH or LOW while E is high, and whether this signifies a command or a data write.</p>
+<hr />
+<h3 id="write-the-lcd_init-function">Write the <code>lcd_init</code> function</h3>
+<p>Before we can send text to appear on the LCD display, we need to initialize the display by sending commands to configure its operation. The datasheet for the control IC shows a “typical” procedure used to initialize the display in various modes. For example, the SPLC780 datasheet shows the following procedure for initializing the display in 4-bit mode:</p>
+<figure>
+<embed src="images/4-bit-SPLC780.pdf" /><figcaption aria-hidden="true">Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.</figcaption>
+</figure>
+<p>We’ll follow this procedure in the <code>lcd_init</code> function to set up our display.</p>
+<p>First, note that as part of this procedure, we send a sequence of bytes to the instruction register (note the value shown on the RS line!) To learn about the instructions available, we’ll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:</p>
 <figure>
 <img src="images/selected-commands-SPLC780.svg" alt="Selected commands from the SPLC780 datasheet." /><figcaption aria-hidden="true">Selected commands from the SPLC780 datasheet.</figcaption>
 </figure>
@@ -211,104 +391,69 @@ cd ~/lab-parallel</code></pre>
 <li>The second example shows how to return the cursor to the “home” position - the first character on the first line. This example shows a “don’t care” bit. To send this command, we could send the bit array <code>00000011</code> <em>or</em> the bit array <code>00000010</code> - the least significant bit doesn’t matter.</li>
 <li>The third example shows how in some commands, we select the value of the bits in the bit array according to our desired configuration. For example, to set the display ON with cursor ON and blinking, we would send <code>00001111</code>, but to have the display ON with no cursor, we would send <code>00001100</code>.</li>
 </ul>
-<p>Before we can write text to the LCD display, we need to initialize the display by sending commands to configure its operation. The datasheet for the control IC shows a “typical” procedure used to initialize the display in various modes. For example, the SPLC780 datasheet shows the following procedure for initializing the display in 4-bit mode:</p>
-<figure>
-<embed src="images/4-bit-SPLC780.pdf" /><figcaption aria-hidden="true">Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.</figcaption>
-</figure>
-<p>We’ll follow a similar procedure to initialize our display into 4-bit mode. While keeping the RS line LOW (for command mode), we send the 4-bit code <code>0011</code> three times. Then, we send the 4-bit code <code>0010</code>. This is equivalent to sending:</p>
+<p>In your <code>lcd-send.py</code> script, fill in some important commands at the end of your constant variable section:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Values for important instructions</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>LCD_CMD_CLEAR  <span class="op">=</span> <span class="bn">0b00000001</span> <span class="co"># clear display</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>LCD_CMD_DSPON  <span class="op">=</span> <span class="bn">0b00001110</span> <span class="co"># display on, with cursor, no blinking</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>LCD_CMD_DSPOFF <span class="op">=</span> <span class="bn">0b00001000</span> <span class="co"># display off</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>LCD_CMD_ENTRY  <span class="op">=</span> <span class="bn">0b00000110</span> <span class="co"># entry mode set</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>LCD_CMD_FNSET  <span class="op">=</span> <span class="bn">0b00101000</span> <span class="co"># function set, 4 bit operation, 2 lines, 5x8 font</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>LCD_CMD_4BIT   <span class="op">=</span> <span class="bn">0b00110010</span> <span class="co"># change to 4 bit mode</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>LCD_CMD_RESET  <span class="op">=</span> <span class="bn">0b00110000</span> <span class="co"># reset (as described in &quot;Reset function&quot;)</span></span></code></pre></div>
+<p>Then, fill in the <code>lcd_init</code> function - we’ll have it configure each of the control and data pins as outputs, then configure the display in 4 bit mode, send the intialization sequence, and turn the display on:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># Function for initializing the display when it is </span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="co"># first powered on</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="kw">def</span> lcd_init():</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>    GPIO.setmode(GPIO.BCM)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>    <span class="co"># Configure pins as outputs</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>    GPIO.setup(LCD_RS, GPIO.OUT)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>    GPIO.setup(LCD_E, GPIO.OUT)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>    GPIO.setup(LCD_D4, GPIO.OUT)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>    GPIO.setup(LCD_D5, GPIO.OUT)</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>    GPIO.setup(LCD_D6, GPIO.OUT)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true"></a>    GPIO.setup(LCD_D7, GPIO.OUT)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true"></a>    <span class="co"># Put display in 4-bit mode</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD) </span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true"></a>    lcd_byte(LCD_CMD_4BIT,   LCD_CMD) </span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true"></a>    </span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true"></a>    <span class="co"># Run the rest of the initialization sequence</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true"></a>    lcd_byte(LCD_CMD_FNSET,  LCD_CMD)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPOFF, LCD_CMD)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true"></a>    lcd_byte(LCD_CMD_CLEAR,  LCD_CMD)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true"></a>    lcd_byte(LCD_CMD_ENTRY,  LCD_CMD)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true"></a>    <span class="co"># Turn the display on</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPON,  LCD_CMD)</span></code></pre></div>
+<p>Then, run <code>lcd-send.py</code> again. This time, you should see the character appear on the display!</p>
+<h3 id="write-the-lcd_char-function">Write the <code>lcd_char</code> function</h3>
+<p>While we can now send a binary number to the display, we have to look up each character manually in the ASCII conversion chart to identify the number to send. Let’s fill in the <code>lcd_char</code> function to do this for us.</p>
+<p>To fill in the <code>lcd_char</code> function, note that the <code>ord</code> function in Python accepts a character as an argument, and returns an integer representing the code point of the character. Use this to implement the <code>lcd_char</code> function, which accepts a character as an argument and returns the representative integer.</p>
+<hr />
+<p><strong>Lab report</strong>: Modify the <code>main</code> function in your <code>lcd-send.py</code> so that it:</p>
 <ul>
-<li>the bit array <code>00110011</code></li>
-<li>followed by the bit array <code>00110010</code>.</li>
+<li>calls <code>lcd_init</code> to initialize the display</li>
+<li>makes several calls to <code>lcd_char</code> to send your net ID (e.g. xx123) to the display</li>
 </ul>
-<p>After the display is in 4-bit mode, we will send some other commands to the display:</p>
-<ul>
-<li><code>00001100</code> to turn the display on, with no cursor.</li>
-<li><code>00000110</code> to set the entry mode (see 5.3.2 in datasheet). We will configure the entry mode so that the cursor moves from left to right, and the display itself does not shift.</li>
-<li><code>00000001</code> to clear the display before we write any characters to it.</li>
-</ul>
-<h3 id="source-code-for-send-to-lcd.py">Source code for <code>send-to-lcd.py</code></h3>
-<p>Now that we have some idea of how we will initialize our display, let’s write some code.</p>
-<p>Open a new file:</p>
-<pre><code>nano ~/lab-parallel/send-to-lcd.py</code></pre>
-<p>At the top, add import statements, and configure the RPi.GPIO library:</p>
-<pre><code>import RPi.GPIO as GPIO
-import time
-import sys
-
-GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)       # Use BCM GPIO numbers</code></pre>
-<p>Then, define some constants:</p>
-<pre><code># GPIO pin to LCD pin mapping
-LCD_RS = 6
-LCD_E  = 5
-LCD_D4 = 25
-LCD_D5 = 24
-LCD_D6 = 23
-LCD_D7 = 22
-
-# Define state of RS pin in character and command mode
-LCD_CHR = GPIO.HIGH   # High in data (character) mode
-LCD_CMD = GPIO.LOW    # Low in instruction (command) mode
-
-# Important commands
-LCD_CLEAR = [0,0,0,0,0,0,0,1]
-LCD_D_OFF = [0,0,0,0,1,0,0,0]
-LCD_4BIT1 = [0,0,1,1,0,0,1,1]
-LCD_4BIT2 = [0,0,1,1,0,0,1,0]
-LCD_ON_NC = [0,0,0,0,1,1,0,0]
-LCD_ENTRY = [0,0,0,0,0,1,1,0]
-
-# Timing constants
-E_PULSE = 0.0005
-E_DELAY = 0.0005</code></pre>
-<p>Then, add the <code>char_to_arr</code> function and <code>write_arr_4bit</code> function, which are on NYU Classes.</p>
-<p>Finally, write your own functions:</p>
-<ul>
-<li><code>setup_lcd</code> should configure all of the pins in output mode. (Use the constants defined at the top of your script instead of hard-coding pin numbers inside your function). Then, it should initialize the LCD by sending the commands described above. Use the <code>write_arr_4bit</code> function and the constants you defined at the top of your script.</li>
-<li><code>string_to_lcd</code> should take a string as input, and write the string to the LCD display.</li>
-</ul>
-<p>After you write these funtions, place the following code at the end of your script to test your code:</p>
-<pre><code>try:
-    setup_lcd()
-    time.sleep(0.005)
-    string_to_lcd(&#39;Hello CompE DP1&#39;)
-    time.sleep(600)
-except KeyboardInterrupt:
-    pass
-finally:
-    write_arr_4bit(LCD_CLEAR, LCD_CMD) # clear display
-    write_arr_4bit(LCD_D_OFF, LCD_CMD) # 0000 1000 Display off - 5.2.4 in datasheet
-    GPIO.cleanup()</code></pre>
-<p>Modify this code to show your net ID on the display, instead of the “Hello” message. Take a photo for your lap report.</p>
+<p>Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this screenshot, and your final <code>lcd-send.py</code>.</p>
 <hr />
-<p><strong>Lab report</strong>: Upload your <code>send-to-lcd.py</code> script.</p>
-<p><strong>Lab report</strong>: Show a photo of the LCD display, with your net ID on it.</p>
-<hr />
-<h3 id="inspect-communication-signal-in-piscope">Inspect communication signal in piscope</h3>
-<p>Run</p>
-<pre><code>sudo pigpiod</code></pre>
-<p>if it is not already running, and open PiScope:</p>
-<pre><code>piscope</code></pre>
-<p>Leave PiScope open to monitor GPIO lines. Then, run your script to write a message to the LCD module.</p>
-<p>Watch what happens on each line as we initialize and write data to the display. (You’ll use the zoom buttons and arrow buttons in the menu bar to more closely examine the signal each time we send something to the display.) Verify that the message appears on the display, and check the output in <code>piscope</code>. Take a screenshot of the initialization process in <code>piscope</code> for your lab report.</p>
-<hr />
-<p><strong>Lab report</strong> (individual work): Annotate the screenshot of the initialization process from <code>piscope</code>. Label the <strong>RS</strong> line, and show what its value should be during the initialization process. Label the <strong>E</strong> line, and explain its function. Then, draw a square around each complete <em>byte</em> of instruction sent to the display, write the byte as an 8-bit binary number, and explain what it does.</p>
-<hr />
-<h3 id="browser-based-ui-to-send-text-to-the-display">Browser-based UI to send text to the display</h3>
-<p>Finally, we’ll see how to use a browser-based UI to send text to the display.</p>
+<h2 id="flask-ui-for-the-lcd-display">Flask UI for the LCD display</h2>
+<p>Finally, we’ll develop a browser-based UI to send text and commands to the display.</p>
 <p>Create a new directory called <code>flask-app</code> in your <code>lab-parallel</code> directory, then navigate to it:</p>
 <pre><code>mkdir ~/lab-parallel/flask-app
 cd ~/lab-parallel/flask-app</code></pre>
-<p>We’ll use the <code>virtualhat</code> library again - download and install it (for Python 2 and Python 3) with</p>
-<pre><code>git clone https://github.com/ffund/virtualhat
-cd virtualhat
-sudo python2 setup.py install
-sudo python3 setup.py install
-cd ~/lab-parallel/flask-app</code></pre>
-<p>Create a <code>templates</code> directory, and inside it, create an <code>index.html</code> file:</p>
-<pre><code>mkdir ~/lab-parallel/flask-app/templates
-nano ~/lab-parallel/flask-app/templates/index.html</code></pre>
-<p>Put the following HTML inside this file:</p>
+<p>It’s good practice to separate the functions that deal with the low-level hardware calls, from the code that runs the UI logic. As we have done previously,</p>
+<ul>
+<li>we’ll implement all of the code that deals with the low-level hardware calls inside the <code>virtualhat</code> library,</li>
+<li>then call <code>virtualhat</code> library functions inside a Python Flask script that controls the UI logic.</li>
+</ul>
+<p>We’ll start with the second item - the Flask UI, which includes an HTML file and a Python script.</p>
+<p>In the <code>flask-app</code> directory, create an <code>index.html</code> file:</p>
+<pre><code>nano ~/lab-parallel/flask-app/index.html</code></pre>
+<p>and put the following HTML inside this file:</p>
 <pre><code>&lt;!DOCTYPE html&gt;
    &lt;head&gt;
     &lt;title&gt;Hello Flask! (LCD)&lt;/title&gt;
@@ -316,75 +461,126 @@ nano ~/lab-parallel/flask-app/templates/index.html</code></pre>
    &lt;/head&gt;
    &lt;body&gt;
      &lt;div class=&quot;container&quot;&gt;
-       &lt;h1&gt;Input text to display on LCD&lt;/h1&gt;
-      &lt;form method=&quot;POST&quot;&gt;
-        &lt;div class=&quot;form-group&quot;&gt;
-          &lt;input class=&quot;form-control&quot; name=&quot;text&quot;&gt;
+        &lt;div class=&quot;row align-items-center&quot;&gt;
+       &lt;div class=&quot;col-9&quot;&gt;
+             &lt;h1&gt;Input text to display on LCD&lt;/h1&gt;
+             &lt;form method=&quot;POST&quot;&gt;
+             &lt;div class=&quot;form-group&quot;&gt;
+                &lt;input class=&quot;form-control&quot; maxlength=&quot;32&quot; name=&quot;text&quot;&gt;
+             &lt;/div&gt;
+             &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;
+             &lt;/form&gt;
+           &lt;/div&gt;
+           &lt;div class=&quot;col-3&quot;&gt;
+             &lt;div class=&quot;btn-group-vertical&quot;&gt;
+               &lt;a href=&quot;/cmd/0&quot; class=&quot;btn btn-warning&quot; role=&quot;button&quot;&gt;Clear display&lt;/a&gt;
+               &lt;a href=&quot;/cmd/1&quot; class=&quot;btn btn-danger&quot; role=&quot;button&quot;&gt;Display off&lt;/a&gt;
+               &lt;a href=&quot;/cmd/2&quot; class=&quot;btn btn-success&quot; role=&quot;button&quot;&gt;Display on&lt;/a&gt;
+             &lt;/div&gt;
+           &lt;/div&gt;
         &lt;/div&gt;
-        &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary&quot;&gt;Submit&lt;/button&gt;
-      &lt;/form&gt;
      &lt;/div&gt;
    &lt;/body&gt;
 &lt;/html&gt;</code></pre>
-<p>This form has a text input field. When you type some text into this field and click the Submit button, the text will be processed inside your Flask app.</p>
-<p>Finally, create your Flask app:</p>
+<p>This page has a form with a text input field. When you type some text into this field (up to 32 characters, since the LCD is 16x2!) and click the Submit button, the text will be processed inside your Flask app.</p>
+<p>It also has several buttons on the side, which will be used to send commands to the display.</p>
+<p>The overall UI will look like this:</p>
+<figure>
+<img src="images/flask-ui.png" style="width:80.0%" alt="Flask UI appearance." /><figcaption aria-hidden="true">Flask UI appearance.</figcaption>
+</figure>
+<p>Then, create the Python script that controls the behavior of the UI:</p>
 <pre><code>nano ~/lab-parallel/flask-app/flask-lcd.py</code></pre>
 <p>with the following contents:</p>
-<pre><code>from flask import Flask, request, render_template
+<pre><code>from flask import Flask, request, redirect
 import virtualhat
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder=&#39;&#39;)
 
 @app.route(&#39;/&#39;)
 def show_form():
-    return render_template(&#39;index.html&#39;)
+    return app.send_static_file(&#39;index.html&#39;)
 
 @app.route(&#39;/&#39;, methods=[&#39;POST&#39;])
 def process_text():
     text = request.form[&#39;text&#39;]
-    print(text)
     # do something here!
-    return render_template(&#39;index.html&#39;)
+    virtualhat.lcd_msg(text)
+    return redirect(&quot;/&quot;)
+
+@app.route(&#39;/cmd/&lt;int:action&gt;&#39;)
+def process_cmd(action):
+    # do something here!
+    virtualhat.lcd_cmd(action)
+    return redirect(&quot;/&quot;)
 
 if __name__ == &quot;__main__&quot;:
     virtualhat.setup()
     app.run(host=&#39;0.0.0.0&#39;, port=80, debug=True, threaded=True)</code></pre>
-<p>You can run your flask app with</p>
-<pre><code>cd ~/lab-parallel/flask-app/
-sudo python3 flask-lcd.py</code></pre>
-<p>Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi’s IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with .</p>
-<p>Your task is to <em>modify</em> the <code>virtualhat</code> library so that:</p>
+<p>Notice that this Flask app includes several calls to <code>virtualhat</code> library functions:</p>
 <ul>
-<li>When you call the <code>setup()</code> function, it will initialize your LCD display,</li>
-<li>When you receive a text input from the form, you’ll send it to the LCD display. Add a new function <code>str_to_lcd</code> in the <code>virtualhat</code> library, and then edit your <code>flask-lcd.py</code> so that instead of printing the text input, you call:</li>
+<li>When the script runs, it calls <code>virtualhat.setup()</code>.</li>
+<li>If someone visits the main page of the UI (<code>/</code>), they’ll get that HTML page we created earlier. (The <code>show_form</code> function will run.)</li>
+<li>If someone types some text in the form input field, then clicks submit, the <code>process_text</code> function will run, and it will get the text that was entered in the form in a variable called <code>text</code>. We then call <code>virtualhat.lcd_msg(text)</code> to process that text and send it to the display.</li>
+<li>If someone presses one of the buttons in the sidebar on the right side of the UI, it will call the <code>process_cmd</code> function, and pass it the integer value (0, 1, or 2) associated with the button that was pressed. (You can find the integer value-to-button mapping in the <code>index.html</code> file, where the buttons are defined.) We then call <code>virtualhat.lcd_cmd(action)</code> to process that integer value and send the corresponding command (clear display, display off, or display on) to the display.</li>
 </ul>
-<pre><code>virtualhat.str_to_lcd(text)</code></pre>
-<p>To modify the <code>virtualhat</code> library, navigate to the directory where the source code of the <code>virtualhat</code> library is located:</p>
+<p>Now, let’s download the <code>virtualhat</code> library and edit it:</p>
+<pre><code>git clone https://github.com/ffund/virtualhat
+cd virtualhat
+nano virtualhat.py</code></pre>
+<p>Add three functions associated with the LCD display to this library. These will become <code>virtualhat</code> library functions:</p>
+<pre><code>def lcd_init():
+    # Set up GPIO pins connected to the display
+    # send the initialization sequence to the display
+    pass
+
+def lcd_msg(text):
+    # Send the message to the data register on display
+    # if longer than 16 characters, wrap around to second line
+    pass
+
+def lcd_cmd(action):
+    # Look up the action index  
+    # send the associated command to the instruction register on the display
+    pass</code></pre>
+<p>Also modify the existing <code>setup()</code> function to call <code>lcd_init()</code>:</p>
+<pre><code>def setup():
+    lcd_init()
+    print(&quot;All peripherals and sensors have been set up successfully!&quot;)
+    return True</code></pre>
+<p>Save the modified <code>virtualhat</code> library file, then install it with</p>
+<pre><code>sudo python3 setup.py install</code></pre>
+<p>Then, return to the <code>flask-app</code> directory:</p>
+<pre><code>cd ~/lab-parallel/flask-app</code></pre>
+<p>You can now run your flask app with</p>
+<pre><code>sudo python3 flask-lcd.py</code></pre>
+<p>and you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type the Pi’s IP address.</p>
+<p>Although you can access and view the Flask UI, it’s not actually functional, since you haven’t yet implemented <code>lcd_init</code>, <code>lcd_msg</code>, and <code>lcd_cmd</code>! Once you have verified that you can access the page, stop the Flask app with <code>Ctrl</code>+<code>C</code>.</p>
+<p>Your task is to <em>modify</em> the <code>virtualhat</code> library as follows:</p>
+<ul>
+<li>Add important constant variables for using the display - pin mappings, important LCD instructions, etc. - at the top.</li>
+<li>Add any important utility functions you might need in order to use the LCD display.</li>
+<li>Implement the <code>lcd_init()</code> function, which is called from the <code>setup()</code> function, so that your LCD display is initialized when someone calls</li>
+</ul>
+<pre><code>virtualhat.setup()</code></pre>
+<ul>
+<li>Implement <code>lcd_msg</code>. This function accepts one argument - a string up to 32 characters long - and sends it to the display. Your <code>lcd_msg</code> function should clear the current contents of the LCD display, then send the message to the display, one character at a time. If the message is more than 16 characters long, the <code>lcd_msg</code> function should wrap the text onto the second line of the display, so that the entire message is displayed.</li>
+<li>Implement <code>lcd_cmd</code>, which accepts one argument - the index of a command to run - and then sends the appropriate instruction to the display.</li>
+</ul>
+<p>To modify the <code>virtualhat</code> library, navigate to the directory where the source code of this version of the <code>virtualhat</code> library is located:</p>
 <pre><code>cd ~/lab-parallel/flask-app/virtualhat</code></pre>
 <p>and then open the <code>virtualhat.py</code> file for editing.</p>
 <pre><code>nano virtualhat.py</code></pre>
 <p>After editing, you will have to re-install the library:</p>
-<pre><code>cd ~/lab-parallel/flask-app/virtualhat
-sudo python2 setup.py install
-sudo python3 setup.py install</code></pre>
-<p>to test your changes.</p>
-<p>In your design, think about how you would handle various scenarios.</p>
-<ul>
-<li>What happens if someone writes a very long string to the form, that doesn’t fit on one line, or even on the entire display? You may have to use some additional command instructions to handle this case - you might want to use the command definitions</li>
-</ul>
-<pre><code>LCD_LINE_1 = [1,0,0,0,0,0,0,0] 
-LCD_LINE_2 = [1,1,0,0,0,0,0,0] </code></pre>
-<ul>
-<li>What happens if someone submits a long string, then submits a short string - will the display be cleared in between?</li>
-</ul>
-<p>You can add comments in the source code to explain your design decisions.</p>
+<pre><code>sudo python3 setup.py install</code></pre>
+<p>to test your changes. Then, you’ll have to re-run the Flask app:</p>
+<pre><code>cd ~/lab-parallel/flask-app/
+sudo python3 flask-lcd.py</code></pre>
 <hr />
-<p><strong>Lab report</strong> Upload your modified <code>virtualhat.py</code> file. (Note: you shouldn’t have any changes in <code>flask-lcd.py</code>, except for adding one line of code to call <code>virtualhat.str_to_lcd(text)</code>.)</p>
+<p><strong>Lab report</strong> Upload your modified <code>virtualhat.py</code> file. (Note: you shouldn’t have any changes in <code>flask-lcd.py</code>! Use exactly the <code>flask-lcd.py</code> I provided here.)</p>
 <p><strong>Lab report</strong>: Show a photograph of your LCD display after you enter the following message in the web form (substitute your own net ID):</p>
-<pre><code>Welcome to CompE DP1 (net ID)</code></pre>
+<pre><code>Welcome DP Corp employee (net ID)</code></pre>
 <p>Also show a photograph of your LCD display after you enter the following message in the web form:</p>
 <pre><code>The quick brown fox jumps over the lazy dog</code></pre>
-<p>Explain your design decisions - what did you decide the LCD should do with text that doesn’t fit on the display? Why?</p>
 <hr />
 </body>
 </html>
