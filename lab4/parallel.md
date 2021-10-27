@@ -415,6 +415,26 @@ def lcd_byte(bits, mode):
 ```
 
 
+Also, in the `lcd_init` function, set up those GPIO pins:
+
+```python
+# Function for initializing the display when it is 
+# first powered on
+def lcd_init():
+
+    GPIO.setmode(GPIO.BCM)
+
+    # Configure pins as outputs
+    GPIO.setup(LCD_RS, GPIO.OUT)
+    GPIO.setup(LCD_E, GPIO.OUT)
+    GPIO.setup(LCD_D4, GPIO.OUT)
+    GPIO.setup(LCD_D5, GPIO.OUT)
+    GPIO.setup(LCD_D6, GPIO.OUT)
+    GPIO.setup(LCD_D7, GPIO.OUT)
+```
+
+(We'll fill in the rest of `lcd_init` in a later section.)
+
 To test it, let's temporarily add an `lcd_byte` call to our `main` function. Send an easily recognizable pattern so that we can see how the bus works (this is the letter `N`, send to the data register on the display):
 
 ```
@@ -435,7 +455,7 @@ piscope
 
 Watch the LCD control lines (GPIO 5, 6) and data lines (GPIO 22, 23, 24, 25) and run `lcd-send.py` again. You should see the following signal appear on the bus when you run your script:
 
-![Sending the letter `N` to the data register.](images/piscope-pattern.png){ width=300px }
+![Sending the letter `N` to the data register.](images/piscope-pattern.png){ width=200px }
 
 
 However, nothing will appear on the display (yet) because we haven't initialized it properly. We'll do that in the next section!

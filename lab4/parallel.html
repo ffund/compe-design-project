@@ -362,6 +362,21 @@ cd ~/lab-parallel</code></pre>
 <span id="cb8-36"><a href="#cb8-36" aria-hidden="true"></a>  time.sleep(LCD_E_HI)</span>
 <span id="cb8-37"><a href="#cb8-37" aria-hidden="true"></a>  GPIO.output(LCD_E, GPIO.LOW)</span>
 <span id="cb8-38"><a href="#cb8-38" aria-hidden="true"></a>  time.sleep(LCD_E_LO)</span></code></pre></div>
+<p>Also, in the <code>lcd_init</code> function, set up those GPIO pins:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="co"># Function for initializing the display when it is </span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="co"># first powered on</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a><span class="kw">def</span> lcd_init():</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>    GPIO.setmode(GPIO.BCM)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>    <span class="co"># Configure pins as outputs</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>    GPIO.setup(LCD_RS, GPIO.OUT)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true"></a>    GPIO.setup(LCD_E, GPIO.OUT)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true"></a>    GPIO.setup(LCD_D4, GPIO.OUT)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true"></a>    GPIO.setup(LCD_D5, GPIO.OUT)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true"></a>    GPIO.setup(LCD_D6, GPIO.OUT)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true"></a>    GPIO.setup(LCD_D7, GPIO.OUT)</span></code></pre></div>
+<p>(We’ll fill in the rest of <code>lcd_init</code> in a later section.)</p>
 <p>To test it, let’s temporarily add an <code>lcd_byte</code> call to our <code>main</code> function. Send an easily recognizable pattern so that we can see how the bus works (this is the letter <code>N</code>, send to the data register on the display):</p>
 <pre><code>lcd_byte(0b01001110, LCD_CHR)</code></pre>
 <p>Let’s inspect this signal in piscope. In a VNC session, run</p>
@@ -370,7 +385,7 @@ cd ~/lab-parallel</code></pre>
 <pre><code>piscope</code></pre>
 <p>Watch the LCD control lines (GPIO 5, 6) and data lines (GPIO 22, 23, 24, 25) and run <code>lcd-send.py</code> again. You should see the following signal appear on the bus when you run your script:</p>
 <figure>
-<img src="images/piscope-pattern.png" width="300" alt="Sending the letter N to the data register." /><figcaption aria-hidden="true">Sending the letter <code>N</code> to the data register.</figcaption>
+<img src="images/piscope-pattern.png" width="200" alt="Sending the letter N to the data register." /><figcaption aria-hidden="true">Sending the letter <code>N</code> to the data register.</figcaption>
 </figure>
 <p>However, nothing will appear on the display (yet) because we haven’t initialized it properly. We’ll do that in the next section!</p>
 <hr />
@@ -406,42 +421,42 @@ cd ~/lab-parallel</code></pre>
 <li>The third example shows how in some commands, we select the value of the bits in the bit array according to our desired configuration. For example, to set the display ON with cursor ON and blinking, we would send <code>00001111</code>, but to have the display ON with no cursor, we would send <code>00001100</code>.</li>
 </ul>
 <p>In your <code>lcd-send.py</code> script, fill in some important commands at the end of your constant variable section:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="co"># Values for important instructions</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a>LCD_CMD_CLEAR  <span class="op">=</span> <span class="bn">0b00000001</span> <span class="co"># clear display</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a>LCD_CMD_DSPON  <span class="op">=</span> <span class="bn">0b00001110</span> <span class="co"># display on, with cursor, no blinking</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a>LCD_CMD_DSPOFF <span class="op">=</span> <span class="bn">0b00001000</span> <span class="co"># display off</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>LCD_CMD_ENTRY  <span class="op">=</span> <span class="bn">0b00000110</span> <span class="co"># entry mode set</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>LCD_CMD_FNSET  <span class="op">=</span> <span class="bn">0b00101000</span> <span class="co"># function set, 4 bit operation, 2 lines, 5x8 font</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>LCD_CMD_4BIT   <span class="op">=</span> <span class="bn">0b00110010</span> <span class="co"># change to 4 bit mode</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>LCD_CMD_RESET  <span class="op">=</span> <span class="bn">0b00110000</span> <span class="co"># reset (as described in &quot;Reset function&quot;)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># Values for important instructions</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a>LCD_CMD_CLEAR  <span class="op">=</span> <span class="bn">0b00000001</span> <span class="co"># clear display</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a>LCD_CMD_DSPON  <span class="op">=</span> <span class="bn">0b00001110</span> <span class="co"># display on, with cursor, no blinking</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a>LCD_CMD_DSPOFF <span class="op">=</span> <span class="bn">0b00001000</span> <span class="co"># display off</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>LCD_CMD_ENTRY  <span class="op">=</span> <span class="bn">0b00000110</span> <span class="co"># entry mode set</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a>LCD_CMD_FNSET  <span class="op">=</span> <span class="bn">0b00101000</span> <span class="co"># function set, 4 bit operation, 2 lines, 5x8 font</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>LCD_CMD_4BIT   <span class="op">=</span> <span class="bn">0b00110010</span> <span class="co"># change to 4 bit mode</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>LCD_CMD_RESET  <span class="op">=</span> <span class="bn">0b00110000</span> <span class="co"># reset (as described in &quot;Reset function&quot;)</span></span></code></pre></div>
 <p>Then, fill in the <code>lcd_init</code> function - we’ll have it configure each of the control and data pins as outputs, then configure the display in 4 bit mode, send the intialization sequence, and turn the display on:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="co"># Function for initializing the display when it is </span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true"></a><span class="co"># first powered on</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true"></a><span class="kw">def</span> lcd_init():</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true"></a>    GPIO.setmode(GPIO.BCM)</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true"></a>    <span class="co"># Configure pins as outputs</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true"></a>    GPIO.setup(LCD_RS, GPIO.OUT)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true"></a>    GPIO.setup(LCD_E, GPIO.OUT)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true"></a>    GPIO.setup(LCD_D4, GPIO.OUT)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true"></a>    GPIO.setup(LCD_D5, GPIO.OUT)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true"></a>    GPIO.setup(LCD_D6, GPIO.OUT)</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true"></a>    GPIO.setup(LCD_D7, GPIO.OUT)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true"></a></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true"></a>    <span class="co"># Put display in 4-bit mode</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD) </span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD)</span>
-<span id="cb13-18"><a href="#cb13-18" aria-hidden="true"></a>    lcd_byte(LCD_CMD_4BIT,   LCD_CMD) </span>
-<span id="cb13-19"><a href="#cb13-19" aria-hidden="true"></a>    </span>
-<span id="cb13-20"><a href="#cb13-20" aria-hidden="true"></a>    <span class="co"># Run the rest of the initialization sequence</span></span>
-<span id="cb13-21"><a href="#cb13-21" aria-hidden="true"></a>    lcd_byte(LCD_CMD_FNSET,  LCD_CMD)</span>
-<span id="cb13-22"><a href="#cb13-22" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPOFF, LCD_CMD)</span>
-<span id="cb13-23"><a href="#cb13-23" aria-hidden="true"></a>    lcd_byte(LCD_CMD_CLEAR,  LCD_CMD)</span>
-<span id="cb13-24"><a href="#cb13-24" aria-hidden="true"></a>    lcd_byte(LCD_CMD_ENTRY,  LCD_CMD)</span>
-<span id="cb13-25"><a href="#cb13-25" aria-hidden="true"></a></span>
-<span id="cb13-26"><a href="#cb13-26" aria-hidden="true"></a>    <span class="co"># Turn the display on</span></span>
-<span id="cb13-27"><a href="#cb13-27" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPON,  LCD_CMD)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="co"># Function for initializing the display when it is </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true"></a><span class="co"># first powered on</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true"></a><span class="kw">def</span> lcd_init():</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true"></a>    GPIO.setmode(GPIO.BCM)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true"></a>    <span class="co"># Configure pins as outputs</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true"></a>    GPIO.setup(LCD_RS, GPIO.OUT)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true"></a>    GPIO.setup(LCD_E, GPIO.OUT)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true"></a>    GPIO.setup(LCD_D4, GPIO.OUT)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true"></a>    GPIO.setup(LCD_D5, GPIO.OUT)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true"></a>    GPIO.setup(LCD_D6, GPIO.OUT)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true"></a>    GPIO.setup(LCD_D7, GPIO.OUT)</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true"></a>    <span class="co"># Put display in 4-bit mode</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD) </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true"></a>    lcd_byte(LCD_CMD_RESET,  LCD_CMD)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true"></a>    lcd_byte(LCD_CMD_4BIT,   LCD_CMD) </span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true"></a>    </span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true"></a>    <span class="co"># Run the rest of the initialization sequence</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true"></a>    lcd_byte(LCD_CMD_FNSET,  LCD_CMD)</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPOFF, LCD_CMD)</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true"></a>    lcd_byte(LCD_CMD_CLEAR,  LCD_CMD)</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true"></a>    lcd_byte(LCD_CMD_ENTRY,  LCD_CMD)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true"></a></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true"></a>    <span class="co"># Turn the display on</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true"></a>    lcd_byte(LCD_CMD_DSPON,  LCD_CMD)</span></code></pre></div>
 <p>Then, run <code>lcd-send.py</code> again. This time, you should see the character appear on the display!</p>
 <h3 id="write-the-lcd_char-function">Write the <code>lcd_char</code> function</h3>
 <p>While we can now send a binary number to the display, we have to look up each character manually in the ASCII conversion chart to identify the number to send. Let’s fill in the <code>lcd_char</code> function to do this for us.</p>
