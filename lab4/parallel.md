@@ -438,11 +438,27 @@ Watch the LCD control lines (GPIO 5, 6) and data lines (GPIO 22, 23, 24, 25) and
 
 However, nothing will appear on the display (yet) because we haven't initialized it properly. We'll do that in the next section!
 
----
-
-**Lab report**: Change call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` display showing the byte. Annotate this display - each time E is high, indicate the four-bit nibble that is sent (as e.g. `0100` and `1110`) and then across the two-nibble sequence, indicate the ASCII character. Also annotate the RS line - indicate whether it is HIGH or LOW while E is high, and whether this signifies a command or a data write.
+\newpage
 
 ---
+
+**Lab report**: Change call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` display showing the byte. Annotate this display as follows:
+
+* Label each line: E, RS, DB7 (MSB), DB6, DB5, DB4 (LSB)
+* Each time E is high, indicate the four-bit nibble that is sent (as e.g. `0100` and `1110`) 
+* Also, across the two-nibble sequence, indicate the ASCII character
+* On the RS line - indicate whether it is HIGH or LOW while E is high, and whether this signifies a command or a data write.
+
+---
+
+
+When watching a digital communication bus in `piscope`, it's up to you to identify what's happening on the bus! With the Analog Discovery 2, however, you can use the Logic Analyzer application and it will "decode" the bus for you.
+
+I'm not going to ask you to do that yourself this week, but please watch [this video](https://stream.nyu.edu/media/16x2+LCD+Display+Logic+Analyzer/1_r00rm6wr) which shows what it looks like and how it works.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_r00rm6wr&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_om5s0hgr" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
+
+
 
 
 
@@ -457,7 +473,7 @@ Before we can send text to appear on the LCD display, we need to initialize the 
 
 We'll follow this procedure in the `lcd_init` function to set up our display.
 
-First, note that as part of this procedure, we send a sequence of bytes to the instruction register (note the value shown on the RS line!) To learn about the instructions available, we'll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:
+First, note that in the initialization procedure, we send several sequences of bytes to the LCD display's instruction register (note the value shown on the RS line!) To learn about the instructions available, we'll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:
 
 ![Selected commands from the SPLC780 datasheet.](images/selected-commands-SPLC780.svg)
 
@@ -542,7 +558,10 @@ Take a photo of the display while your net ID appears on it. (Make sure the numb
 
 ## Flask UI for the LCD display
 
-Finally, we'll develop a browser-based UI to send text and commands to the display.
+Finally, we'll develop a browser-based UI to send text and commands to the display. You can follow along with [this video](https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+task+description/1_7p71bmfv) as we set up the task.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_7p71bmfv&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_gj4t9azh" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
+
 
 Create a new directory called `flask-app` in your `lab-parallel` directory, then navigate to it:
 
@@ -752,6 +771,9 @@ cd ~/lab-parallel/flask-app/
 sudo python3 flask-lcd.py
 ```
 
+You can refer to the [demo video](https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+demo/1_4bda7efn) to see how a correct solution would work.
+
+<div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_4bda7efn&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_pzwlybd2" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
 ---
 

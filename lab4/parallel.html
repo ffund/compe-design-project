@@ -374,15 +374,29 @@ cd ~/lab-parallel</code></pre>
 </figure>
 <p>However, nothing will appear on the display (yet) because we haven’t initialized it properly. We’ll do that in the next section!</p>
 <hr />
-<p><strong>Lab report</strong>: Change call to the <code>send_byte</code> function - send the first character of your net ID (in lowercase), instead of the capital <code>N</code>. Take a screenshot of your <code>piscope</code> display showing the byte. Annotate this display - each time E is high, indicate the four-bit nibble that is sent (as e.g. <code>0100</code> and <code>1110</code>) and then across the two-nibble sequence, indicate the ASCII character. Also annotate the RS line - indicate whether it is HIGH or LOW while E is high, and whether this signifies a command or a data write.</p>
+<p><strong>Lab report</strong>: Change call to the <code>send_byte</code> function - send the first character of your net ID (in lowercase), instead of the capital <code>N</code>. Take a screenshot of your <code>piscope</code> display showing the byte. Annotate this display as follows:</p>
+<ul>
+<li>Label each line: E, RS, DB7 (MSB), DB6, DB5, DB4 (LSB)</li>
+<li>Each time E is high, indicate the four-bit nibble that is sent (as e.g. <code>0100</code> and <code>1110</code>)</li>
+<li>Also, across the two-nibble sequence, indicate the ASCII character</li>
+<li>On the RS line - indicate whether it is HIGH or LOW while E is high, and whether this signifies a command or a data write.</li>
+</ul>
 <hr />
+<p>When watching a digital communication bus in <code>piscope</code>, it’s up to you to identify what’s happening on the bus! With the Analog Discovery 2, however, you can use the Logic Analyzer application and it will “decode” the bus for you.</p>
+<p>I’m not going to ask you to do that yourself this week, but please watch <a href="https://stream.nyu.edu/media/16x2+LCD+Display+Logic+Analyzer/1_r00rm6wr">this video</a> which shows what it looks like and how it works.</p>
+<div style="max-width:1280px">
+<div style="position:relative;padding-bottom:56.25%">
+<iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;playerId=kaltura_player&amp;entry_id=1_r00rm6wr&amp;flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&amp;wid=1_om5s0hgr" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%">
+</iframe>
+</div>
+</div>
 <h3 id="write-the-lcd_init-function">Write the <code>lcd_init</code> function</h3>
 <p>Before we can send text to appear on the LCD display, we need to initialize the display by sending commands to configure its operation. The datasheet for the control IC shows a “typical” procedure used to initialize the display in various modes. For example, the SPLC780 datasheet shows the following procedure for initializing the display in 4-bit mode:</p>
 <figure>
 <embed src="images/4-bit-SPLC780.pdf" /><figcaption aria-hidden="true">Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.</figcaption>
 </figure>
 <p>We’ll follow this procedure in the <code>lcd_init</code> function to set up our display.</p>
-<p>First, note that as part of this procedure, we send a sequence of bytes to the instruction register (note the value shown on the RS line!) To learn about the instructions available, we’ll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:</p>
+<p>First, note that in the initialization procedure, we send several sequences of bytes to the LCD display’s instruction register (note the value shown on the RS line!) To learn about the instructions available, we’ll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:</p>
 <figure>
 <img src="images/selected-commands-SPLC780.svg" alt="Selected commands from the SPLC780 datasheet." /><figcaption aria-hidden="true">Selected commands from the SPLC780 datasheet.</figcaption>
 </figure>
@@ -441,7 +455,13 @@ cd ~/lab-parallel</code></pre>
 <p>Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this screenshot, and your final <code>lcd-send.py</code>.</p>
 <hr />
 <h2 id="flask-ui-for-the-lcd-display">Flask UI for the LCD display</h2>
-<p>Finally, we’ll develop a browser-based UI to send text and commands to the display.</p>
+<p>Finally, we’ll develop a browser-based UI to send text and commands to the display. You can follow along with <a href="https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+task+description/1_7p71bmfv">this video</a> as we set up the task.</p>
+<div style="max-width:1280px">
+<div style="position:relative;padding-bottom:56.25%">
+<iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;playerId=kaltura_player&amp;entry_id=1_7p71bmfv&amp;flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&amp;wid=1_gj4t9azh" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%">
+</iframe>
+</div>
+</div>
 <p>Create a new directory called <code>flask-app</code> in your <code>lab-parallel</code> directory, then navigate to it:</p>
 <pre><code>mkdir ~/lab-parallel/flask-app
 cd ~/lab-parallel/flask-app</code></pre>
@@ -575,6 +595,13 @@ def lcd_cmd(action):
 <p>to test your changes. Then, you’ll have to re-run the Flask app:</p>
 <pre><code>cd ~/lab-parallel/flask-app/
 sudo python3 flask-lcd.py</code></pre>
+<p>You can refer to the <a href="https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+demo/1_4bda7efn">demo video</a> to see how a correct solution would work.</p>
+<div style="max-width:1280px">
+<div style="position:relative;padding-bottom:56.25%">
+<iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&amp;playerId=kaltura_player&amp;entry_id=1_4bda7efn&amp;flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&amp;wid=1_pzwlybd2" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%">
+</iframe>
+</div>
+</div>
 <hr />
 <p><strong>Lab report</strong> Upload your modified <code>virtualhat.py</code> file. (Note: you shouldn’t have any changes in <code>flask-lcd.py</code>! Use exactly the <code>flask-lcd.py</code> I provided here.)</p>
 <p><strong>Lab report</strong>: Show a photograph of your LCD display after you enter the following message in the web form (substitute your own net ID):</p>
