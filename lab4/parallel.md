@@ -64,7 +64,7 @@ The 16x2 character LCD is a small display that can show two lines of text or oth
 
 This module actually includes multiple parts on a single PCB. Here's a block diagram that shows how it all works together:
 
-![Block diagram of 16x2 character LCD. ([Source](https://cdn-shop.adafruit.com/product-files/181/p181.pdf))](images/lcd-16x2-block.pdf){ width=70% }
+![Block diagram of 16x2 character LCD. ([Source](https://cdn-shop.adafruit.com/product-files/181/p181.pdf))](images/lcd-16x2-block.svg){ width=70% }
 
 We'll review each of these parts in turn.
 
@@ -366,7 +366,7 @@ The timing diagram for write operations, on page 25 of the SPLC780 driver datash
 
 \newpage
 
-![Timing diagram for write operations to the LCD module.](images/splc780-write-diagram.pdf){width=80%}
+![Timing diagram for write operations to the LCD module.](images/splc780-write-diagram.svg){width=80%}
 
 
 
@@ -469,7 +469,7 @@ I'm not going to ask you to do that yourself this week, but please watch [this v
 
 Before we can send text to appear on the LCD display, we need to initialize the display by sending commands to configure its operation. The datasheet for the control IC shows a "typical" procedure used to initialize the display in various modes. For example, the SPLC780 datasheet shows the following procedure for initializing the display in 4-bit mode:
 
-![Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.](images/4-bit-SPLC780.pdf)
+![Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.](images/4-bit-SPLC780.svg)
 
 We'll follow this procedure in the `lcd_init` function to set up our display.
 

@@ -129,7 +129,7 @@
 <p>The 16x2 character LCD is a small display that can show two lines of text or other symbols, with 16 characters on each line.</p>
 <p>This module actually includes multiple parts on a single PCB. Here’s a block diagram that shows how it all works together:</p>
 <figure>
-<embed src="images/lcd-16x2-block.pdf" style="width:70.0%" /><figcaption aria-hidden="true">Block diagram of 16x2 character LCD. (<a href="https://cdn-shop.adafruit.com/product-files/181/p181.pdf">Source</a>)</figcaption>
+<img src="images/lcd-16x2-block.svg" style="width:70.0%" alt="Block diagram of 16x2 character LCD. (Source)" /><figcaption aria-hidden="true">Block diagram of 16x2 character LCD. (<a href="https://cdn-shop.adafruit.com/product-files/181/p181.pdf">Source</a>)</figcaption>
 </figure>
 <p>We’ll review each of these parts in turn.</p>
 <p>First, the LCD panel and LED backlight. The following figure shows a disassembled LCD panel and backlight. A metal frame (A) is positioned over the LCD “glass” (B). Between the LCD and the PCB (G) is a reflector (F), lightguide (E) and LEDs mounted to small PCD (D), and a diffuser (C). These layers work together to “spread” the light across the back of the LCD panel.</p>
@@ -322,7 +322,7 @@ cd ~/lab-parallel</code></pre>
 </figure>
 <p>The timing diagram for write operations, on page 25 of the SPLC780 driver datasheet, further clarifies exactly what happens on the bus during each write operation. We can see that <strong>E</strong> acts as a clock signal, pulsing each time a new bit is transmitted on the data lines. The datasheet also specifies the minimum time that each data and control line must be “held” at its desired value before, during, and after the pulse. (We’ll be extra conservative, and hold the line longer.) With that in mind, let’s fill in the <code>lcd_byte</code> function.</p>
 <figure>
-<embed src="images/splc780-write-diagram.pdf" style="width:80.0%" /><figcaption aria-hidden="true">Timing diagram for write operations to the LCD module.</figcaption>
+<img src="images/splc780-write-diagram.svg" style="width:80.0%" alt="Timing diagram for write operations to the LCD module." /><figcaption aria-hidden="true">Timing diagram for write operations to the LCD module.</figcaption>
 </figure>
 <div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="co"># Function for sending one byte of data to the display, </span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="co"># in either LCD_CMD (command) or LCD_CHR (data character) mode.</span></span>
@@ -393,7 +393,7 @@ cd ~/lab-parallel</code></pre>
 <h3 id="write-the-lcd_init-function">Write the <code>lcd_init</code> function</h3>
 <p>Before we can send text to appear on the LCD display, we need to initialize the display by sending commands to configure its operation. The datasheet for the control IC shows a “typical” procedure used to initialize the display in various modes. For example, the SPLC780 datasheet shows the following procedure for initializing the display in 4-bit mode:</p>
 <figure>
-<embed src="images/4-bit-SPLC780.pdf" /><figcaption aria-hidden="true">Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.</figcaption>
+<img src="images/4-bit-SPLC780.svg" alt="Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet." /><figcaption aria-hidden="true">Initializing the display in 4-bit mode - page 12 of SPLC780 datasheet.</figcaption>
 </figure>
 <p>We’ll follow this procedure in the <code>lcd_init</code> function to set up our display.</p>
 <p>First, note that in the initialization procedure, we send several sequences of bytes to the LCD display’s instruction register (note the value shown on the RS line!) To learn about the instructions available, we’ll refer to the SPLC780 datasheet. Refer to page 6 of this datasheet, where it starts to define some of the commands. Here are a few examples:</p>
