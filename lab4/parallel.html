@@ -268,10 +268,10 @@ cd ~/lab-parallel</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="co"># GPIO pin to LCD pin mapping</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>LCD_RS <span class="op">=</span> <span class="dv">6</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>LCD_E  <span class="op">=</span> <span class="dv">5</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>LCD_D4 <span class="op">=</span> <span class="dv">22</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>LCD_D5 <span class="op">=</span> <span class="dv">23</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>LCD_D6 <span class="op">=</span> <span class="dv">24</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>LCD_D7 <span class="op">=</span> <span class="dv">25</span></span></code></pre></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a>LCD_D4 <span class="op">=</span> <span class="dv">25</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a>LCD_D5 <span class="op">=</span> <span class="dv">24</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>LCD_D6 <span class="op">=</span> <span class="dv">23</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>LCD_D7 <span class="op">=</span> <span class="dv">22</span></span></code></pre></div>
 <p>You may be wondering why we used the <code>LCD_</code> prefix for each variable name - isn’t it obvious what <code>RS</code> is, even without the <code>LCD_</code> prefix? However, in most projects we will have more than one peripheral connected to the Pi, so it’s helpful to prefix all of the constants and functions related to a particular peripheral, with that peripheral’s name.</p>
 <p>We’ll add more constant variables to this section later. For now, though, we’ll define a few functions. To make it easier to debug, we’ll define them as “dummy” functions (empty functions that don’t do anything), so that we can immediately use them and test their integration in the overall program - then we’ll fill them in gradually.</p>
 <p>Add three “dummy” function definitions and set up the <code>main</code> function:</p>

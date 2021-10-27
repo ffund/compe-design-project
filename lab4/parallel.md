@@ -289,10 +289,10 @@ Then set up your GPIO pin to LCD pin mapping. It's conventional to define these 
 # GPIO pin to LCD pin mapping
 LCD_RS = 6
 LCD_E  = 5
-LCD_D4 = 22
-LCD_D5 = 23
-LCD_D6 = 24
-LCD_D7 = 25
+LCD_D4 = 25
+LCD_D5 = 24
+LCD_D6 = 23
+LCD_D7 = 22
 ```
 
 You may be wondering why we used the `LCD_` prefix for each variable name - isn't it obvious what `RS` is, even without the `LCD_` prefix? However, in most projects we will have more than one peripheral connected to the Pi, so it's helpful to prefix all of the constants and functions related to a particular peripheral, with that peripheral's name.
