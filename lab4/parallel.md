@@ -792,4 +792,6 @@ Also show a photograph of your LCD display after you enter the following message
 The quick brown fox jumps over the lazy dog
 ```
 
+The numbered sticker on the breadboard should be visible in your photos.
+
 ---
