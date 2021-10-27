@@ -557,7 +557,7 @@ Then, run `lcd-send.py` again. This time, you should see the character appear on
 
 While we can now send a binary number to the display, we have to look up each character manually in the ASCII conversion chart to identify the number to send. Let's fill in the `lcd_char` function to do this for us.
 
-To fill in the `lcd_char` function, note that the `ord` function in Python accepts a character as an argument, and returns an integer representing the code point of the character. Use this to implement the `lcd_char` function, which accepts a character as an argument and returns the representative integer.
+To fill in the `lcd_char` function, note that the `ord` function in Python accepts a character as an argument, and returns an integer representing the code point of the character. Use this to implement the `lcd_char` function, which accepts a character as an argument and sends it to the display.
 
 ---
 

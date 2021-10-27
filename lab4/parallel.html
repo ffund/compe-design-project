@@ -460,7 +460,7 @@ cd ~/lab-parallel</code></pre>
 <p>Then, run <code>lcd-send.py</code> again. This time, you should see the character appear on the display!</p>
 <h3 id="write-the-lcd_char-function">Write the <code>lcd_char</code> function</h3>
 <p>While we can now send a binary number to the display, we have to look up each character manually in the ASCII conversion chart to identify the number to send. Let’s fill in the <code>lcd_char</code> function to do this for us.</p>
-<p>To fill in the <code>lcd_char</code> function, note that the <code>ord</code> function in Python accepts a character as an argument, and returns an integer representing the code point of the character. Use this to implement the <code>lcd_char</code> function, which accepts a character as an argument and returns the representative integer.</p>
+<p>To fill in the <code>lcd_char</code> function, note that the <code>ord</code> function in Python accepts a character as an argument, and returns an integer representing the code point of the character. Use this to implement the <code>lcd_char</code> function, which accepts a character as an argument and sends it to the display.</p>
 <hr />
 <p><strong>Lab report</strong>: Modify the <code>main</code> function in your <code>lcd-send.py</code> so that it:</p>
 <ul>
