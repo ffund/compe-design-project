@@ -41,6 +41,8 @@ The potentiometer has a strip of resistive material connected across the two out
 
 The middle terminal is connected to a "wiper", that divides the resistive material into two parts. When you turn the knob, you adjust the position of the wiper, and in turn, how much of the total resistance is between the first pin and middle pin vs. how much is between the middle pin and outer pin.
 
+\newpage
+
 ---
 
 **Key potentiometer properties**:
