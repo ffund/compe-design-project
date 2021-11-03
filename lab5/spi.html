@@ -127,7 +127,7 @@ GPIO.cleanup()</code></pre>
 <pre><code>python3 spi-id.py</code></pre>
 <p>and note the ID that is returned.</p>
 <h3 id="change-the-spi-bus-speed">Change the SPI bus speed</h3>
-<p>By default, the SPI interface operates too fast for <code>piscope</code> to be able to reliably show us what’s going on on the SPI lines. We will tell the SPI interface to run slower so that we can watch it. Open the library file <code>MFRC522.py</code>:</p>
+<p>By default, the SPI interface operates too fast for us to reliably see what’s going on on the SPI lines. We will tell the SPI interface to run slower so that we can watch it. Open the library file <code>MFRC522.py</code>:</p>
 <pre><code>nano ~/lab-spi/MFRC522-python/mfrc522/MFRC522.py</code></pre>
 <p>and find the line</p>
 <pre><code>    def __init__(self, bus=0, device=0, spd=1000000, pin_mode=10, pin_rst=-1, debugLevel=&#39;WARNING&#39;):</code></pre>
@@ -204,7 +204,7 @@ cd ~/lab-spi/</code></pre>
 <p><strong>Lab report</strong>: Take a screenshot of the Logic Analyzer display showing at least 2 of the module initialization commands, as described above. Annotate the screenshot - for each initialization command, label the register byte (in hex) and command byte. Then, show a screenshot of the section of the datasheet that describes this command.</p>
 <p>Note the status of the CE0 line on the Pi during the transactions above. What is the purpose of the CE line?</p>
 <p><strong>Lab report</strong>: Take a screenshot from the Protocol tool, showing the tag ID being sent over the SPI bus. In the same screenshot, show the terminal output with the identical tag ID printed in the terminal. (As in my example!)</p>
-<p>In the screenshot from the Protocol tool, circle each byte that is sent <em>from the Pi to the RFID module</em> in one color, and circle each byte that is sent <em>from the display to the RFID module</em> in a different color.</p>
+<p>In the screenshot from the Protocol tool, circle each byte that is sent <em>from the Pi to the RFID module</em> in one color, and circle each byte that is sent <em>from the RFID module to the Pi</em> in a different color.</p>
 <hr />
 <h3 id="write-to-and-read-from-a-tag">Write to and read from a tag</h3>
 <p>Sometimes, we may want to read and write more than just the tag ID - we may want to store data on the tag.</p>
@@ -246,7 +246,7 @@ finally:
 <p>Note that for each “read”, the Pi first sends the address of the FIFODataReg (0x09), then reads a byte from the peripheral. This address byte appears as 92 in the Protocol tool, because only the middle 6 bits are address bits; the first bit is 1 (indicating a read operation) and the last bit is always 0.</p>
 <hr />
 <p><strong>Lab report</strong>: Take a screenshot from the Protocol tool, showing the text from the tag (your net ID!) being sent over the SPI bus. In the same screenshot, show the terminal output with the identical tag ID printed in the terminal.</p>
-<p>In the screenshot from the Protocol tool, circle each byte that is sent <em>from the Pi to the RFID module</em> in one color, and circle each byte that is sent <em>from the display to the RFID module</em> in a different color.</p>
+<p>In the screenshot from the Protocol tool, circle each byte that is sent <em>from the Pi to the RFID module</em> in one color, and circle each byte that is sent <em>from the RFID module to the Pi</em> in a different color.</p>
 <hr />
 </body>
 </html>

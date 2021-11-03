@@ -186,7 +186,7 @@ and note the ID that is returned.
 
 ### Change the SPI bus speed
 
-By default, the SPI interface operates too fast for `piscope` to be able to reliably show us what's going on on the SPI lines. We will tell the SPI interface to run slower so that we can watch it. Open the library file `MFRC522.py`:
+By default, the SPI interface operates too fast for us to reliably see what's going on on the SPI lines. We will tell the SPI interface to run slower so that we can watch it. Open the library file `MFRC522.py`:
 
 ```
 nano ~/lab-spi/MFRC522-python/mfrc522/MFRC522.py
@@ -329,7 +329,7 @@ Note the status of the CE0 line on the Pi during the transactions above. What is
 
 **Lab report**: Take a screenshot from the Protocol tool, showing the tag ID being sent over the SPI bus. In the same screenshot, show the terminal output with the identical tag ID printed in the terminal. (As in my example!)
 
-In the screenshot from the Protocol tool, circle each byte that is sent *from the Pi to the RFID module* in one color, and circle each byte that is sent *from the display to the RFID module* in a different color.
+In the screenshot from the Protocol tool, circle each byte that is sent *from the Pi to the RFID module* in one color, and circle each byte that is sent *from the RFID module to the Pi* in a different color.
 
 ---
 
@@ -397,6 +397,6 @@ Note that for each "read", the Pi first sends the address of the FIFODataReg (0x
 
 **Lab report**: Take a screenshot from the Protocol tool, showing the text from the tag (your net ID!) being sent over the SPI bus. In the same screenshot, show the terminal output with the identical tag ID printed in the terminal.
 
-In the screenshot from the Protocol tool, circle each byte that is sent *from the Pi to the RFID module* in one color, and circle each byte that is sent *from the display to the RFID module* in a different color.
+In the screenshot from the Protocol tool, circle each byte that is sent *from the Pi to the RFID module* in one color, and circle each byte that is sent *from the RFID module to the Pi* in a different color.
 
 ---
