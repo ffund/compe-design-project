@@ -422,6 +422,7 @@ while True:
      # turn display off
      time.sleep(5)
      # turn display on
+     time.sleep(5)
 ```
 
 Then, modify this code to actually turn the display off and on where indicated by the comments. (You can use the example in the lecture slides as a reference!) Run your `oled-toggle.py` script to test it:
