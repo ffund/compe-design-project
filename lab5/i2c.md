@@ -415,7 +415,7 @@ bus = smbus.SMBus(1)    # I2C device 1 - on GPIO2 and GPIO3
 OLED_ADDRESS = 0x3c     #7 bit address (not including R/W bit)
 OLED_REGADDR = 0x00
 OLED_DISPOFF = 0xAE
-OLED_DISPON  = 0xAE
+OLED_DISPON  = 0xAF
 
 
 while True:
