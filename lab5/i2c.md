@@ -57,12 +57,12 @@ Now that we understand how to reach the module over the I2C bus, we need to know
 
 ![Datasheet description of the I2C write interface.](images/i2c-datasheet-command.png){width=600px}
 
-The datasheet (in **Section 8.1.5.1 I2C-bus Write data**) further clarifies that to distinguish between writing a command and writing to the display data, when we send on the I2C bus, we send a "command byte" immediately after the peripheral address byte. In the "command byte", the lower six bits are always 0. The upper two bits are CO and DC respectively, and these bits are set to indicate whether the following data byte is command or GDDRAM data, and whether additional bytes are expected to follow:
+The datasheet (in **Section 8.1.5.1 I2C-bus Write data**) further clarifies that to distinguish between writing a command and writing to the display data, when we send on the I2C bus, we send a "command byte" immediately after the peripheral address byte. In the "command byte", the lower six bits are always 0. The upper two bits are CO and DC respectively, and these bits are set to indicate whether the following data byte is command (`DC=0`) or GDDRAM data (`DC=1`), and whether one byte (`CO=1`) or a stream of bytes (`CO=0`) are expected to follow:
 
-* Command byte `0b10000000` = `0x80` indicates multiple commands
-* Command byte `0b00000000` = `0x00` indicates one command
-* Command byte `0b11000000` = `0xC0` indicates multiple GDDRAM data bytes
-* Command byte `0b01000000` = `0x40` indicates one GDDRAM data byte
+* Command byte `0b10000000` = `0x80` indicates one command
+* Command byte `0b00000000` = `0x00` indicates multiple commands
+* Command byte `0b11000000` = `0xC0` indicates one GDDRAM data byte
+* Command byte `0b01000000` = `0x40` indicates multiple GDDRAM data byte
 
 The *commands* that are available to configure the display are described in **Section 9 Command Table** and **Section 10 Command Descriptions**.
 

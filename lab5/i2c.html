@@ -124,12 +124,12 @@
 <figure>
 <img src="images/i2c-datasheet-command.png" width="600" alt="Datasheet description of the I2C write interface." /><figcaption aria-hidden="true">Datasheet description of the I2C write interface.</figcaption>
 </figure>
-<p>The datasheet (in <strong>Section 8.1.5.1 I2C-bus Write data</strong>) further clarifies that to distinguish between writing a command and writing to the display data, when we send on the I2C bus, we send a “command byte” immediately after the peripheral address byte. In the “command byte”, the lower six bits are always 0. The upper two bits are CO and DC respectively, and these bits are set to indicate whether the following data byte is command or GDDRAM data, and whether additional bytes are expected to follow:</p>
+<p>The datasheet (in <strong>Section 8.1.5.1 I2C-bus Write data</strong>) further clarifies that to distinguish between writing a command and writing to the display data, when we send on the I2C bus, we send a “command byte” immediately after the peripheral address byte. In the “command byte”, the lower six bits are always 0. The upper two bits are CO and DC respectively, and these bits are set to indicate whether the following data byte is command (<code>DC=0</code>) or GDDRAM data (<code>DC=1</code>), and whether one byte (<code>CO=1</code>) or a stream of bytes (<code>CO=0</code>) are expected to follow:</p>
 <ul>
-<li>Command byte <code>0b10000000</code> = <code>0x80</code> indicates multiple commands</li>
-<li>Command byte <code>0b00000000</code> = <code>0x00</code> indicates one command</li>
-<li>Command byte <code>0b11000000</code> = <code>0xC0</code> indicates multiple GDDRAM data bytes</li>
-<li>Command byte <code>0b01000000</code> = <code>0x40</code> indicates one GDDRAM data byte</li>
+<li>Command byte <code>0b10000000</code> = <code>0x80</code> indicates one command</li>
+<li>Command byte <code>0b00000000</code> = <code>0x00</code> indicates multiple commands</li>
+<li>Command byte <code>0b11000000</code> = <code>0xC0</code> indicates one GDDRAM data byte</li>
+<li>Command byte <code>0b01000000</code> = <code>0x40</code> indicates multiple GDDRAM data byte</li>
 </ul>
 <p>The <em>commands</em> that are available to configure the display are described in <strong>Section 9 Command Table</strong> and <strong>Section 10 Command Descriptions</strong>.</p>
 <figure>
