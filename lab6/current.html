@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Driving current</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Driving current</h1>
+</header>
+<p>In this lab, we’ll practice using a GPIO pin to switch a load on and off with a BJT transistor circuit.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>In this experiment, we will use a BJT transistor to switch a digital output on and off with a control signal from a GPIO pin, but with current and supply voltage from the Pi’s power rails. You will need:</p>
+<ul>
+<li>A Pi, SD card, and power supply</li>
+<li>Breadboard and jumper cables</li>
+<li>Digital multimeter</li>
+<li>2N3904 BJT NPN transistor. (The label is printed on the flat side of the transistor; you may have to hold the transistor at an angle in order to read it.)</li>
+<li>5mm white LED with ~25mA maximum current rating and ~3V forward voltage.</li>
+<li>Active buzzer. This part has the driver circuitry inside , so you don’t need a PWM signal to drive it (unlike the passive piezo buzzers we’ve discussed before, which <em>do</em> require a PWM signal). Note that this part is polarized - there is a small <strong>+</strong> marking on the top to indicate the positive side.</li>
+<li>220Ω, 4.7kΩ, and 47kΩ resistors</li>
+</ul>
+<h2 id="driving-current-using-a-transistor">Driving current using a transistor</h2>
+<p>First, we’ll work with a basic LED circuit.</p>
+<figure>
+<img src="images/orientation-2N3904-2N2222.svg" style="width:70.0%" alt="Identify base, collector, and emitter pins for your transistor, then connect it as pictured. Note that the order of pins is not standardized; different transistors can have different pinouts." /><figcaption aria-hidden="true">Identify base, collector, and emitter pins for your transistor, then connect it as pictured. Note that the order of pins is <em>not</em> standardized; different transistors can have different pinouts.</figcaption>
+</figure>
+<p>Use the diagram from the datasheet (also shown here) to identify the base, collector, and emitter pins on your transistor. Then, place it in your breadboard and add resistors and an LED as follows:</p>
+<ul>
+<li>220Ω resistor in series with the collector pin</li>
+<li>4.7kΩ resistor in series with the base pin</li>
+<li>Negative side (short leg) of LED in series with the 220Ω resistor</li>
+</ul>
+<p>Finally, connect it to your Pi as pictured -</p>
+<ul>
+<li>GND to the emitter pin of the transistor</li>
+<li>5V supply to the positive side (long leg) of LED.</li>
+<li>Any available GPIO pin to the 4.7kΩ resistor</li>
+</ul>
+<p>Configure the GPIO pin as output HIGH (you can use the <code>gpio</code> utility), and watch the LED turn on. Then configure the GPIO pin as output LOW and watch the LED turn off.</p>
+<h3 id="voltage-and-current-measurement">Voltage and current measurement</h3>
+<p>Use your digital multimeter to measure the voltage:</p>
+<ul>
+<li>across the LED</li>
+<li>across the base and emitter pins of the transistor</li>
+<li>across the base and collector pins of the transistor</li>
+<li>across the base resistor</li>
+<li>across the collector resistor</li>
+</ul>
+<p>while the LED is switched on. Save these values for your lab report.</p>
+<p>To measure current using a digital multimeter, you must:</p>
+<ul>
+<li>break the circuit</li>
+<li>set the dial on the multimeter to current mode, and move the red probe to the current terminal</li>
+<li>put the multimeter in series with your circuit</li>
+</ul>
+<p>Be very careful <em>not</em> to put the multimeter in parallel with any part of your circuit when it is in current mode - this will create a short circuit, and can break your multimeter and/or your Pi.</p>
+<p>Use your multimeter to measure current</p>
+<ul>
+<li>between the 5V supply pin and the positive side of the LED</li>
+<li>between the GPIO pin and the base resistor</li>
+</ul>
+<p>while the LED is switched on. Save these values for your lab report.</p>
+<p>Replace the 4.7kΩ between the GPIO pin and the transistor base with a 47kΩ resistor. Repeat this procedure and save your measurements.</p>
+<hr />
+<p><strong>Lab report</strong>: Draw a diagram of the circuit, similar to the schematic shown above. On the diagram, indicate the <strong>measured</strong> voltage drop across each component: <span class="math inline">\(V_{LED}\)</span>, <span class="math inline">\(V_{BE}\)</span>, <span class="math inline">\(V_{CE}\)</span>, <span class="math inline">\(V_{R_B}\)</span>, <span class="math inline">\(V_{R_C}\)</span>. Also indicate the <strong>measured</strong> current in each branch, <span class="math inline">\(I_B\)</span> and <span class="math inline">\(I_C\)</span>.</p>
+<!-- VBE = 0.67, VCE = 0.11, IC = 11.39, IB  = 0.5-->
+<p><strong>Lab report</strong>: Compute <span class="math inline">\(\frac{I_C}{I_B}\)</span>. Is this value greater than or less than the value for <span class="math inline">\(h_{FE}\)</span> in the transistor datasheet? What does this tell you about the mode of operation of the transistor?</p>
+<p><strong>Lab report</strong>: Take a screenshot of the part of the datasheet that describes the expected <span class="math inline">\(V_{BE}\)</span>, <span class="math inline">\(V_{CE}\)</span>, <span class="math inline">\(h_{FE}\)</span> for this transistor. Annotate the screenshot to circle the most appropriate values for your experiment (since these vary with the current in the circuit.) Are your measured values within the expected range?</p>
+<p><strong>Lab report</strong> (individual work): Which resistor is primarily responsible for limiting the current flowing through the LED? Which resistor is primarily responsible for limiting the current from the GPIO pin?</p>
+<p><strong>Lab report</strong> (individual work): What is the benefit of this circuit with the transistor, compared to the circuit in Lab 2 where the LED and a current-limiting resistor were connected directly to a GPIO pin?</p>
+<p><strong>Lab report</strong>: Draw a diagram of the circuit with the 47kΩ resistor. On the diagram, indicate the <strong>measured</strong> voltage drop across each component: <span class="math inline">\(V_{LED}\)</span>, <span class="math inline">\(V_{BE}\)</span>, <span class="math inline">\(V_{CE}\)</span>, <span class="math inline">\(V_{R_B}\)</span>, <span class="math inline">\(V_{R_C}\)</span>. Also indicate the <strong>measured</strong> current in each branch, <span class="math inline">\(I_B\)</span> and <span class="math inline">\(I_C\)</span>.</p>
+<p><strong>Lab report</strong> (individual work): Explain what changes when you replace the 4.7kΩ resistor with a 47kΩ resistor. Show how you would analyze the circuit. Is it still operating in the same mode? Can you determine the current through the LED just by analyzing the circuit and referring to datasheet parameters (without measurement)?</p>
+<!-- with 50k: VBE = 0.743, VCE = 0.629, IC = 8.91, IB  = 0.04-->
+<hr />
+<h3 id="buzzer-circuit">Buzzer circuit</h3>
+<p>Replace the LED in your schematic with the 5V buzzer. (Make sure to note the polarity of the buzzer!)</p>
+<figure>
+<img src="images/buzzer_bb.svg" alt="5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn’t need an external PWM signal." /><figcaption aria-hidden="true">5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn’t need an external PWM signal.</figcaption>
+</figure>
+<p>Verify that you can turn the buzzer on and off by writing HIGH or LOW to the GPIO output.</p>
+<p>Then, remove the wire that connects the 5V supply pin to the positive leg of the buzzer. Instead, connect the 3.3V supply pin to the positive leg of the buzzer. Try to turn the buzzer on and off by writing HIGH or LOW to the GPIO output.</p>
+<hr />
+<p><strong>Lab report</strong> (individual work): The 5V buzzer requires a 5V signal to turn on. But with this transistor circuit, we can use a 3.3V GPIO pin to switch it on and off. How? Explain.</p>
+<hr />
+</body>
+</html>
