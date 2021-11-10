@@ -59,7 +59,7 @@ Use your digital multimeter to measure the voltage:
 
 * across the LED
 * across the base and emitter pins of the transistor
-* across the base and collector pins of the transistor
+* across the collector and emitter pins of the transistor
 * across the base resistor
 * across the collector resistor
 
