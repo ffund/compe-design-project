@@ -118,7 +118,7 @@ Replace the 4.7kΩ between the GPIO pin and the transistor base with a 47kΩ res
 
 ### Buzzer circuit
 
-Replace the LED in your schematic with the 5V buzzer. (Make sure to note the polarity of the buzzer!)
+Put the 4.7kΩ resistor back in place of the 47kΩ. Replace the LED in your schematic with the 5V buzzer. (Make sure to note the polarity of the buzzer!)
 
 ![5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn't need an external PWM signal.](images/buzzer_bb.svg)
 
