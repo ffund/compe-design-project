@@ -391,7 +391,7 @@ For the last set of measurements, you will need to observe the signals on GPIO14
 You will place an object approximately 5, 10, and 15 cm away from the sensor. (The sensor works best with a smooth, flat object at close range.)  You will capture two screenshots in each case. You'll need:
 
 * a screenshot of the Python script terminal output for the given distance
-* a screenshot of the scope display (either `piscope` or Discovery 2) showing the complete TRIG signal, and the time between the falling edge on TRIG and the rising edge on ECHO. This time is proportional to the distance. Use the cursor tool to measure this duration.  
+* a screenshot of the scope display (either `piscope` or Discovery 2) showing the complete TRIG signal, and the pulse width on ECHO. This time is proportional to the distance. Use the cursor tool to measure this duration.  
 
 
 ---
