@@ -222,7 +222,7 @@ gpio -g pwm 12 600   # 60ms out of 100ms</code></pre>
 <figure>
 <img src="images/scope-hcsr04-divider.svg" width="350" alt="HC-SR04 connection." /><figcaption aria-hidden="true">HC-SR04 connection.</figcaption>
 </figure>
-<p>The output fro the HC-SR04 TRIG pin will be a pulse width.</p>
+<p>The output from the HC-SR04 ECHO pin will be a pulse width.</p>
 <p>On the Pi, create a new file <code>hc-sr04.py</code> script to measure distance:</p>
 <pre><code>import RPi.GPIO as GPIO
 import time

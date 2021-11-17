@@ -318,7 +318,7 @@ The overall configuration (excluding the VCC and GND connections on the HC-SR04)
 
 \newpage
 
-The output fro the HC-SR04 TRIG pin will be a pulse width. 
+The output from the HC-SR04 ECHO pin will be a pulse width. 
 
 
 On the Pi, create a new file `hc-sr04.py` script to measure distance:
