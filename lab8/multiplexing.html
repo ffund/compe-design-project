@@ -121,7 +121,7 @@
 <p>First, we will connect the outputs of the shift register to the LED bar graph. For this part, you must be very careful: with many “bare” resistor legs positioned very close to one another, it’s easy to accidentally short them. Use your 220Ω resistors to connect the top 8 anodes on the bar graph to outputs QA through QH of the shift register, in order, with QA connected to the <em>top</em> bar and QH connected to the <em>bottom</em> of the 8 connected bars. Be very careful to make sure no resistor legs or other conductive parts are accidentally touching!</p>
 <p>Once you are confident with that part of the circuit, connect the rest of the shift register pins:</p>
 <ul>
-<li>Connect the VDD pin of the shift register to GND and the VCC pin to 3.3V.</li>
+<li>Connect the GND pin of the shift register to GND and the VCC pin to 3.3V.</li>
 <li>The OE (output enable) pin on the shift register, which is active LOW, should be tied to ground to permanently enable the outputs.</li>
 <li>The SRCLR (shift register clear) pin on the shift register, which is also active LOW, is tied to the HIGH voltage level so that it is permanently <em>not</em> active.</li>
 <li>The SI/SER (serial input) pin on the shift register is connected to GPIO10 on the Pi.</li>

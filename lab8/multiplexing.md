@@ -58,7 +58,7 @@ First, we will connect the outputs of the shift register to the LED bar graph. F
 
 Once you are confident with that part of the circuit, connect the rest of the shift register pins:
 
-* Connect the VDD pin of the shift register to GND and the VCC pin to 3.3V.
+* Connect the GND pin of the shift register to GND and the VCC pin to 3.3V.
 * The OE (output enable) pin on the shift register, which is active LOW, should be tied to ground to permanently enable the outputs.
 * The SRCLR (shift register clear) pin on the shift register, which is also active LOW, is tied to the HIGH voltage level so that it is permanently _not_ active.
 * The SI/SER (serial input) pin on the shift register is connected to GPIO10 on the Pi.
