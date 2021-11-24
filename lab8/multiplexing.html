@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Multiplexing I/O</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Multiplexing I/O</h1>
+</header>
+<p>In this lab, we’ll practice using a shift register and an I2C multiplexer to multiplex I/O pins over a serial communication bus.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>In this experiment, we will use two ICs - a shift register and an I2C multiplexer - to multiplex I/O pins on the Pi. You will need:</p>
+<ul>
+<li>A Pi, SD card, and power supply</li>
+<li>Breadboard and jumper cables</li>
+<li>Analog Discovery 2</li>
+<li>SN74HC595N shift register</li>
+<li>10 segment LED bar graph</li>
+<li>8x 220Ω resistor</li>
+<li>MCP23008 I2C pin multiplexer</li>
+<li>2x push button switches</li>
+<li>4x small LED with 2.0FV</li>
+</ul>
+<h2 id="multiplexing-outputs-with-a-shift-register">Multiplexing outputs with a shift register</h2>
+<h3 id="connect-your-shift-register-and-led-bar-graph">Connect your shift register and LED bar graph</h3>
+<p>For this experiment, we will use the SN74HC595N shift register to control an LED “bar graph” output. The LED bar graph has 10 LEDs, but we will just use 8 of them.</p>
+<p>Use the datasheet for the LED bar graph to orient the part (one of the corners is slightly flattened, so you can see which side has the LED anodes and LED cathodes). Then place it in a breadboard with a “ravine” in the middle, near the top of the breadboard, and oriented so that the anodes are on the left side of the breadboard and the cathodes are on the right side.</p>
+<p>Connect the top 8 cathodes to the GND power rail on your breadboard, and connect this GND rail to the GND line on your Pi.</p>
+<p>Then, place your shift register across the “ravine” in the breadboard, underneath the LED bar graph, with the notch (indicating the top of the IC) at the top.</p>
+<p>Use the following table from the SN74HC595N datasheet to identify the pins on the shift register:</p>
+<figure>
+<embed src="images/sn74hc595-pin-configurations.pdf" /><figcaption aria-hidden="true">Shift register pins and functions.</figcaption>
+</figure>
+<p>Then, connect your shift register as described below.</p>
+<p>First, we will connect the outputs of the shift register to the LED bar graph. For this part, you must be very careful: with many “bare” resistor legs positioned very close to one another, it’s easy to accidentally short them. Use your 220Ω resistors to connect the top 8 anodes on the bar graph to outputs QA through QH of the shift register, in order, with QA connected to the <em>top</em> bar and QH connected to the <em>bottom</em> of the 8 connected bars. Be very careful to make sure no resistor legs or other conductive parts are accidentally touching!</p>
+<p>Once you are confident with that part of the circuit, connect the rest of the shift register pins:</p>
+<ul>
+<li>Connect the VDD pin of the shift register to GND and the VCC pin to 3.3V.</li>
+<li>The OE (output enable) pin on the shift register, which is active LOW, should be tied to ground to permanently enable the outputs.</li>
+<li>The SRCLR (shift register clear) pin on the shift register, which is also active LOW, is tied to the HIGH voltage level so that it is permanently <em>not</em> active.</li>
+<li>The SI/SER (serial input) pin on the shift register is connected to GPIO10 on the Pi.</li>
+<li>The RCLK pin on the shift register is connected to GPIO8 on the Pi.</li>
+<li>The SRCLK pin on the shift register is connected to GPIO11 on the Pi.</li>
+</ul>
+<h3 id="understanding-the-shift-register">Understanding the shift register</h3>
+<p>The basic operation of the shift register is described by “Figure 4. Logic Diagram (Positive Logic)” and “Table 1 - Function Table” on page 12 and 13 of the datasheet. The device is an 8-bit shift register, connected to an 8-bit storage register, which is connected to the 8 output pins.</p>
+<ul>
+<li>When the SRCLK line is pulsed, the bit on the SER line moves into the first stage of the shift register, and every other stage is shifted to the next stage.</li>
+<li>When the RCLK line is pulse, the contents of the shift register are copied to a storage register, which is connected to the output pins. Now, all of the outputs are HIGH or LOW depending on the contents of the register.</li>
+</ul>
+<h3 id="flask-app-for-shift-register">Flask app for shift register</h3>
+<p>To help you understand how the shift register works, I have prepared a Flask UI for the shift register.</p>
+<p>Create a new directory, and navigate to it:</p>
+<pre><code>mkdir ~/lab-multiplex
+cd ~/lab-multiplex</code></pre>
+<p>Inside this directory, create and navigate to a Flask UI directory:</p>
+<pre><code>mkdir flask-shift
+cd flask-shift</code></pre>
+<p>Inside this directory, create a file <code>index.html</code> with the following contents:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="dt">&lt;!DOCTYPE </span>html<span class="dt">&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>   <span class="kw">&lt;head&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a>    <span class="kw">&lt;title&gt;</span>Shift register<span class="kw">&lt;/title&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>    <span class="kw">&lt;link</span><span class="ot"> rel=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> href=</span><span class="st">&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>   <span class="kw">&lt;/head&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>   <span class="kw">&lt;body&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a>   <span class="kw">&lt;div</span><span class="ot"> class=</span><span class="st">&quot;container&quot;</span><span class="kw">&gt;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>    <span class="kw">&lt;h1&gt;</span>Shift register control<span class="kw">&lt;/h1&gt;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>      <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/out/0&quot;</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> role=</span><span class="st">&quot;button&quot;</span><span class="kw">&gt;</span>Send LOW<span class="kw">&lt;/a&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>      <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/out/1&quot;</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> role=</span><span class="st">&quot;button&quot;</span><span class="kw">&gt;</span>Send HIGH<span class="kw">&lt;/a&gt;</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>      <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/clk/0&quot;</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> role=</span><span class="st">&quot;button&quot;</span><span class="kw">&gt;</span>Pulse SRCLK<span class="kw">&lt;/a&gt;</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>      <span class="kw">&lt;a</span><span class="ot"> href=</span><span class="st">&quot;/clk/1&quot;</span><span class="ot"> class=</span><span class="st">&quot;btn btn-primary&quot;</span><span class="ot"> role=</span><span class="st">&quot;button&quot;</span><span class="kw">&gt;</span>Pulse RCLK<span class="kw">&lt;/a&gt;</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>   <span class="kw">&lt;/div&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>   <span class="kw">&lt;/body&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a><span class="kw">&lt;/html&gt;</span></span></code></pre></div>
+<p>Save and close this file.</p>
+<p>Then, create a file <code>shift-app.py</code> with the following contents:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="im">from</span> flask <span class="im">import</span> Flask, redirect</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a>SDI   <span class="op">=</span> <span class="dv">10</span>  <span class="co"># BCM10 - physical pin 19</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a>RCLK  <span class="op">=</span> <span class="dv">8</span>   <span class="co"># BCM8 - physical pin 24</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a>SRCLK <span class="op">=</span> <span class="dv">11</span>  <span class="co"># BCM11- physical pin 23</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a>CLK_TIME <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>, static_folder<span class="op">=</span><span class="st">&#39;&#39;</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a><span class="kw">def</span> hello():</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>    <span class="cf">return</span> app.send_static_file(<span class="st">&#39;index.html&#39;</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a><span class="at">@app.route</span>(<span class="st">&#39;/out/&lt;int:value&gt;&#39;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a><span class="kw">def</span> send_output(value):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a>    GPIO.output(SDI,value)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a>    <span class="cf">return</span> redirect(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true"></a><span class="at">@app.route</span>(<span class="st">&#39;/clk/&lt;int:clock&gt;&#39;</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true"></a><span class="kw">def</span> pulse_clk(clock):</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true"></a>    <span class="cf">if</span> clock<span class="op">==</span><span class="dv">0</span>:</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true"></a>        clk_pin <span class="op">=</span> SRCLK</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true"></a>    <span class="cf">elif</span> clock<span class="op">==</span><span class="dv">1</span>:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true"></a>        clk_pin <span class="op">=</span> RCLK</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true"></a>    GPIO.output(clk_pin, GPIO.LOW)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true"></a>    time.sleep(CLK_TIME)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true"></a>    GPIO.output(clk_pin, GPIO.HIGH)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true"></a>    time.sleep(CLK_TIME)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true"></a>    <span class="cf">return</span> redirect(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true"></a></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true"></a>    <span class="co"># set up GPIO pins</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true"></a>    GPIO.setwarnings(<span class="va">False</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true"></a>    GPIO.setmode(GPIO.BCM)   <span class="co"># BCM pin numbering</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true"></a>    GPIO.setup(SDI, GPIO.OUT)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true"></a>    GPIO.setup(RCLK, GPIO.OUT)</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true"></a>    GPIO.setup(SRCLK, GPIO.OUT)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true"></a>    GPIO.output(SDI, GPIO.LOW)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true"></a>    GPIO.output(RCLK, GPIO.LOW)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true"></a>    GPIO.output(SRCLK, GPIO.LOW)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true"></a>    app.run(host<span class="op">=</span><span class="st">&#39;0.0.0.0&#39;</span>, port<span class="op">=</span><span class="dv">80</span>, debug<span class="op">=</span><span class="va">True</span>, threaded<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>Run with</p>
+<pre><code>sudo python3 shift-app.py</code></pre>
+<p>Open a browser on any device on the same network as your Pi, and in the address bar, type the Pi’s IP address on this network. This will load a page with four buttons on it, like the following:</p>
+<figure>
+<img src="images/sr-flask.png" style="width:40.0%" alt="Shift register Flask app." /><figcaption aria-hidden="true">Shift register Flask app.</figcaption>
+</figure>
+<p>You will control the state of the SER line with the “Send LOW” and “Send HIGH” buttons, and you can pulse either clock with the “Pulse SRCLK” and “Pulse RCLK” buttons.</p>
+<p>Try the following sequence to see how the shift register moves values from one stage to the next:</p>
+<ul>
+<li>Press “Send HIGH”. This will send a HIGH value to the SER line on the shift register. Nothing will change on the LED bar graph.</li>
+<li>Press “Pulse SRCLK”. This will “clock” the value on the SER line (the HIGH value you just set!) into the shift register. The new HIGH value will be in the first stage, and every stage will be shifted over one step. However, nothing will change on the LED bar graph.</li>
+<li>Press “Pulse RCLK”. This will “clock” the value in the shift register to the storage register. The storage register vlaues will appear on the outputs QA (first stage) to QH (last stage), and in turn, on the LED bar graph.</li>
+</ul>
+<p>At this point, you should see that the first bar in the LED bar graph (the one connected to QA) is lit!</p>
+<p>Now, we’ll see how that value “shifts” through the eight-bit shift register.</p>
+<ul>
+<li>Press “Send LOW”. This will change the value on the SER line to LOW. (Otherwise, we’d keep loading new HIGH values into the first shift register stage - we don’t want to do that!). Nothing will change on the LED bar graph.</li>
+<li>Press “Pulse SRCLK”. This will “clock” the value on the SER line (the LOW value you just set!) into the shift register. The new LOW value will be in the first stage, and every stage will be shifted over one step. However, nothing will change on the LED bar graph.</li>
+<li>Press “Pulse RCLK”. This will “clock” the value in the shift register to the output register. The new state of the shift register stages will appear on the outputs QA (first stage) to QH (last stage), and in turn, on the LED bar graph.</li>
+</ul>
+<p>You should see that the HIGH value you sent previously has “shifted” to the second stage - the LED bar that is connected to QB will be lit.</p>
+<p>Repeat this “shift” until the HIGH value has shifted past the last stage (QH) and all of the LED bars are <em>not</em> lit.</p>
+<p>In the previous example, we updated the storage register (and thereby, the LED outputs) each time we updated the shift register. However, in many cases we’ll want to send an 8-bit value to the shift register and only <em>then</em> update the storage register, so that only the desired output (and not the intermediate shift register states) appears.</p>
+<p>Repeat the steps above, but this time, only pulse RCLK once, at the end of the sequence. Can you make the LED bar graph go straight from “all outputs off” to “only the last output (at QH) is HIGH”?</p>
+<hr />
+<p><strong>Lab report</strong> (individual work): Identify the sequence of steps (button presses) to make the ASCII equivalent of the first digit of your net ID appear on the LED bar graph, <em>without</em> showing the intermediate steps. (Try it out and make sure it works!) List those steps.</p>
+<hr />
+<h3 id="shift-register-using-spi-bus">Shift register using SPI bus</h3>
+<p>The sequence of steps used to “send” a byte to the output pins:</p>
+<ul>
+<li>keep RCLK low</li>
+<li>send one bit at a time on SER, and pulse SRCLK with each bit</li>
+<li>pulse RCLK high at the end</li>
+</ul>
+<p>looks just like an SPI transaction, with the SRCLK line acting as clock, a serial data out line, and the RCLK line acting as a chip select line that is pulled low before the transaction begins and pulled high at the end of the transaction.</p>
+<p>In fact, we can use the hardware SPI to send a byte to the LED array.</p>
+<p>Since the Flask app we just used reconfigured the SPI pins to work in OUTPUT mode, we first have to set them back to ALT mode to use the hardware SPI device. We’ll do this with the <code>pigs</code> utility in the <code>pigpio</code> library. If <code>pigpiod</code> is not already running, then run</p>
+<pre><code>sudo pigpiod</code></pre>
+<p>Then, run</p>
+<pre><code>pigs m 8 w  # pin8 - ce0 - to write mode
+pigs m 9 0  # pin9 - miso - to alt0
+pigs m 10 0 # pin10 - mosi - to alt0
+pigs m 11 0 # pin11 - sclk- to alt0</code></pre>
+<p>to set the pin modes. You can then use <code>gpio readall</code> and verify that the SPI pins are in ALT0 mode.</p>
+<p>Finally, send a byte to the LED array using the hardware SPI device.</p>
+<p>Navigate back to your <code>lab-multiplex</code> directory:</p>
+<pre><code>cd ~/lab-multiplex</code></pre>
+<p>Then create a <code>shift-register-spi.py</code> script with the following contents:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="im">import</span> spidev</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true"></a>spi <span class="op">=</span> spidev.SpiDev()</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true"></a>spi.<span class="bu">open</span>(<span class="dv">0</span>,<span class="dv">0</span>)    <span class="co"># SPI Port 0, Chip Select 0</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true"></a>spi.mode <span class="op">=</span> <span class="bn">0b00</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true"></a>spi.max_speed_hz <span class="op">=</span> <span class="dv">7629</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true"></a>spi.xfer([<span class="bn">0b01010101</span>])</span></code></pre></div>
+<p>Run this script with</p>
+<pre><code>python3 shift-register-spi.py</code></pre>
+<p>and observe the effect on the LED bar graph.</p>
+<p>Let us inspect this SPI signal with the Discovery 2. Connect your Discovery 2 to the SPI bus as follows:</p>
+<ul>
+<li>Use the row of header pins that came with the Discovery 2 - stick it in to the breadboard on the right side of the shift register. Then, you’ll be able to connect the Discovery 2 wires directly.</li>
+<li>Connect the GND pin on the Discovery 2 to GND.</li>
+<li>Connect the DIO0 (pink) pin on the Discovery 2 to RCLK</li>
+<li>Connect the DIO1 (green) pin on the Discovery 2 to SRCLK</li>
+<li>Connect the DIO2 (purple) pin on the Discovery 2 to SER</li>
+</ul>
+<p>Then, open the Logic Analyzer tool on the Discovery 2. Add an “SPI” bus with the following configuration:</p>
+<figure>
+<img src="images/scope-spi-bus.png" style="width:40.0%" alt="SPI bus settings." /><figcaption aria-hidden="true">SPI bus settings.</figcaption>
+</figure>
+<p>and configure a trigger on the falling edge of DIO0 (Enable).</p>
+<p>Watch the SPI transfer in your Discovery 2 Logic Analyzer as you use the <code>shift-register-spi.py</code> script to send the ASCII equivalent of the first character in your Net ID to the LED array. Take a screenshot of the Logic Analyzer view for your lab report.</p>
+<p>We can use the shift register to easily control a large number of outputs, without using many GPIO pins. (Note that only one pin on the Pi is completely occupied by the shift register - the CS line! The other SPI bus pins can still be used to connect a second SPI peripheral, with the other CS line.)</p>
+<p>Modify the <code>shift-register-spi.py</code> script so it creates the following effect on the LED bar graph:</p>
+<ul>
+<li>first, all bars are off</li>
+<li>after one second, the top and bottom bars are lit</li>
+<li>after another second, the top 2 and bottom 2 bars are lit</li>
+<li>after another second, the top 3 and bottom 3 bars are lit</li>
+<li>after another second, all 8 bars are lit.</li>
+</ul>
+<p>For full credit, your code should be clean, organized, and commented appropriately.</p>
+<hr />
+<p><strong>Lab report</strong>: Show the Logic Analyzer screenshot from the SPI transfer of the first character of your net ID to the LED bar graph via the shift register. Annotate the screenshot and indicate the exact instant in time at which:</p>
+<ul>
+<li>Each bit is loaded into the <em>first</em> shift register stage.</li>
+<li>The output pins show the byte that you sent.</li>
+</ul>
+<p><strong>Lab report</strong>: Upload your modified <code>shift-register-spi.py</code> script. The script should create the following effect on the LED bar graph:</p>
+<ul>
+<li>first, all bars are off</li>
+<li>after one second, the top and bottom bars are lit</li>
+<li>after another second, the top 2 and bottom 2 bars are lit</li>
+<li>after another second, the top 3 and bottom 3 bars are lit</li>
+<li>after another second, all 8 bars are lit.</li>
+</ul>
+<p>For full credit, your code should be clean, organized, and commented appropriately.</p>
+<hr />
+<p>When you are finished with this section, you can remove these parts from your breadboard.</p>
+<h2 id="i2c-multiplexer">I2C multiplexer</h2>
+<p>Next, we’ll use the MCP23008 I2C pin multiplexer to control multiple inputs and outputs using the (shared) I2C bus. Unlike the shift register, which can only be used to control <em>output</em> pins, the MCP23008 can be used to multiplex output <em>and</em> input pins.</p>
+<p>Place the pin multiplexer (MCP23008) in your breaboard. Refer to the MCP23008 datasheet to identify the pins. Make sure you look at the diagram for the MCP23008, not the other multiplexer varieties also described in the same datasheet.</p>
+<p>Then,</p>
+<ul>
+<li>Connect VSS to GND, VDD to 3.3V.</li>
+<li>Connect the SCL and SDA pins to the I2C bus on your Pi.</li>
+<li>The RESET pin, which is active low, should be tied to 3.3V so that the IC is <em>not</em> reset.</li>
+<li>Each of the address pins A2, A1, A0, should be tied to either GND <em>or</em> 3.3V, so that the address of the IC is <code>0x20</code>. To determine the I2C address given the state of the A2, A1, A0 pins, refer to <strong>Figure 1-2 I2C control byte format</strong> in the datasheet.</li>
+</ul>
+<p>Before you connect any inputs and outputs, test your I2C connection. Use</p>
+<pre><code>i2cdetect -y 1 0x20 0x27</code></pre>
+<p>to scan the I2C bus and see if there are any devices connected in the address range 0x20 to 0x27. Make sure your MCP23008 appears on address 0x20.</p>
+<p>For this exercise, you will implement a tally counter. It should have:</p>
+<ul>
+<li>two buttons - one button to increment the count, one button to decrement the count.</li>
+<li>four bits of output. Use four 2mm LEDs, with 220Ω current-limiting resistors, to display the current count.</li>
+</ul>
+<p>Connect these inputs and outputs as follows:</p>
+<ul>
+<li>Connect the HIGH side of each LED to GP4, GP5, GP6, and GP7, in order of their position on the breadboard. Then, put the LOW side of each LED in series with a current-limiting resistor to GND.</li>
+<li>For each push button switch, identify which pins are internally connected when the switch is not actuated. Then, connect one pin of each switch to GP0 and GP1, respectively, and the other (independent) pin of each switch to GND using a current-limiting resistor in series. (The purpose of the current-limiting resistor is to protect against accidentally setting the GPIO pin as OUTPUT HIGH).</li>
+</ul>
+<p>To use the MCP23008, we’ll use the <code>smbus</code> library in Python, which allows us to read and write to the I2C bus. We’ll mainly use two functions:</p>
+<ul>
+<li><code>write_byte_data</code> accepts three arguments: the address of the I2C peripheral, the address of the register we want to write to, and the byte we want to write to that register.</li>
+<li><code>read_byte_data</code> accepts two arguments: the address of the I2C peripheral, and the address of the register we want to read from.</li>
+</ul>
+<p>A demo script that shows you how to read from the MCP23008 input pins and write to the MCP23008 output pins is provided for you.</p>
+<p>Carefully study this script, then try to run it:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true"></a><span class="im">import</span> smbus</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true"></a>MCP23008_ADDR  <span class="op">=</span> <span class="bn">0x20</span>  <span class="co"># Address of peripheral on I2C bus</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true"></a>MCP23008_IODIR <span class="op">=</span> <span class="bn">0x00</span>  <span class="co"># IO direction configuration register address</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true"></a>MCP23008_GPPU  <span class="op">=</span> <span class="bn">0x06</span>  <span class="co"># Pull-up configuration register address</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true"></a>MCP23008_GPIO  <span class="op">=</span> <span class="bn">0x09</span>  <span class="co"># GPIO register address</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true"></a>i2c <span class="op">=</span> smbus.SMBus(<span class="dv">1</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true"></a><span class="kw">def</span> setAllInput():</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true"></a>    i2c.write_byte_data(MCP23008_ADDR, MCP23008_IODIR, <span class="bn">0xFF</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true"></a><span class="kw">def</span> setAllOutput():</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true"></a>    i2c.write_byte_data(MCP23008_ADDR, MCP23008_IODIR, <span class="bn">0x00</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true"></a><span class="kw">def</span> getAllDir():</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true"></a>    <span class="cf">return</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_IODIR)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true"></a><span class="kw">def</span> getAllPullup():</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true"></a>    <span class="cf">return</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_GPPU)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true"></a><span class="kw">def</span> setPinDir(pin, isInput, pullup <span class="op">=</span> <span class="va">False</span>):</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true"></a>    directionReg <span class="op">=</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_IODIR)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true"></a>    <span class="cf">if</span> isInput:</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true"></a>        directionReg <span class="op">|=</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> pin)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true"></a>    <span class="cf">else</span>:</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true"></a>        directionReg <span class="op">=</span> directionReg <span class="op">&amp;</span> <span class="op">~</span>(<span class="dv">1</span><span class="op">&lt;&lt;</span>pin)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true"></a>    i2c.write_byte_data(MCP23008_ADDR, MCP23008_IODIR, directionReg)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true"></a></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true"></a>    <span class="cf">if</span> isInput:</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true"></a>        puReg <span class="op">=</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_GPPU)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true"></a>        <span class="cf">if</span> pullup:</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true"></a>            puReg <span class="op">=</span> puReg <span class="op">|</span> (<span class="dv">1</span><span class="op">&lt;&lt;</span>pin)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true"></a>        <span class="cf">else</span>:</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true"></a>            puReg <span class="op">=</span> puReg <span class="op">&amp;</span> <span class="op">~</span>(<span class="dv">1</span><span class="op">&lt;&lt;</span>pin)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true"></a>        i2c.write_byte_data(MCP23008_ADDR, MCP23008_GPPU, puReg)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true"></a></span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true"></a><span class="kw">def</span> readAll():</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true"></a>    <span class="cf">return</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_GPIO)</span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true"></a><span class="kw">def</span> readPin(pin):</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true"></a>    gpioReg <span class="op">=</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_GPIO)</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true"></a>    <span class="cf">return</span> (gpioReg <span class="op">&gt;&gt;</span> pin) <span class="op">&amp;</span> <span class="bn">0x01</span></span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true"></a><span class="kw">def</span> setPin(pin, state):</span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true"></a>    gpioReg <span class="op">=</span> i2c.read_byte_data(MCP23008_ADDR, MCP23008_GPIO)</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true"></a>    <span class="cf">if</span> state:</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true"></a>        gpioReg <span class="op">=</span> gpioReg <span class="op">|</span> (<span class="dv">1</span> <span class="op">&lt;&lt;</span> pin)</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true"></a>    <span class="cf">else</span>:</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true"></a>        gpioReg <span class="op">=</span> gpioReg <span class="op">&amp;</span> <span class="op">~</span>(<span class="dv">1</span><span class="op">&lt;&lt;</span>pin)        </span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true"></a>    i2c.write_byte_data(MCP23008_ADDR, MCP23008_GPIO, gpioReg)</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true"></a></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true"></a>    <span class="co"># demo &quot;library&quot; functions</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true"></a></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true"></a>    setAllInput()</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true"></a>    setPinDir(<span class="dv">4</span>, <span class="dv">0</span>)</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true"></a>    setPinDir(<span class="dv">0</span>, <span class="dv">1</span>, pullup <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true"></a></span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Pin modes (0=output, 1=input):&quot;</span>)</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="bu">format</span>(getAllDir(), <span class="st">&quot;010b&quot;</span>))</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Built-in pull-up (0=disabled, 1=enabled):&quot;</span>)</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="bu">format</span>(getAllPullup(), <span class="st">&quot;010b&quot;</span>))</span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true"></a></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Set GP4 HIGH&quot;</span>)</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true"></a>    setPin(<span class="dv">4</span>, <span class="dv">1</span>)</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true"></a>    d <span class="op">=</span> readPin(<span class="dv">4</span>)</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true"></a>    <span class="bu">print</span>(d)</span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Set GP4 LOW&quot;</span>)</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true"></a>    setPin(<span class="dv">4</span>, <span class="dv">0</span>)</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true"></a>    d <span class="op">=</span> readPin(<span class="dv">4</span>)</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true"></a>    <span class="bu">print</span>(d)</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true"></a></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Read input on GP0&quot;</span>)</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true"></a>    d <span class="op">=</span> readPin(<span class="dv">0</span>)</span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true"></a>    <span class="bu">print</span>(d)</span></code></pre></div>
+<p>This script provides some basic “library” functions for reading from or writing to entire registers on the MCP23008, and for reading and writing the configuration or state of any single pin. Try it out and make sure you understand how it works.</p>
+<p>Finally, implement the tally counter with the 4-bit output and the two switch inputs, as described above. Your counter should have an increment button and a decrement button (either of which can be pressed at <em>any</em> time, in <em>any</em> sequence), and should display the current count as a binary number on the 4-bit LED output.</p>
+<p>You can use the baseline script as a starting point to implement your tally counter! The rest of the details are up to you. However, your code should be clean, organized, and commented appropriately for full credit.</p>
+<hr />
+<p><strong>Lab report</strong>: Upload your tally counter implementation as a <code>.py</code> file.</p>
+<p>Your counter should have an increment button and a decrement button (either of which can be pressed at <em>any</em> time, in <em>any</em> sequence), and should display the current count as a binary number on the 4-bit LED output.</p>
+<p>You can use the baseline script as a starting point to implement your tally counter! The rest of the details are up to you. However, your code should be clean, organized, and commented appropriately for full credit.</p>
+<p>Also upload a short video showing your tally counter in operation.</p>
+<hr />
+</body>
+</html>

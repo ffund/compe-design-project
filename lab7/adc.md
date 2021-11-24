@@ -2,7 +2,9 @@
 title: Analog to digital converter IC
 ---
 
-In this lab, we'll learn how to read an analog voltage using an analog to digital converter, which sends data to the Pi over a digital communication bus.clock, etc.)
+In this lab, we'll learn how to read an analog voltage using an analog to digital converter, which sends data to the Pi over a digital communication bus.
+
+After this lab exercise, you should be prepared to work with not only the MCP3002 IC from this lab, but also other ADC ICs. You should understand how to use the ADC datasheet (and the datasheet of any analog sensors you plan to read), identify how to connect your parts, and write software to read from an ADC and use the values that it returns.
 
 
 ## Notes
@@ -418,6 +420,7 @@ Run your Flask app with
 ```
 sudo python3 flask-sensors.py
 ```
+
 Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi's IP address, or the hostname you use to access the Pi over SSH. 
 
 This page will return an error message, because you are calling a `read_temp` function in the `virtualhat` library, but this function doesn't exist! You'll need to modify the `virtualhat` library as follows:
