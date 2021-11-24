@@ -47,7 +47,7 @@ Then, place your shift register across the "ravine" in the breadboard, underneat
 Use the following table from the SN74HC595N datasheet to identify the pins on the shift register:
 
 
-![Shift register pins and functions.](images/sn74hc595-pin-configurations.pdf)
+![Shift register pins and functions.](images/sn74hc595-pin-configurations.svg)
 
 \newpage
 
