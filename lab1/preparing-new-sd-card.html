@@ -32,49 +32,56 @@
 <p>You should only attempt this if your existing card becomes unusable, and the instructor has advised that you will need to prepare your SD card again.</p>
 <h1 id="procedure-for-preparing-a-new-micro-sd-card">Procedure for preparing a new micro SD card</h1>
 <h2 id="write-a-disk-image-with-etcher">Write a disk image with Etcher</h2>
-<p>To prepare the micro SD card for use, we will use a free application called <a href="https://www.balena.io/etcher/">Etcher</a>. Download Etcher onto your laptop: <a href="https://www.balena.io/etcher/"><code>https://www.balena.io/etcher/</code></a></p>
-<p>You will also need to download the Raspberry Pi OS image from <a href="https://www.raspberrypi.org/software/operating-systems/">https://www.raspberrypi.org/software/operating-systems/</a>. Several versions are available on that page; we are using the “Raspberry Pi OS with desktop and recommended software” version with release date May 7th 2021.</p>
-<p>To use Etcher to write an image to a micro SD card:</p>
-<ul>
-<li>Open Etcher.</li>
-<li>Click “Select Image”</li>
-<li>Navigate to the download location.</li>
-<li>Select the image file e.g. <code>2021-05-07-raspios-buster-armhf-full.zip</code>.</li>
-<li>Insert your micro SD card into a USB-micro SD adapter, then plug it into your computer’s USB port.</li>
-<li>Click “Select Target”, and make sure that Etcher has found the micro SD card to write to. (To be safe, you may want to make sure any other USB flash drives or portable drives are physically disconnected from your computer, so you can’t accidentally overwrite them.)</li>
-<li>Click “Flash”.</li>
-<li>When it’s finished, you can close Etcher.</li>
-</ul>
-<h2 id="additional-configuration-for-headless-use">Additional configuration for headless use</h2>
-<p>Before you can use this SD card in a Raspberry Pi, you will need to configure it to</p>
-<ul>
-<li>enable SSH, and</li>
-<li>connect to the <code>ece4313</code> network (and/or any other network that you need your Pi to connect to)</li>
-</ul>
-<p><strong>Note</strong>: These instructions assume that you have a terminal running a <code>bash</code>, <code>zsh</code>, or similar shell. If you are using Linux or Mac, your operating system has a built-in terminal running <code>bash</code> or <code>zsh</code>. If you are Windows, you can use the <a href="https://git-scm.com/downloads">Git Bash</a> terminal.</p>
-<p>Open a terminal, and navigate to the SD card filesystem named <code>boot</code>. At the terminal prompt, inside this filesystem, run:</p>
-<pre><code>touch ssh</code></pre>
-<p>to create a blank file called <code>ssh</code> inside the <code>boot</code> directory. This will enable SSH when the Pi boots for the first time, so that you will be able to connect to it in “headless” mode (without having to attach a monitor and/or keyboard).</p>
-<p>Also, in your terminal, run</p>
-<pre><code>nano wpa_supplicant.conf</code></pre>
-<p>to create a new WiFi configuration file using <code>nano</code>.</p>
-<p>Put the <a href="wpa_supplicant.conf">following contents</a> (exactly!) in the file.</p>
-<pre><code>country=US
-ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-
-network={
-    ssid=&quot;ece4313&quot;
-    psk=&quot;CompEDP1&quot;
-}</code></pre>
-<p>To save (write <strong>o</strong>ut) the file, use <code>Ctrl</code>+<code>O</code>, and hit <code>Enter</code> when prompted (at the bottom) to accept the file name. Look for a message indicating “Wrote 8 lines” (or similar). Then, quit <code>nano</code> with <code>Ctrl</code>+<code>X</code>.</p>
-<p>Make sure that the files have been created: run</p>
-<pre><code>ls</code></pre>
-<p>and check that both files (<code>ssh</code> and <code>wpa_supplicant.conf</code>) appear. Also check the file contents by running</p>
-<pre><code>cat ssh</code></pre>
-<p>(this file should be blank), and</p>
-<pre><code>cat wpa_supplicant.conf</code></pre>
-<p>(this file should be exactly as shown above.)</p>
-<p>Once you have completed this configuration, you can remove the micro SD card from the USB adapter, and use it with your Pi. Your Pi will be configured to accept logins over SSH, and to connect to the WiFi network in the lab (<code>ece4313</code>).</p>
+<p>To prepare the micro SD card for use, we will use a free application called <a href="https://www.raspberrypi.com/software/">Raspberry Pi Imager</a>. Download the Imager onto your laptop.</p>
+<p>When you open the Imager, you will be prompted to select an OS Image:</p>
+<figure>
+<img src="images/rpi-imager-choose-os.png" alt="Select an OS Image." /><figcaption aria-hidden="true">Select an OS Image.</figcaption>
+</figure>
+<p>For this course, we will use the Raspberry Pi OS Image released in September 2022, as shown here:</p>
+<figure>
+<img src="images/rpi-imager-choose-os-2.png" alt="Raspberry Pi OS Image." /><figcaption aria-hidden="true">Raspberry Pi OS Image.</figcaption>
+</figure>
+<p>After you make this selection, click on the “cog” icon to configure more advanced settings:</p>
+<figure>
+<img src="images/rpi-imager-cog.png" alt="Open advanced settings." /><figcaption aria-hidden="true">Open advanced settings.</figcaption>
+</figure>
+<p>Check the box that says “Set hostname” and name it “raspberrypi” + the number of your Pi, e.g. </p>
+<figure>
+<img src="images/rpi-imager-hostname.png" alt="Set the hostname." /><figcaption aria-hidden="true">Set the hostname.</figcaption>
+</figure>
+<p>Check the box that says “Enable SSH” and choose “password authentication”:</p>
+<figure>
+<img src="images/rpi-imager-enable-ssh.png" alt="Enable SSH." /><figcaption aria-hidden="true">Enable SSH.</figcaption>
+</figure>
+<p>Set the username to <code>pi</code> and the password to <code>raspberry</code>:</p>
+<figure>
+<img src="images/rpi-imager-username.png" alt="Set username and password." /><figcaption aria-hidden="true">Set username and password.</figcaption>
+</figure>
+<p>Check the box that says “Configure Wireless LAN” and set the SSID and password as follows:</p>
+<figure>
+<img src="images/rpi-imager-wifi.png" alt="Set up WiFi." /><figcaption aria-hidden="true">Set up WiFi.</figcaption>
+</figure>
+<p>You can also check the box that says “Set locale settings” and configure as follows:</p>
+<figure>
+<img src="images/rpi-imager-locale.png" alt="Locale settings." /><figcaption aria-hidden="true">Locale settings.</figcaption>
+</figure>
+<p>Then click “Save” to save your settings:</p>
+<figure>
+<img src="images/rpi-imager-save-settings.png" alt="Save settings." /><figcaption aria-hidden="true">Save settings.</figcaption>
+</figure>
+<p>Next, click on “Choose Storage”:</p>
+<figure>
+<img src="images/rpi-imager-storage.png" alt="Choose storage." /><figcaption aria-hidden="true">Choose storage.</figcaption>
+</figure>
+<p>Select the SD card writer.</p>
+<p>Finally, click “Write”:</p>
+<figure>
+<img src="images/rpi-imager-write.png" alt="Write the SD card." /><figcaption aria-hidden="true">Write the SD card.</figcaption>
+</figure>
+<p>Click “Yes” to agree to overwrite the current SD card:</p>
+<figure>
+<img src="images/rpi-imager-overwrite.png" alt="Overwrite the existing data on the SD card." /><figcaption aria-hidden="true">Overwrite the existing data on the SD card.</figcaption>
+</figure>
+<p>Once the image is written, you can remove the micro SD card from the USB adapter, and use it with your Pi.</p>
 </body>
 </html>
