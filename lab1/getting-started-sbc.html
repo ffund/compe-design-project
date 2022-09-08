@@ -60,8 +60,11 @@ Students will be able to:
 <p>For SSH, you will need a terminal and an SSH client:</p>
 <ul>
 <li>If you are using a Mac or Linux device, the built-in terminal that comes with your operating system includes an SSH client. Make sure you know how to open the Terminal application that comes with your operating system.</li>
-<li>If you are using a Windows device and you do not already have an SSH client, you will have to download and install one. I recommend Git Bash, which you can download here: <a href="https://git-scm.com/downloads"><code>https://git-scm.com/downloads</code></a>. Once you have downloaded and installed this application, make sure you know how to open a Git Bash terminal.</li>
+<li>If you are using a Windows device and you do not already have an SSH client, you will have to download and install one. I recommend Git Bash, which you can download here: <a href="https://git-scm.com/downloads"><code>https://git-scm.com/downloads</code></a>. Once you have downloaded and installed this application, open a Git Bash terminal, like this:</li>
 </ul>
+<figure>
+<img src="images/git-bash.png" alt="Open a Git Bash terminal - for Windows users." /><figcaption aria-hidden="true">Open a Git Bash terminal - for Windows users.</figcaption>
+</figure>
 <p>Once you have a terminal window open, run</p>
 <pre><code>ssh</code></pre>
 <p>You should see some usage information, like this (although not necessarily identical to this):</p>
@@ -129,7 +132,7 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? </code></pr
 <p>The intial default VNC screen resolution is too small, so while we are in <code>raspi-config</code> we can also change that.</p>
 <ul>
 <li>Use the arrow keys to navigate to <code>Display Options</code> and hit <code>Enter</code>.</li>
-<li>Navigate to <code>Resolution</code> and hit <code>Enter</code> again.</li>
+<li>Navigate to <code>VNC Resolution</code> and hit <code>Enter</code> again.</li>
 <li>Use the arrow keys to select <code>1024x768</code>. Then use the <code>Tab</code> key to select <code>OK</code> and hit <code>Enter</code>.</li>
 <li>When you see the confirmation that the resolution is set, select <code>OK</code> and then hit <code>Enter</code>.</li>
 <li>If prompted to reboot the Pi, you can accept the suggest by using the <code>Tab</code> key to select <code>Yes</code> and then hitting <code>Enter</code>. If you are not prompted to reboot, use <code>Esc</code> to close <code>raspi-config</code>.</li>
@@ -158,11 +161,10 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? </code></pr
 </ol>
 <hr />
 <h2 id="establish-a-connection-over-a-personal-network">Establish a connection over a personal network</h2>
-<p>Since you may sometimes need to attend lab sessions from home, you should make sure that you can connect to your Pi even outside the lab (when the <code>ece4313</code> network is not available to you.) It’s important that you are able to connect to your Pi outside of this lab:</p>
+<p>Before you leave the lab, you should also make sure that you can connect to your Pi even outside the lab (when the <code>ece4313</code> network is not available to you.) It’s important that you are able to connect to your Pi outside of this lab:</p>
 <ul>
-<li>in case you have to attend a lab session from home because you have symptoms, or are quarantining due to potential exposure,</li>
-<li>in case we all have to attend a lab session from home, either because the University switches to remote learning or because the instructor has symptoms or is quarantining,</li>
-<li>in case you don’t finish a lab assignment during the lab session, and want to do the rest at home,</li>
+<li>when you don’t finish a lab assignment during the lab session, and want to do the rest at home,</li>
+<li>in case you have to attend a lab session from home because you are not feeling well,</li>
 <li>for later in the semester - so that you can work on your project outside of scheduled lab sessions.</li>
 </ul>
 <p>You can use your mobile phone or laptop to create a WiFi hotspot, and configure your Pi to connect to this hotspot. However,</p>
@@ -170,71 +172,123 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? </code></pr
 <li>The WiFi hotspot should be on the 2.4GHz WiFi band, not on 5GHz. The Pi Zero W only supports the 2.4GHz WiFi band.</li>
 <li>The WiFi hotspot should use an authentication method that is supported by the Pi. In these instructions, we assume standard home network authentication methods; enterprise authentication may be more complicated.</li>
 </ul>
-<p>The following links will show you how to create a hotspot on an Android or iPhone device, or on a Mac or Windows PC. Open the link for the platform that you have available to you, and start your hotspot!</p>
+<p>The following sections will show you how to create a hotspot on an iPhone or Android device, or on a Windows or Mac PC.</p>
+<h3 id="create-a-hotspot-on-an-iphone">Create a hotspot on an iPhone</h3>
+<p>To create a hotspot on your iPhone, follow the instructions at <a href="https://support.apple.com/en-us/HT204023">https://support.apple.com/en-us/HT204023</a>. However, to make sure your Pi is able to connect to this hotspot:</p>
 <ul>
-<li><a href="https://support.google.com/android/answer/9059108?hl=en">Create a WiFi hotspot on your Android phone</a>. If your wireless carrier limits tethering, you can <a href="https://support.google.com/android/answer/9083864?hl=en">turn off mobile data</a> before you create the WiFi hotspot. If mobile data is turned off, the devices connected to your WiFi hotspot won’t have Internet access, but they will be able to connect to one another over the hotspot network.</li>
-<li><a href="https://support.apple.com/en-us/HT204023">Create a WiFi hotspot on your iPhone</a>. Make sure to select the “Maximize compatibility” option so that your hotspot will be available on the 2.4 GHz frequency band! Note: The default SSID of the iPhone hotspot is set according to the name of the iPhone, for example, “Fraida’s iPhone”. It’s easier to work with an SSID that does not have any spaces or special characters, like the apostrophe. If you’re willing, you can change the iPhones name in the General settings tab to a name which does not contain any special characters, save, and enable the hotspot again.</li>
-<li><a href="https://support.apple.com/guide/mac-help/share-internet-connection-mac-network-users-mchlp1540/mac">Create a WiFi hotspot on your Mac</a></li>
-<li><a href="https://support.microsoft.com/en-us/help/4027762/windows-use-your-pc-as-a-mobile-hotspot">Create a WiFi hotspot on Windows 10</a>. There is an important caveat here: if you are connected to an existing WiFi network, this will <em>share</em> it on the same wireless frequency band that you are connected on. But, the Pi Zero W only supports the 2.4GHz WiFi band, not the 5GHz WiFi band. Before you start the hotspot, your Windows PC should be connected to a WiFi network on the 2.4GHz WiFi band.</li>
-<li><a href="https://archive.codeplex.com/?p=virtualrouter">Create a WiFi hotspot on Windows 7 or 8</a> (third-party software, open source.) If you set it to share an existing WiFi connection, make sure your Windows PC is connected to a WiFi network that is on the 2.4GHz WiFi band, not the 5GHz WiFi band.</li>
-<li><a href="https://www.connectify.me/free-wifi-hotspot-software-app/">Create a WiFi hotspot on Windows with Connectify (third-party software, use free version)</a></li>
+<li>Some iPhone versions have a “Maximize Compatibility” option in the “Personal Hotspot” configuration menu. If your iPhone has this option, you must make sure it is turned <em>on</em>.</li>
+<li>The default SSID of the iPhone hotspot is set according to the name of the iPhone, for example, “Fraida’s iPhone”. It’s easier to work with an SSID that does not have any spaces or special characters, like the apostrophe. If you’re willing, you can change the iPhones name in the General settings tab (General &gt; About &gt; Name) to a name which does not contain any special characters, save, and enable the hotspot again.</li>
+<li>Set your password so that it has no spaces or other special characters.</li>
 </ul>
-<p>Identify the WiFi network name (SSID) and password that your mobile device or laptop uses for its WiFi hotspot. You will configure your Pi to connect to that network.</p>
-<p>First, you need your Pi and your laptop to still be connected to the <code>ece4313</code> network, so you can connect to your Pi using SSH. In a terminal session on your Pi, run</p>
+<p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
+<h3 id="create-a-hotspot-on-an-android-phone">Create a hotspot on an Android phone</h3>
+<p>To create a hotspot on your Android phone, follow the instructions at <a href="https://support.google.com/android/answer/9059108?hl=en">https://support.google.com/android/answer/9059108?hl=en</a>.</p>
+<p>Set the network name and password so that it has no spaces or other special characters.</p>
+<p>If your wireless carrier limits tethering, you can <a href="https://support.google.com/android/answer/9083864?hl=en">turn off mobile data</a> before you create the WiFi hotspot. If mobile data is turned off, the devices connected to your WiFi hotspot won’t have Internet access, but they will be able to connect to one another over the hotspot network.</p>
+<p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
+<h3 id="create-a-hotspot-on-a-windows-10-or-windows-11-laptop">Create a hotspot on a Windows 10 or Windows 11 laptop</h3>
+<p>To create a hotspot on your Windows 10 or Windows 11 laptop, follow the instructions at <a href="https://support.microsoft.com/en-us/help/4027762/windows-use-your-pc-as-a-mobile-hotspot">https://support.microsoft.com/en-us/help/4027762/windows-use-your-pc-as-a-mobile-hotspot</a>.</p>
+<p>Set the network name and password so that it has no spaces or other special characters.</p>
+<p>To make sure the Pi will connect to this hotspot, you need to make sure it is in the 2.4GHz band. If your hotspot shows “Any Band”, then edit the properties:</p>
+<figure>
+<img src="images/windows-edit-band.png" alt="Edit Windows hotspot properties." /><figcaption aria-hidden="true">Edit Windows hotspot properties.</figcaption>
+</figure>
+<p>Change the “Network Band” option to 2.4GHz and save this setting:</p>
+<figure>
+<img src="images/windows-edit-band-2.png" alt="Change the network band." /><figcaption aria-hidden="true">Change the network band.</figcaption>
+</figure>
+<p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Then, you can stop the hotspot and re-connect your computer to the <code>ece4313</code> network. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
+<h3 id="create-a-hotspot-on-a-mac">Create a hotspot on a Mac</h3>
+<p>This process is more complicated than the other options, so you should attempt this only if you cannot create a hotspot using iPhone, Android, or Windows. (For example, if your wireless carrier does not allow you to create a hotspot from your phone.)</p>
+<p>To create a hotspot on a Mac, you will actually need a second device (e.g. an iPhone) to be connected to the Mac using a wired USB or Thunderbolt cable. Then, on the Mac, open System Preferences &gt; Sharing and select “Internet Sharing”. Configure it to share your connection <em>from</em> “iPhone USB” <em>to</em> “WiFi”:</p>
+<figure>
+<img src="images/mac-sharing-1.png" alt="Configure Internet sharing on a Mac." /><figcaption aria-hidden="true">Configure Internet sharing on a Mac.</figcaption>
+</figure>
+<p>Then, click on “WiFi options”. Set the network name and password so that it has no spaces or other special characters. Also, set the channel to either 1, 6, or 11.</p>
+<figure>
+<img src="images/mac-sharing-2.png" alt="Configure WiFi settings on a Mac." /><figcaption aria-hidden="true">Configure WiFi settings on a Mac.</figcaption>
+</figure>
+<p>Finally, once everything is configured, check the box next to “Internet Sharing”:</p>
+<figure>
+<img src="images/mac-sharing-3.png" alt="Turn on Internet sharing." /><figcaption aria-hidden="true">Turn on Internet sharing.</figcaption>
+</figure>
+<p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Then, you can stop the hotspot and re-connect your computer to the <code>ece4313</code> network. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
+<h3 id="edit-configuration-files-on-your-pi">Edit configuration files on your Pi</h3>
+<p>Now that you know the <em>name</em> and <em>password</em> of your hotspot network, you will need to configure your Pi to connect to this network.</p>
+<p>You will need your Pi and your laptop to still be connected to the <code>ece4313</code> network, and you should connect to your Pi using SSH. We are going to edit <em>two</em> configuration files on the Pi.</p>
+<p><strong>First</strong>: we will edit the <code>sysctl</code> configuration file, which includes many system-wide configuration options. We can are going to add a line to this file to configure the system to respond to “broadcast pings” (more details on that later!)</p>
+<pre><code>echo &quot;net.ipv4.icmp_echo_ignore_broadcasts=0&quot; | sudo tee -a /etc/sysctl.conf</code></pre>
+<p>Then, to load the change, run</p>
+<pre><code>sudo sysctl -p</code></pre>
+<p>Finally, run</p>
+<pre><code>sysctl net.ipv4.icmp_echo_ignore_broadcasts</code></pre>
+<p>and verify that the output shows</p>
+<pre><code>net.ipv4.icmp_echo_ignore_broadcasts = 0</code></pre>
+<p><strong>Second</strong>: we will edit the <code>wpa_supplicant</code> configuration file, which describes the wireless network configuration.</p>
+<p>In a terminal session on your Pi, run</p>
 <pre><code>iwlist wlan0 scan</code></pre>
 <p>This will show you all of the WiFi networks visible to your Pi. Make sure you can see your personal hotspot! If not, try running</p>
 <pre><code>iwlist wlan0 scan</code></pre>
-<p>again - sometimes, it will only “see” the network it is currently connected to on the first try, but will find other networks in a subsequent scan.</p>
-<p>If your WiFi hotspot has spaces or special characters in it, you may have trouble configuring your Pi to connect to it using its human-readable name. Instead, you can <a href="https://www.convertstring.com/EncodeDecode/HexEncode">get its hex encoding</a>, and use that to connect. (But note the different instructions below - if you use the hex encoded version, you won’t enclose the SSID in quotes when adding it to the configuration file.)</p>
+<p>a second or third time - sometimes, it will only “see” the network it is currently connected to on the first try, but will find other networks in a subsequent scan.</p>
+<!-- 
+
+
+If your WiFi hotspot has spaces or special characters in it (and you are unable to change it), you may have trouble configuring your Pi to connect to it using its human-readable name. Instead, you can [get its hex encoding](https://www.convertstring.com/EncodeDecode/HexEncode), and use that to connect. (But note the different instructions below - if you use the hex encoded version, you won't enclose the SSID in quotes when adding it to the configuration file.)
+
+-->
 <p>Once you are sure that your Pi can see your hotspot network, run</p>
 <pre><code>sudo nano /etc/wpa_supplicant/wpa_supplicant.conf</code></pre>
 <p>This will open the network configuration file in <code>nano</code>, a terminal-based text editor. You should see the following file contents:</p>
 <pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
-country=US
 
 network={
     ssid=&quot;ece4313&quot;
-    psk=&quot;CompEDP1&quot;
+    psk=0c9f2bfe3dd03e035634302d3a37b9f523718de95c91eaadfaad4129fcc2a4cf
 }</code></pre>
-<p>indicating that the Pi is configured to connect to the <code>ece4313</code> network with passphrase <code>CompEDP1</code>.</p>
+<p>indicating that the Pi is configured to connect to the <code>ece4313</code> network.</p>
 <p>Add a network with the SSID and password of your mobile hotspot. For example, if your SSID is <code>E71210</code> and the passphrase is <code>00934596</code>, the file will look like this:</p>
 <pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
-country=US
 
 network={
   ssid=&quot;ece4313&quot;
-  psk=&quot;CompEDP1&quot;
+  psk=0c9f2bfe3dd03e035634302d3a37b9f523718de95c91eaadfaad4129fcc2a4cf
 }
 
 network={
   ssid=&quot;E71210&quot;
   psk=&quot;00934596&quot;
 }</code></pre>
-<p>If you are using a hex-encoded SSID, because your network name has spaces or special characters in it, don’t enclose the hex-encoded SSID in quotes. For example:</p>
-<pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+<!-- 
+If you are using a hex-encoded SSID, because your network name has spaces or special characters in it, don't enclose the hex-encoded SSID in quotes. For example: 
+
+
+```
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=US
 
 network={
-  ssid=&quot;ece4313&quot;
-  psk=&quot;CompEDP1&quot;
+  ssid="ece4313"
+  psk=0c9f2bfe3dd03e035634302d3a37b9f523718de95c91eaadfaad4129fcc2a4cf
 }
 
 network={
   ssid=4537313231300A
-  psk=&quot;00934596&quot;
-}</code></pre>
+  psk="00934596"
+}
+```
+-->
 <p>Next, define priorities, so that if both networks are available your personal network will be preferred. Make sure to give your personal network a higher priority than the lab network - otherwise, the Pi will just connect to the lab network, and you won’t be able to test whether your personal network works!</p>
-<p>A higher value indicates higher priority - for example, the network with priority 2 is preferred over the network with priority 1:</p>
+<p><strong>A higher value indicates higher priority</strong> (this is the opposite of what you might expect) - for example, the network with priority 2 is preferred over the network with priority 1. Your personal network’s priority should be a <em>larger number</em> than the lab network:</p>
 <pre><code>ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 country=US
 
 network={
   ssid=&quot;ece4313&quot;
-  psk=&quot;CompEDP1&quot;
+  psk=0c9f2bfe3dd03e035634302d3a37b9f523718de95c91eaadfaad4129fcc2a4cf
   priority=1
 }
 
@@ -245,9 +299,42 @@ network={
 }</code></pre>
 <p>To save (write <strong>o</strong>ut) the file, use <code>Ctrl</code>+<code>O</code>, and hit <code>Enter</code> when prompted (at the bottom) to accept the file name. Look for a message indicating “Wrote N lines” (or similar). Then, quit <code>nano</code> with <code>Ctrl</code>+<code>X</code>.</p>
 <p>(Note: you can add as many networks as you like to this file. For example, if you have a home WiFi network that you want your Pi to connect to, you can add it, too.)</p>
-<p>Now, reboot your Pi. At your Pi’s terminal prompt, run:</p>
+<h3 id="find-out-your-pis-address">Find out your Pi’s address</h3>
+<p>If you did everything right, your Pi should now connect to your “personal” network when it reboots.</p>
+<ol type="1">
+<li>First, switch your personal hotspot on.</li>
+<li>Then, reboot your Pi. At your Pi’s terminal prompt, run:</li>
+</ol>
 <pre><code>sudo reboot</code></pre>
-<p>While you wait for your Pi to come back online, connect your laptop to your “personal” network - the mobile hotspot or WiFi connection shared from your laptop. Remember that your Pi and your laptop need to be on the same network, so if your Pi connects to your mobile hotspot, so should your laptop!</p>
+<ol start="3" type="1">
+<li>If your personal hotspot is provided by your phone, connect your laptop to this hotspot. Remember that your Pi and your laptop need to be on the same network, so if your Pi connects to your mobile hotspot, so should your laptop!</li>
+</ol>
+<p>Your Pi should boot after a few minutes and connect to your personal hotspot. However, you will <em>not</em> be able to connect to your Pi using the “192.168.0.N” address - that address is specific to the <code>ece4313</code> network. On your personal hotspot, your Pi will have a different address (and it may be a different address every time you connect your Pi to your hotspot.)</p>
+<p>The process of finding out the address will, again, depend on the type of hotspot device. I will provide instructions below for Android hotspot, Windows hotspot, or “other”. If the Android or Windows hotspot instructions don’t work for you (for example, because you have a different device model), you can still use the “other” instructions.</p>
+<hr />
+<p><strong>Android</strong>: If you are creating a hotspot from an Android device, you may see a “Connected Devices” area on the mobile hotspot settings page. After you Pi connects, you’ll see a “raspberrypi” entry in that list. Click on that entry:</p>
+<figure>
+<img src="images/android-find-ip-1.png" style="width:30.0%" alt="Find Raspberry Pi in connected device list on Android hotspot." /><figcaption aria-hidden="true">Find Raspberry Pi in connected device list on Android hotspot.</figcaption>
+</figure>
+<p>Then, note the IP address that appears in the following window:</p>
+<figure>
+<img src="images/android-find-ip-2.png" style="width:30.0%" alt="Find IP address from Android hotspot." /><figcaption aria-hidden="true">Find IP address from Android hotspot.</figcaption>
+</figure>
+<p>This should be the address of your Pi.</p>
+<hr />
+<p><strong>Windows</strong>: If you are creating a hotspot from a Windows laptop, in the Mobile Hotspot settings page you may see a list of connected devices. You can find your Pi in this list and note its IP address:</p>
+<figure>
+<img src="images/windows-find-ip.png" alt="Find IP address from Windows hotspot." /><figcaption aria-hidden="true">Find IP address from Windows hotspot.</figcaption>
+</figure>
+<hr />
+<p><strong>Other - Mac laptop</strong>: Otherwise, if your laptop is a Mac, you can find out your Pi’s IP address as follows.</p>
+<p>In a local terminal on your Mac (not on your Pi), run</p>
+<pre><code>ifconfig</code></pre>
+<p>In the output, find the block labeled <code>en0</code>.</p>
+<hr />
+<p><strong>Other - Mac laptop</strong>: Otherwise, if you use a Windows laptop, you can find out your Pi’s IP address as follows.</p>
+<hr />
+<h3 id="ssh-into-your-pi">SSH into your Pi</h3>
 <p>When the Pi comes back online (it will take a few minutes to boot!), you may be able to reach it even without knowing its IP address. In a <em>local</em> terminal window on your laptop, run</p>
 <pre><code>ping raspberrypi.local</code></pre>
 <p>(if the <code>ping</code> process does not stop by itself, you can stop it with <code>Ctrl</code>+<code>C</code>.) If you received some response, great! Make sure you can SSH into your Pi with</p>

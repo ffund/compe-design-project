@@ -15,7 +15,7 @@ You should only attempt this if your existing card becomes unusable, and the ins
 
 # Procedure for preparing a new micro SD card
 
-## Write a disk image with Etcher
+## Write a disk image with Raspberry Pi Imager
 
 To prepare the micro SD card for use, we will use a free application called [Raspberry Pi Imager](https://www.raspberrypi.com/software/). Download the Imager onto your laptop.
 

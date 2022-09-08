@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>browser-based-ui.md</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="creating-a-browser-based-ui">Creating a browser-based UI</h1>
+<p>One of the major advantages of using a single board computer is that it runs a full operating system, with existing libraries and software. In this lab, you will learn how to use that to create a browser-based interface through which users can interact with a Pi-based product.</p>
+<h2 id="by-the-end-of-this-session">By the end of this session…</h2>
+<p>You will be able to:</p>
+<ul>
+<li>Create and run a basic Flask app that interacts with a <em>virtual</em> “HAT library”</li>
+</ul>
+<p>(a HAT is a hardware circuit that is attached to a Pi - <strong>H</strong>ardware <strong>A</strong>ttached on <strong>T</strong>op).</p>
+<p>In a future lab assignment, we’ll use this browser-based interface to control a real circuit connected to the Pi.</p>
+<h2 id="lab-report">Lab report</h2>
+<p>You will submit your lab work in Gradescope. You will upload some screenshots and answer some questions as described in the Gradescope assignment. You do not have to include anything else (e.g. no description of procedure, etc.)</p>
+<h2 id="the-virtualhat-library">The VirtualHat library</h2>
+<p>Since we don’t have any circuit attached to this Pi, we’re going to use a VirtualHat library I created for this lab, which uses a “virtual circuit”. Get the code for my HAT and install it on your VM with:</p>
+<pre><code>git clone https://github.com/ffund/virtualhat
+cd virtualhat
+sudo python3 setup.py install</code></pre>
+<p>The VirtualHat library includes the following functions:</p>
+<ul>
+<li><code>setup()</code> initializes all of the peripherals and sensors in the VirtualHat</li>
+<li><code>led_on()</code> turns on a virtual LED</li>
+<li><code>led_off()</code> turns off a virtual LED</li>
+<li><code>read_light_level()</code> reads the current light level from a virtual sensor</li>
+</ul>
+<p>Read and then try running the <code>demo.py</code> file included with the library to see how these are used. To run the <code>demo.py</code> file, use</p>
+<pre><code>python3 demo.py</code></pre>
+<p>Now we are ready to create a basic browser-based interface to the VirtualHat library. We will use Flask, a lightweight web framework for Python applications.</p>
+<p>Create a new directory called <code>lab1</code> in your home directory, and create an <code>app</code> inside <em>that</em> directory, then navigate to it:</p>
+<pre><code>mkdir /home/pi/lab1
+mkdir /home/pi/lab1/app
+cd /home/pi/lab1/app</code></pre>
+<p>Then, use your preferred terminal-based text editor to create a file <code>basic-flask-app.py</code> with the following contents:</p>
+<pre><code>from flask import Flask
+
+app = Flask(__name__, static_folder=&#39;&#39;)
+
+@app.route(&quot;/&quot;)
+def hello():
+    return app.send_static_file(&#39;index.html&#39;)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&#39;0.0.0.0&#39;, port=80, debug=True, threaded=True)</code></pre>
+<p>In this code, we:</p>
+<ul>
+<li>imported the <code>Flask</code> class from the <code>flask</code> library</li>
+<li>created an instance of the <code>Flask</code> class, calling it <code>app</code></li>
+<li>set up a “route” that will be triggered when the user visits <code>/</code>, which is the root of the app; this is the route that is triggered when the user visits the home page of a site. We will run the function <code>hello()</code> when the route is triggered; this function just sends the static web page called “index.html” to the user. (We’ll create <code>index.html</code> in just a moment.)</li>
+<li>set up the Flask app to run when this <code>basic-flask-app.py</code> file is called as a Python script (not when it is imported as a library).</li>
+</ul>
+<p>As far as networking: we configured the app to run on the IP address <code>0.0.0.0</code>, which means that it will run on all IP addresses available on this host, and it will run on port 80, which is the default port for web pages that are not encrypted.</p>
+<p>Save and close the Flask app file. Then, create a file <code>index.html</code> in the same directory, with the following contents, and save and close that file as well:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+   &lt;head&gt;
+      &lt;title&gt;Hello Flask!&lt;/title&gt;
+      &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot;&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+   &lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;Hello Flask&lt;/h1&gt;
+   &lt;/div&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>(Note that we are loading the Bootstrap stylesheet, which will affect the appearance of the elements on our page. We’ll talk more about Bootstrap soon.)</p>
+<p>When you are ready, run the <code>basic-flask-app.py</code> Python script. You will need to run it as <code>sudo</code>, because only privileged applications can use the default web port, port 80:</p>
+<pre><code>sudo python3 basic-flask-app.py </code></pre>
+<p>You should see some output similar to the following;</p>
+<pre><code> * Serving Flask app &quot;basic-flask-app&quot; (lazy loading)
+ * Environment: production
+   WARNING: This is a development server. Do not use it in a production deployment.
+   Use a production WSGI server instead.
+ * Debug mode: on
+ * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 237-595-907</code></pre>
+<p>Copy and paste the Pi’s address into the address bar of a browser, then hit Enter to load the site. You should see the following page:</p>
+</body>
+</html>
