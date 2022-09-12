@@ -1,0 +1,270 @@
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN""http://www.w3.org/TR/html4/strict.dtd">
+<html><head><title>ECE-UY 4313 Fall 2022 Calendar</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+    
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+    
+    <style type="text/css">
+        /* Styling for the title (Month and Year) of the calendar */
+        div.title {
+            font: x-large Verdana, Arial, Helvetica, sans-serif;
+            text-align: center;
+            height: 40px;
+            background-color: white;
+            color: black;
+        }
+        /* Styling for the footer */
+        div.footer {
+            font: small Verdana, Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        /* Styling for the overall table */
+        table {
+            font: 100% Verdana, Arial, Helvetica, sans-serif;
+            table-layout: fixed;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        /* Styling for the column headers (days of the week) */
+        th {
+            padding: 0 0.5em;
+            text-align: center;
+            background-color:gray;
+            color:white;
+        }
+        /* Styling for the individual cells (days) */
+        td  {     
+            font-size: medium;
+            padding: 0.25em 0.25em;   
+            width: 14%; 
+            height: 80px;
+            text-align: left;
+            vertical-align: top;
+            border:  1px solid black;
+        }
+        /* Styling for the date numbers */
+        .date  {     
+            font-size: large;
+            padding: 0.25em 0.25em;   
+            text-align: left;
+            vertical-align: top;
+        }
+        /* Class for individual days (coming in future release) */
+        .sun {
+            color:red;
+        }
+        /* Hide the month element (coming in future release) */
+        th.month {
+            visibility: hidden;
+            display:none;
+        }
+        
+    </style>
+</head>
+<body>
+        <div class="title">        <p class="text-center"></p><h1>ECE-UY 4313 Fall 2021 Schedule</h1></p>        </div>
+        <br>
+        <div class="footer">        
+            <p><i>This is a tentative schedule, subject to change. Final exam date is not yet set by the registrar. Symbol key is at the bottom of the page.</i></p>
+        </div>
+        <br>
+    <div class="title">September 2022</div>
+    <table border="1">
+        <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+        <tr>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">1</span></td>
+            <td><span class="date">2</span></td>
+            <td><span class="date">3</span></td></tr>
+        <tr><td><span class="date">4</span></td>
+            <td><span class="date">5</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Labor day</p></td>
+            <td><span class="date">6</span></td>
+            <td><span class="date">7</span><p><span class="badge bg-danger"><i class="bi bi-youtube"></i></span> Electronics review</p></td>
+            <td><span class="date">8</span></td>
+            <td><span class="date">9</span></td>
+            <td><span class="date">10</span></td></tr>
+            <tr><td><span class="date">11</span></td>
+            <td><span class="date">12</span> <br> <span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Course intro</p></td>
+            <td><span class="date">13</span></td>
+            <td><span class="date">14</span> <br> <span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Getting started</p></td>
+            <td><span class="date">15</span></td>
+            <td><span class="date">16</span></td>
+            <td><span class="date">17</span></td></tr>
+            <tr><td><span class="date">18</span></td>
+            <td><span class="date">19</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Digital I/O</p></td>
+            <td><span class="date">20</span> <p><span class="badge bg-info"><i class="bi bi-lightbulb-fill"></i></span>  Project idea practice deadline</p>
+                <p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Electronics review</p></td>
+            <td><span class="date">21</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Electronics review</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Digital I/O</p></td>
+            <td><span class="date">22</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Getting started</p></td>
+            <td><span class="date">23</span></td>
+            <td><span class="date">24</span></td></tr>
+                <tr><td><span class="date">25</span></td>
+            <td><span class="date">26</span><p><span class="badge bg-danger"><i class="bi bi-youtube"></i></span> Pulse width output</p></td>
+            <td><span class="date">27</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Digital I/O</p></td>
+            <td><span class="date">28</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Digital I/O</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Pulse width output</p></td>
+            <td><span class="date">29</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Digital I/O</p></td>
+            <td><span class="date">30</span></td>
+            <td><span class="date">&nbsp;</span></td></tr>
+            </table>
+            <p><div class="title">October 2022</div>
+                <table border="1">
+                    <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+                    <tr><td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">1</span></td></tr>
+                    <tr><td><span class="date">2</span></td>
+            <td><span class="date">3</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Pulse width input</p></td>
+            <td><span class="date">4</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Pulse width output</p></td>
+            <td><span class="date">5</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Pulse width output</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Pulse width input</p></td>
+            <td><span class="date">6</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Pulse width output</p></td>
+            <td><span class="date">7</span></td>
+            <td><span class="date">8</span></td></tr>
+                    <tr><td><span class="date">9</span></td>
+            <td><span class="date">10</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Fall break</p></td>
+
+            <td><span class="date">11</span><p><span class="badge bg-danger"><i class="bi bi-youtube"></i></span> Parallel communication</p>
+                <p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Pulse width input</p></td>
+            <td><span class="date">12</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Pulse width input</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Makeup session</p></td>
+            <td><span class="date">13</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Pulse width input</p></td>
+            <td><span class="date">14</span></td>
+            <td><span class="date">15</span></td></tr>
+                    <tr><td><span class="date">16</span></td>
+            <td><span class="date">17</span><p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Midterm exam</p></td>
+            <td><span class="date">18</span><p><span class="badge bg-info"><i class="bi bi-lightbulb-fill"></i></span> Project idea batch deadline</p></td>
+            <td><span class="date">19</span><br> <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Parallel communication</p></td>
+            <td><span class="date">20</span></td>
+            <td><span class="date">21</span></td>
+            <td><span class="date">22</span></td></tr>
+                    <tr><td><span class="date">23</span></td>
+            <td><span class="date">24</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Serial communication</p></td>
+            <td><span class="date">25</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Parallel communication</p></td>
+            <td><span class="date">26</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Parallel communication</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Serial communication</p></td>
+            <td><span class="date">27</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Parallel communication</p></td>
+            <td><span class="date">28</span></td>
+            <td><span class="date">29</span></td></tr>
+                    <tr><td><span class="date">30</span></td>
+            <td><span class="date">31</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Driving current, logic level translation</p></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td></tr>
+                </table>
+                <p><div class="title">November 2022</div>
+                    <table border="1">
+                        <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+                        <tr><td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">1</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Serial communication</p></td>
+            <td><span class="date">2</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Serial communication</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Driving current, logic level translation</p></td>
+            <td><span class="date">3</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Serial communication</p></td>
+            <td><span class="date">4</span></td>
+            <td><span class="date">5</span></td></tr>
+                        <tr><td><span class="date">6</span></td>
+            <td><span class="date">7</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> ADC</p></td>
+            <td><span class="date">8</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Driving current, logic level translation</p></td>
+            <td><span class="date">9</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Driving current, logic level translation</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> ADC</p></td>
+            <td><span class="date">10</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Driving current, logic level translation</p></td>
+            <td><span class="date">11</span></td>
+            <td><span class="date">12</span></td></tr>
+                        <tr><td><span class="date">13</span></td>
+            <td><span class="date">14</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Multiplexing I/O</p></td>
+            <td><span class="date">15</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> ADC</p></td>
+            <td><span class="date">16</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> ADC</p>
+                <p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Multiplexing I/O</p></td>
+            <td><span class="date">17</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> ADC</p></td>
+            <td><span class="date">18</span></td>
+            <td><span class="date">19</span></td></tr>
+                        <tr><td><span class="date">20</span></td>
+            <td><span class="date">21</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Selecting parts</p></td>
+            <td><span class="date">22</span><p><span class="badge bg-info"><i class="bi bi-lightbulb-fill"></i></span> Project approval deadline</p></td>
+            <td><span class="date">23</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Fall break</p></td>
+            <td><span class="date">24</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Thanksgiving</p></td>
+            <td><span class="date">25</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Thanksgiving</p></td>
+            <td><span class="date">26</span></td></tr>
+                        <tr><td><span class="date">27</span></td>
+            <td><span class="date">28</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Breakout boards and add-on boards</p></td>
+            <td><span class="date">29</span><p><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Multiplexing I/O</p></td>
+            <td><span class="date">30</span><br> <p><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Multiplexing I/O</p>
+                <p><span class="badge bg-info"><i class="bi bi-cpu-fill"></i></span> Project work</p></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td></tr>
+                    </table>
+                    <p><div class="title">December 2022</div>
+                        <table border="1">
+                            <tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr>
+                            <tr><td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">&nbsp;</span></td>
+            <td><span class="date">1</span><p><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Multiplexing I/O</p></td>
+            <td><span class="date">2</span></td>
+            <td><span class="date">3</span></td></tr>
+                            <tr><td><span class="date">4</span></td>
+            <td><span class="date">5</span> <br> <p><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> Project discussion</p></td>
+            <td><span class="date">6</span></td>
+            <td><span class="date">7</span><p><span class="badge bg-info"><i class="bi bi-cpu-fill"></i></span> Project work</p></td>
+            <td><span class="date">8</span></td>
+            <td><span class="date">9</span></td>
+            <td><span class="date">10</span></td></tr>
+                            <tr><td><span class="date">11</span></td>
+            <td><span class="date">12</span> <br> <p><span class="badge bg-info"><i class="bi bi-easel3-fill"></i></span> Project presentations</p></td>
+            <td><span class="date">13</span></td>
+            <td><span class="date">14</span><p><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> Makeup day</p></td>
+            <td><span class="date">15</span><p><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> Reading day</p></td>
+            <td><span class="date">16</span></td>
+            <td><span class="date">17</span></td></tr>
+                            <tr><td><span class="date">18</span></td>
+            <td><span class="date">19</span></td>
+            <td><span class="date">20</span></td>
+            <td><span class="date">21</span></td>
+            <td><span class="date">22</span></td>
+            <td><span class="date">23</span></td>
+            <td><span class="date">24</span></td></tr>
+                            <tr><td><span class="date">25</span></td>
+            <td><span class="date">26</span></td>
+            <td><span class="date">27</span></td>
+            <td><span class="date">28</span></td>
+            <td><span class="date">29</span></td>
+            <td><span class="date">30</span></td>
+            <td><span class="date">31</span></td></tr>
+                        </table>
+                        <br>
+                        <hr>
+                        <br>
+                        <p>Key:</p>
+                        <ul>
+                            <li><span class="badge bg-secondary"><i class="bi bi-calendar2-x-fill"></i></span> NYU academic calendar event</li>
+                            <li><span class="badge bg-success"><i class="bi bi-easel3-fill"></i></span> In person lecture</li>
+                            <li><span class="badge bg-success"><i class="bi bi-cpu-fill"></i></span> In person lab</li>
+                            <li><span class="badge bg-warning"><i class="bi bi-pencil-square"></i></span> Homework due (50% to be allowed to take quiz)</li>
+                            <li><span class="badge bg-warning"><i class="bi bi-cpu-fill"></i></span> Lab report due</li>
+                            <li><span class="badge bg-primary"><i class="bi bi-check-circle-fill"></i></span> Quiz or exam</li>
+                            <li><span class="badge bg-danger"><i class="bi bi-youtube"></i></span> Online asynchronous lesson instead of in person lecture</li>
+                            <li><span class="badge bg-info"><i class="bi bi-lightbulb-fill"></i></span>  Project milestone deadline</li>
+                            <li><span class="badge bg-info"><i class="bi bi-easel3-fill"></i></span>  Project work in lecture</li>
+                            <li><span class="badge bg-info"><i class="bi bi-cpu-fill"></i></span>  Project work in lab</li>
+                        </ul>
+                
+                    </body></html>
+                    
