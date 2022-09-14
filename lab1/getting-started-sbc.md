@@ -90,7 +90,7 @@ Make sure you know how to open VNC viewer. It will look like this when you run i
 
 \newpage
 
-# Connecting to your Pi
+# Connecting to your Pi in LC011
 
 ## Turn on your Pi for a headless session
 
@@ -141,14 +141,14 @@ indicating that you are in a terminal session on the Pi, and any commands you ru
 1. Connect your laptop to the `ece4313` network. Show a screenshot that demonstrates how you can tell you have done this step successfully.
 2. Power on the Pi and have it load the operating system from SD card. Show a photo that demonstrates how you can tell you have done this step successfully.
 3. Open a terminal on your laptop. Show a screenshot that demonstrates how you can tell you have done this step successfully.
-4. Identify the address of your Pi on the `ece4313` network. Show a photo to demonstrate.
+4. Identify the address of your Pi on the `ece4313` network. Show a photo to demonstrate this step.
 5. Use SSH to connect to a terminal session on your Pi, with this address. Show a photo that demonstrates how you can tell you have done this step successfully.
 
 ---
 
 \newpage
 
-## Enable VNC and establish a VNC session over the ece4313 network
+## Enable VNC 
 
 Now that you have a terminal session on the Pi, you can also enable VNC on the Pi, so that you can also establish a graphical connection. The Raspberry Pi OS includes a configuration tool called `raspi-config` that we can use to enable VNC. Run
 
@@ -179,6 +179,10 @@ Then, you can close your SSH session with the following command:
 exit
 ```
 
+(This was a one-time configuration - after you have done this, you'll be able to connect using VNC in the future without repeating the `raspi-config` step.)
+
+
+## Establish a VNC session over the ece4313 network
 
 Now, open the RealVNC Viewer, and in the address bar at the top, type the address of *your* Pi. (It's not necessarily the same as the address shown in my screenshot!) Then, hit `Enter`.
 
@@ -209,8 +213,8 @@ Then, you'll see the Raspberry Pi OS desktop:
 
 \newpage
 
+# Connecting to your Pi at home
 
-## Establish a connection over a personal network
 
 Before you leave the lab, you should also make sure that you can connect to your Pi even outside the lab (when the `ece4313` network is not available to you.) It's important that you are able to connect to your Pi outside of this lab:
 
@@ -218,16 +222,13 @@ Before you leave the lab, you should also make sure that you can connect to your
 * in case you have to attend a lab session from home because you are not feeling well,
 * for later in the semester - so that you can work on your project outside of scheduled lab sessions.
 
-You can use your mobile phone or laptop to create a WiFi hotspot, and configure your Pi to connect to this hotspot. However,
+You can use your mobile phone or laptop to create a WiFi hotspot, and configure your Pi to connect to this hotspot. The following sections will show you how.
 
-* The WiFi hotspot should be on the 2.4GHz WiFi band, not on 5GHz. The Pi Zero W only supports the 2.4GHz WiFi band.
-* The WiFi hotspot should use an authentication method that is supported by the Pi. In these instructions, we assume standard home network authentication methods; enterprise authentication may be more complicated.
-
-The following sections will show you how to create a hotspot on an iPhone or Android device, or on a Windows or Mac PC. 
+## Create a hotspot
 
 ### Create a hotspot on an iPhone
 
-To create a hotspot on your iPhone, follow the instructions at [https://support.apple.com/en-us/HT204023](https://support.apple.com/en-us/HT204023). However, to make sure your Pi is able to connect to this hotspot:
+To create a hotspot on your iPhone, follow the instructions at [https://support.apple.com/en-us/HT204023](https://support.apple.com/en-us/HT204023). However, to make sure your Pi is able to connect to this hotspot, there are some important additional instructions:
 
 * Some iPhone versions have a "Maximize Compatibility" option in the "Personal Hotspot" configuration menu. If your iPhone has this option, you must make sure it is turned *on*.
 * The default SSID of the iPhone hotspot is set according to the name of the iPhone, for example, "Fraida’s iPhone". It's easier to work with an SSID that does not have any spaces or special characters, like the apostrophe. If you're willing, you can change the iPhones name in the General settings tab (General > About > Name) to a name which does not contain any special characters, save, and enable the hotspot again. 
@@ -283,14 +284,13 @@ Finally, once everything is configured, check the box next to "Internet Sharing"
 Once you have set this up, make a note of the network *name* and *password* - you will need these in a later step. Then, you can stop the hotspot and re-connect your computer to the `ece4313` network. Continue from the section titled *Edit configuration files on your Pi*.
 
 
-
-### Edit configuration files on your Pi
+## Edit configuration files on your Pi
 
 Now that you know the *name* and *password* of your hotspot network, you will need to configure your Pi to connect to this network.
 
 You will need your Pi and your laptop to still be connected to the `ece4313` network, and you should connect to your Pi using SSH.  We are going to edit *two* configuration files on the Pi.
 
-**First**: we will edit the `sysctl` configuration file, which includes many system-wide configuration options. We can are going to add a line to this file to configure the system to respond to "broadcast pings" (more details on that later!)
+**First**: we will edit the `sysctl` configuration file, which includes many system-wide configuration options. We can are going to add a line to this file to configure the system to respond to "broadcast pings" (more details on that later!) At the terminal *on your Pi*, run
 
 ```
 echo "net.ipv4.icmp_echo_ignore_broadcasts=0" | sudo tee -a /etc/sysctl.conf
@@ -397,6 +397,12 @@ network={
 
 Next, define priorities, so that if both networks are available your personal network will be preferred. Make sure to give your personal network a higher priority than the lab network - otherwise, the Pi will just connect to the lab network, and you won't be able to test whether your personal network works!
 
+*If* you add additional network blocks for your home WiFi network, make sure that:
+
+* your laptop/mobile hotspot has the *largest* priority
+* your home WiFi network has the second largest priority
+* the `ece4313` network has the smallest priority
+
 **A higher value indicates higher priority** (this is the opposite of what you might expect) - for example, the network with priority 2 is preferred over the network with priority 1. Your personal network's priority should be a *larger number* than the lab network:
 
 
@@ -423,9 +429,11 @@ To save (write **o**ut) the file, use `Ctrl`+`O`, and hit `Enter` when prompted 
 (Note: you can add as many networks as you like to this file. For example, if you have a home WiFi network that you want your Pi to connect to, you can add it, too.)
 
 
-### Find out your Pi's address
+## Find out your Pi's address
 
-If you did everything right, your Pi should now connect to your "personal" network when it reboots.
+If you did everything right, your Pi should now connect to your "personal" network when it reboots. But, in order to access it, you'll need to find out its address. On your "personal" network, your Pi's address may be different every time it connects to the network.
+
+To find out your Pi's address,
 
 1. First, switch your personal hotspot on.
 2. Then, reboot your Pi. At your Pi's terminal prompt, run:
@@ -437,13 +445,39 @@ sudo reboot
 3. If your personal hotspot is provided by your phone, connect your laptop to this hotspot. Remember that your Pi and your laptop need to be on the same network, so if your Pi connects to your mobile hotspot, so should your laptop!
 
 
-Your Pi should boot after a few minutes and connect to your personal hotspot. However, you will *not* be able to connect to your Pi using the "192.168.0.N" address - that address is specific to the `ece4313` network. On your personal hotspot, your Pi will have a different address (and it may be a different address every time you connect your Pi to your hotspot.)
+Your Pi should boot **after a few minutes** and connect to your personal hotspot. However, you will *not* be able to connect to your Pi using the "192.168.0.N" address - that address is specific to the `ece4313` network. On your personal hotspot, your Pi will have a different address (and it may be a different address every time you connect your Pi to your hotspot.)
 
 The process of finding out the address will, again, depend on the type of hotspot device. I will provide instructions below for Android hotspot, Windows hotspot, or "other". If the Android or Windows hotspot instructions don't work for you (for example, because you have a different device model), you can still use the "other" instructions.
 
----
 
-**Android**: If you are creating a hotspot from an Android device, you may see a "Connected Devices" area on the mobile hotspot settings page. After you Pi connects, you'll see a "raspberrypi" entry in that list. Click on that entry:
+Before you proceed:
+
+* Make sure you have rebooted your Pi according to the instruction above, *and* waited a few minutes afterward for it to come back up.
+* Make sure your laptop is connected to the same personal hotspot that you configured your Pi to use.
+
+
+### Find out your Pi's address using its name - any device
+
+On some networks/with some devices, you can reach your Pi by *name* without knowing its address. You can try this by running the following command in your *local* terminal:
+
+
+```
+ping raspberrypiXX.local
+```
+
+where in place of `XX` you substitute the number on the sticker on your Pi. This command says, "If there is a device on the same network named `raspberrypi.XX`, please respond!" If you get reply like
+
+```
+64 bytes from Y.Y.Y.Y: icmp_seq=1 ttl=64 time=0.049 ms
+```
+
+make a note of the IP address `Y.Y.Y.Y` in the response. Then, continue from the section *SSH into your Pi*.
+
+If you don't get any response, or if you get an error message like `Destination Host Unreachable` or `Name or service not known` in the response, that's OK! Move on to the next option that is appropriate for your device/hotspot.
+
+### Find out your Pi's address - Android hotspot
+
+If you are creating a hotspot from an Android device, you may see a "Connected Devices" area on the mobile hotspot settings page. After you Pi connects, you'll see a "raspberrypi" entry in that list. Click on that entry:
 
 ![Find Raspberry Pi in connected device list on Android hotspot.](images/android-find-ip-1.png){ width=30% }
 
@@ -452,17 +486,16 @@ Then, note the IP address that appears in the following window:
 ![Find IP address from Android hotspot.](images/android-find-ip-2.png){ width=30% }
 
 This should be the address of your Pi.
+### Find out your Pi's address - Windows hotspot
 
----
-
-**Windows**: If you are creating a hotspot from a Windows laptop, in the Mobile Hotspot settings page you may see a list of connected devices. You can find your Pi in this list and note its IP address:
+If you are creating a hotspot from a Windows laptop, in the Mobile Hotspot settings page you may see a list of connected devices. You can find your Pi in this list and note its IP address:
 
 ![Find IP address from Windows hotspot.](images/windows-find-ip.png)
 
 
----
+### Find out your Pi's address - Mac laptop
 
-**Other - Mac laptop**: Otherwise, if your laptop is a Mac, you can find out your Pi's IP address as follows.
+Otherwise, if your laptop is a Mac, you can find out your Pi's IP address as follows.
 
 In a local terminal on your Mac (not on your Pi), run
 
@@ -470,63 +503,123 @@ In a local terminal on your Mac (not on your Pi), run
 ifconfig
 ```
 
-In the output, find the block labeled `en0`. 
+In the output, find the block labeled `en0`. Look for the laptop's `inet` address (circled in blue in the example image below) and the `broadcast` address on the network (circled in purple in the example image below):
 
----
+![Finding your IP address and broadcast address on a Mac. In this example, an Android phone is providing the hotspot network.](images/mac-find-ip-1.png)
 
-**Other - Mac laptop**: Otherwise, if you use a Windows laptop, you can find out your Pi's IP address as follows.
+This will look different, depending on the network you are on. Here's another example:
 
-In a local terminal on your Mac (not on your Pi), run
+![Finding your IP address and broadcast address on a Mac - another example. In this example, an iPhone is providing the hotspot network.](images/mac-find-ip-2.png)
+
+
+Then, in your Mac's local terminal, run 
+
+```
+ping X.X.X.X
+```
+
+where in place of `X.X.X.X` you substitute the *broadcast address* (e.g. the address circled in purple in the examples above). This command says, "Every device on the same network as me, please respond!" 
+
+You will probably get at least one response like
+
+```
+64 bytes from X.X.X.X: icmp_seq=1 ttl=64 time=0.049 ms
+```
+
+from *yourself* - e.g. with the `inet` address you identified previously. You may also get a response from an address that ends in `.1`, e.g. `172.20.10.1` or `192.168.43.1` - this is the device that provides the hotspot. Look for a response from an address that is *not* one of those, and make a note of that address. Then, continue from the section *SSH into your Pi*.
+
+
+
+### Find out your Pi's address -  Windows laptop, Windows laptop hotspot
+
+If you use a Windows laptop, and this laptop provides the hotspot network but does not give you any list of "Connected Devices", you can find out your Pi's IP address as follows.
+
+In a local terminal on your Windows laptop (not on your Pi), run
 
 ```
 ipconfig
 ```
 
-In the output, find the block labeled `en0`. 
+In the output, find the block for your WiFi adapter. is will be an entry that has an "IPv4 Address" associated with it, but that is not the "WiFi" adapter - for example, the block circled in blue in the image below:
+
+![Hotspot network adapter.](images/windows-hostpot-ip.png)
+
+Your next step must be to find out the *broadcast address* of this network. Copy the value shown for "IPv4 Address" and the value shown for "Subnet Mask" into WolframAlpha, and look for the "broadcast ID" in the result, like this:
+
+![Find out Windows hotspot broadcast address.](images/windows-hostpot-broadcast.png)
+
+Then, in your laptop's local terminal, run 
+
+```
+ping X.X.X.X
+```
+
+where in place of `X.X.X.X` you substitute the *broadcast address* (e.g. the address circled in purple in the example above). This command says, "Every device on the same network as me, please respond!" 
+
+You will probably get at least one response like
+
+```
+64 bytes from X.X.X.X: icmp_seq=1 ttl=64 time=0.049 ms
+```
+
+from *yourself* - e.g. with the "IPv4 Address" you identified previously (in the blue-circled block above). Look for a response from an address that is *not* your laptop's own address, and make a note of that address. Then, continue from the section *SSH into your Pi*.
 
 
 ---
 
+**Other - Windows laptop, Android or iPhone hotspot**: If you use a Windows laptop, and your hotspot network is provided by an Android phone or iPhone, you can find out your Pi's IP address as follows.
 
-### SSH into your Pi
-
-When the Pi comes back online (it will take a few minutes to boot!), you may be able to reach it even without knowing its IP address. In a *local* terminal window on your laptop, run
-
-```
-ping raspberrypi.local
-```
-
-(if the `ping` process does not stop by itself, you can stop it with `Ctrl`+`C`.) If you received some response, great! Make sure you can SSH into your Pi with
+In a local terminal on your Windows laptop (not on your Pi), run
 
 ```
-ssh pi@raspberrypi.local
+ipconfig
 ```
 
-and use `raspberry` as the password.
+In the output, find the block corresponding to your WiFi adapter.
 
+![Find hotspot network on Windows laptop. In this example, the hotspot is provided by an iPhone.](images/windows-iphone-ip.png)
 
-If not, you'll have to find out the Pi's IP address from your mobile phone:
+The network configuration will be different, depending on the type of hotspot device you are using. Here's another example:
 
-* On Android devices, in the Mobile Hotspot menu, look for a Connected Devices section which lists the currently connected devices. If you see `raspberrypi` appear in this list, you can click on it to find out the IP address assigned to the Pi.
-* On an iPhone, you can install the (free) Network Analyzer app. Open it, and select the LAN tab at the bottom of the screen. Tap the Scan button to see the IP address of every device currently connected to your network.
-* On Windows 10, you should be able to see a list of connected devices and addresses from the Mobile Hotspot configuration page.
-* With Connectify, the GUI should show you the list of connected devices and addresses. 
-* On a MAC, you can find out the IP address of your Pi by running `arp -a` and looking for the entry corresponding to the Pi.
+![Find hotspot network on Windows laptop. In this example, the hotspot is provided by an Android phone.](images/windows-android-ip.png)
 
+Your next step must be to find out the *broadcast address* of this network. Copy the value shown for "IPv4 Address" and the value shown for "Subnet Mask" into WolframAlpha (circled in blue in the examples above), and look for the "broadcast ID" in the result, like this:
 
-Then, make sure you can reach that address - in a terminal session, run
+![Find out Windows hotspot broadcast address. This example shows the broadcast address for the "IPv4 Address" and "Subnet Mask" shown in the iPhone example. ](images/windows-iphone-wolfram.png)
 
-```
-ping A.B.C.D
-```
-
-substituting the IP address you found in place of `A.B.C.D` above. (If the `ping` process does not stop by itself, you can stop it with `Ctrl`+`C`.) Make sure you get some response! Then, verify that you can SSH into your Pi with
+Then, in your laptop's local terminal, run 
 
 ```
-ssh pi@A.B.C.D
+ping X.X.X.X
 ```
 
-again, substituting the IP address you found in place of `A.B.C.D`, and use `raspberry` as the password.
+where in place of `X.X.X.X` you substitute the *broadcast address* (e.g. the address circled in purple in the example above). This command says, "Every device on the same network as me, please respond!" 
+
+You will probably get at least one response like
+
+```
+64 bytes from X.X.X.X: icmp_seq=1 ttl=64 time=0.049 ms
+```
+
+from *yourself* - e.g. with the "IPv4 Address" you identified previously (in the blue-circled block above). You may also get a response from an address that ends in `.1`, e.g. `172.20.10.1` or `192.168.43.1`, that was identified as the "Default Gateway" in the `ipconfig` output - this is the device that provides the hotspot. Look for a response from an address that is *not* one of those, and make a note of that address. Then, continue from the section *SSH into your Pi*.
+
+
+## Establish an SSH connection over your personal hotspot network
+
+
+Once you have identified the address of the Pi, make sure you can reach that address - in a terminal session, run
+
+```
+ping Y.Y.Y.Y
+```
+
+substituting the IP address you found in place of `Y.Y.Y.Y` above. (If the `ping` process does not stop by itself, you can stop it with `Ctrl`+`C`.) Make sure you get some response! Then, verify that you can SSH into your Pi with
+
+```
+ssh pi@Y.Y.Y.Y
+```
+
+again, substituting the IP address you found in place of `Y.Y.Y.Y`, and use `raspberry` as the password.
 
 On the Pi, run
 
@@ -536,18 +629,27 @@ iwconfig wlan0
 
 to see the current network configuration. 
 
+
+## Establish a VNC session over your personal hotspot network
+
+As with SSH, you will need to substitute the IP address that you found ("Y.Y.Y.Y") in the address space of the VNC viewer application when you connect to your Pi using your personal hotspot device. Open the VNC viewer and practice this now.
+
+
 **Note**: After you have finished this section, you can re-connect using the `ece4313` network in the lab for the rest of this assignment. The `ece4313` network may offer a better network connection than your personal hotspot.
 
 
 ---
 
-**Lab report**: Prepare an instruction/checklist document for yourself to use in the future when you need to establish an SSH connection to your Pi over your personal network. Your list should include instructions specifically for *your* work environment, describing how to:
+**Lab report**: Imagine that six weeks from now, you need to use your Pi at home to finish a lab assignment. You don't want to spend an hour or two figuring out how to connect to your Pi at home *before* you can even continue your work! Write a step-by-step tutorial for "future you", with instructions specifically for *your* personal hotspot device, with images at each step that show what it looks like when you have carried out the step correctly. Your tutorial should include instructions to:
 
-1. Start a personal (2.4GHz) WiFi network from your phone or laptop, and to connect your laptop to this network (if it's a phone hotspot). Show a photo that demonstrates how you can tell you have done this step successfully. 
+
+1. Start a personal (2.4GHz) WiFi network from your phone or laptop, and to connect your laptop to this network (if it's a phone hotspot). Show a screenshot that demonstrates how you can tell you have done this step successfully. 
 2. Power on the Pi and have it load the operating system from SD card. Show a photo that demonstrates how you can tell you have done this step successfully. (You can copy your own answer from a previous section.)
-3. Identify the address of your Pi your *personal* network, and verify that it responds to a `ping` command at that address, OR confirm that your Pi responds to `ping` by name. Show a photo to demonstrate.
-4. Open a terminal and use SSH to connect to a terminal session on your Pi over your *personal* network. Show a photo that demonstrates how you can tell you have done this step successfully.
-5. Open a VNC viewer and use VNC to connect to a GUI session on your Pi over your *personal* network. Show a photo that demonstrates how you can tell you have done this step successfully.
+3. Identify the address of your Pi your *personal* network, and verify that it responds to a `ping` command at that address. Show a screenshot to demonstrate the steps of identifying the Pi's address, and a photo showing what it look when your `ping` to that address is successful. (Note that each time you connect your Pi to your personal hotspot network, it can have a different address - so you need to show the *steps* to finding that address.)
+4. Open a terminal and use SSH to connect to a terminal session on your Pi over your *personal* network. Show a screenshot that demonstrates how you can tell you have done this step successfully.
+5. Open a VNC viewer and use VNC to connect to a GUI session on your Pi over your *personal* network. Show a screenshot that demonstrates how you can tell you have done this step successfully.
+
+(Your instructions should not include one-time configuration tasks - for example, you don't need to include the parts about editing the `wpa_supplicant.conf` file, or enabling VNC with `raspi-config`, since you have already done those steps and won't need to do them again.)
 
 
 **Lab report**: Upload the contents of your final `wpa_supplicant.conf` file, with your personal network configuration. (In the event that you have to create a new SD card in the future, you will copy this configuration file onto your new SD card so that it can connect to your own *personal* network.)
@@ -569,7 +671,7 @@ Click on the Raspberry icon in the top left to see the application menu, and exp
 
 ---
 
-**Lab report**: Write instructions for yourself, describing how to open each of these applications on the Pi:
+**Lab report**: Write instructions for "future you", describing how to open each of these applications on the Pi:
 
 * a browser
 * a text editor
@@ -839,7 +941,7 @@ scp /Users/ffund/hello.txt pi@192.168.0.5:/home/pi/hello.txt
 
 ---
 
-**Lab report**: Create a file at `/home/pi/lab1/pi.txt` on your Pi, with your net ID as the file contents. Also create a file file `laptop.txt` at the location of your choice on your laptop, with your net ID as the file contents. Then, prepare an instruction/checklist document for yourself explaining:
+**Lab report**: Create a file at `/home/pi/lab1/pi.txt` on your Pi, with your net ID as the file contents. Also create a file file `laptop.txt` at the location of your choice on your laptop, with your net ID as the file contents. Then, prepare an instruction/checklist document for "future you" explaining:
 
 1. how to transfer the file from `/home/pi/lab1/pi.txt` on your Pi, to a location of your choice on your laptop, using VNC. Then, explain how to open the file on your laptop and verify its contents. Show a screenshot of the file open on your laptop, with the contents displayed.
 2. how to transfer the file from `/home/pi/lab1/pi.txt` on your Pi, to a location of your choice on your laptop, using SCP. Then, explain how to open the file on your laptop and verify its contents.  Show a screenshot of the file open on your laptop, with the contents displayed.
