@@ -189,26 +189,26 @@ Are you sure you want to continue connecting (yes/no/[fingerprint])? </code></pr
 <p>Set the network name and password so that it has no spaces or other special characters.</p>
 <p>To make sure the Pi will connect to this hotspot, you need to make sure it is in the 2.4GHz band. If your hotspot shows “Any Band”, then edit the properties:</p>
 <figure>
-<img src="images/windows-edit-band.png" alt="Edit Windows hotspot properties." /><figcaption aria-hidden="true">Edit Windows hotspot properties.</figcaption>
+<img src="images/windows-edit-band.png" style="width:70.0%" alt="Edit Windows hotspot properties." /><figcaption aria-hidden="true">Edit Windows hotspot properties.</figcaption>
 </figure>
 <p>Change the “Network Band” option to 2.4GHz and save this setting:</p>
 <figure>
-<img src="images/windows-edit-band-2.png" alt="Change the network band." /><figcaption aria-hidden="true">Change the network band.</figcaption>
+<img src="images/windows-edit-band-2.png" style="width:70.0%" alt="Change the network band." /><figcaption aria-hidden="true">Change the network band.</figcaption>
 </figure>
 <p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Then, you can stop the hotspot and re-connect your computer to the <code>ece4313</code> network. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
 <h3 id="create-a-hotspot-on-a-mac">Create a hotspot on a Mac</h3>
 <p>This process is more complicated than the other options, so you should attempt this only if you cannot create a hotspot using iPhone, Android, or Windows. (For example, if your wireless carrier does not allow you to create a hotspot from your phone.)</p>
 <p>To create a hotspot on a Mac, you will actually need a second device (e.g. an iPhone) to be connected to the Mac using a wired USB or Thunderbolt cable. Then, on the Mac, open System Preferences &gt; Sharing and select “Internet Sharing”. Configure it to share your connection <em>from</em> “iPhone USB” <em>to</em> “WiFi”:</p>
 <figure>
-<img src="images/mac-sharing-1.png" alt="Configure Internet sharing on a Mac." /><figcaption aria-hidden="true">Configure Internet sharing on a Mac.</figcaption>
+<img src="images/mac-sharing-1.png" style="width:90.0%" alt="Configure Internet sharing on a Mac." /><figcaption aria-hidden="true">Configure Internet sharing on a Mac.</figcaption>
 </figure>
 <p>Then, click on “WiFi options”. Set the network name and password so that it has no spaces or other special characters. Also, set the channel to either 1, 6, or 11.</p>
 <figure>
-<img src="images/mac-sharing-2.png" alt="Configure WiFi settings on a Mac." /><figcaption aria-hidden="true">Configure WiFi settings on a Mac.</figcaption>
+<img src="images/mac-sharing-2.png" style="width:50.0%" alt="Configure WiFi settings on a Mac." /><figcaption aria-hidden="true">Configure WiFi settings on a Mac.</figcaption>
 </figure>
 <p>Finally, once everything is configured, check the box next to “Internet Sharing”:</p>
 <figure>
-<img src="images/mac-sharing-3.png" alt="Turn on Internet sharing." /><figcaption aria-hidden="true">Turn on Internet sharing.</figcaption>
+<img src="images/mac-sharing-3.png" style="width:50.0%" alt="Turn on Internet sharing." /><figcaption aria-hidden="true">Turn on Internet sharing.</figcaption>
 </figure>
 <p>Once you have set this up, make a note of the network <em>name</em> and <em>password</em> - you will need these in a later step. Then, you can stop the hotspot and re-connect your computer to the <code>ece4313</code> network. Continue from the section titled <em>Edit configuration files on your Pi</em>.</p>
 <h2 id="edit-configuration-files-on-your-pi">Edit configuration files on your Pi</h2>
@@ -331,13 +331,14 @@ network={
 <h3 id="find-out-your-pis-address---android-hotspot">Find out your Pi’s address - Android hotspot</h3>
 <p>If you are creating a hotspot from an Android device, you may see a “Connected Devices” area on the mobile hotspot settings page. After you Pi connects, you’ll see a “raspberrypi” entry in that list. Click on that entry:</p>
 <figure>
-<img src="images/android-find-ip-1.png" style="width:30.0%" alt="Find Raspberry Pi in connected device list on Android hotspot." /><figcaption aria-hidden="true">Find Raspberry Pi in connected device list on Android hotspot.</figcaption>
+<img src="images/android-find-ip-1.png" style="width:23.0%" alt="Find Raspberry Pi in connected device list on Android hotspot." /><figcaption aria-hidden="true">Find Raspberry Pi in connected device list on Android hotspot.</figcaption>
 </figure>
 <p>Then, note the IP address that appears in the following window:</p>
 <figure>
-<img src="images/android-find-ip-2.png" style="width:30.0%" alt="Find IP address from Android hotspot." /><figcaption aria-hidden="true">Find IP address from Android hotspot.</figcaption>
+<img src="images/android-find-ip-2.png" style="width:23.0%" alt="Find IP address from Android hotspot." /><figcaption aria-hidden="true">Find IP address from Android hotspot.</figcaption>
 </figure>
-<p>This should be the address of your Pi. ### Find out your Pi’s address - Windows hotspot</p>
+<p>This should be the address of your Pi.</p>
+<h3 id="find-out-your-pis-address---windows-hotspot">Find out your Pi’s address - Windows hotspot</h3>
 <p>If you are creating a hotspot from a Windows laptop, in the Mobile Hotspot settings page you may see a list of connected devices. You can find your Pi in this list and note its IP address:</p>
 <figure>
 <img src="images/windows-find-ip.png" alt="Find IP address from Windows hotspot." /><figcaption aria-hidden="true">Find IP address from Windows hotspot.</figcaption>
@@ -366,11 +367,11 @@ network={
 <pre><code>ipconfig</code></pre>
 <p>In the output, find the block for your WiFi adapter. is will be an entry that has an “IPv4 Address” associated with it, but that is not the “WiFi” adapter - for example, the block circled in blue in the image below:</p>
 <figure>
-<img src="images/windows-hostpot-ip.png" alt="Hotspot network adapter." /><figcaption aria-hidden="true">Hotspot network adapter.</figcaption>
+<img src="images/windows-hostpot-ip.png" style="width:70.0%" alt="Hotspot network adapter." /><figcaption aria-hidden="true">Hotspot network adapter.</figcaption>
 </figure>
 <p>Your next step must be to find out the <em>broadcast address</em> of this network. Copy the value shown for “IPv4 Address” and the value shown for “Subnet Mask” into WolframAlpha, and look for the “broadcast ID” in the result, like this:</p>
 <figure>
-<img src="images/windows-hostpot-broadcast.png" alt="Find out Windows hotspot broadcast address." /><figcaption aria-hidden="true">Find out Windows hotspot broadcast address.</figcaption>
+<img src="images/windows-hostpot-broadcast.png" style="width:70.0%" alt="Find out Windows hotspot broadcast address." /><figcaption aria-hidden="true">Find out Windows hotspot broadcast address.</figcaption>
 </figure>
 <p>Then, in your laptop’s local terminal, run</p>
 <pre><code>ping X.X.X.X</code></pre>
@@ -378,21 +379,21 @@ network={
 <p>You will probably get at least one response like</p>
 <pre><code>64 bytes from X.X.X.X: icmp_seq=1 ttl=64 time=0.049 ms</code></pre>
 <p>from <em>yourself</em> - e.g. with the “IPv4 Address” you identified previously (in the blue-circled block above). Look for a response from an address that is <em>not</em> your laptop’s own address, and make a note of that address. Then, continue from the section <em>SSH into your Pi</em>.</p>
-<hr />
-<p><strong>Other - Windows laptop, Android or iPhone hotspot</strong>: If you use a Windows laptop, and your hotspot network is provided by an Android phone or iPhone, you can find out your Pi’s IP address as follows.</p>
+<h3 id="find-out-your-pis-address---windows-laptop-android-or-iphone-hotspot">Find out your Pi’s address - Windows laptop, Android or iPhone hotspot</h3>
+<p>If you use a Windows laptop, and your hotspot network is provided by an Android phone or iPhone, you can find out your Pi’s IP address as follows.</p>
 <p>In a local terminal on your Windows laptop (not on your Pi), run</p>
 <pre><code>ipconfig</code></pre>
 <p>In the output, find the block corresponding to your WiFi adapter.</p>
 <figure>
-<img src="images/windows-iphone-ip.png" alt="Find hotspot network on Windows laptop. In this example, the hotspot is provided by an iPhone." /><figcaption aria-hidden="true">Find hotspot network on Windows laptop. In this example, the hotspot is provided by an iPhone.</figcaption>
+<img src="images/windows-iphone-ip.png" style="width:68.0%" alt="Find hotspot network on Windows laptop. In this example, the hotspot is provided by an iPhone." /><figcaption aria-hidden="true">Find hotspot network on Windows laptop. In this example, the hotspot is provided by an iPhone.</figcaption>
 </figure>
 <p>The network configuration will be different, depending on the type of hotspot device you are using. Here’s another example:</p>
 <figure>
-<img src="images/windows-android-ip.png" alt="Find hotspot network on Windows laptop. In this example, the hotspot is provided by an Android phone." /><figcaption aria-hidden="true">Find hotspot network on Windows laptop. In this example, the hotspot is provided by an Android phone.</figcaption>
+<img src="images/windows-android-ip.png" style="width:68.0%" alt="Find hotspot network on Windows laptop. In this example, the hotspot is provided by an Android phone." /><figcaption aria-hidden="true">Find hotspot network on Windows laptop. In this example, the hotspot is provided by an Android phone.</figcaption>
 </figure>
 <p>Your next step must be to find out the <em>broadcast address</em> of this network. Copy the value shown for “IPv4 Address” and the value shown for “Subnet Mask” into WolframAlpha (circled in blue in the examples above), and look for the “broadcast ID” in the result, like this:</p>
 <figure>
-<img src="images/windows-iphone-wolfram.png" alt="Find out Windows hotspot broadcast address. This example shows the broadcast address for the “IPv4 Address” and “Subnet Mask” shown in the iPhone example." /><figcaption aria-hidden="true">Find out Windows hotspot broadcast address. This example shows the broadcast address for the “IPv4 Address” and “Subnet Mask” shown in the iPhone example.</figcaption>
+<img src="images/windows-iphone-wolfram.png" style="width:65.0%" alt="Find out Windows hotspot broadcast address. This example shows the broadcast address for the “IPv4 Address” and “Subnet Mask” shown in the iPhone example." /><figcaption aria-hidden="true">Find out Windows hotspot broadcast address. This example shows the broadcast address for the “IPv4 Address” and “Subnet Mask” shown in the iPhone example.</figcaption>
 </figure>
 <p>Then, in your laptop’s local terminal, run</p>
 <pre><code>ping X.X.X.X</code></pre>
@@ -403,7 +404,8 @@ network={
 <h2 id="establish-an-ssh-connection-over-your-personal-hotspot-network">Establish an SSH connection over your personal hotspot network</h2>
 <p>Once you have identified the address of the Pi, make sure you can reach that address - in a terminal session, run</p>
 <pre><code>ping Y.Y.Y.Y</code></pre>
-<p>substituting the IP address you found in place of <code>Y.Y.Y.Y</code> above. (If the <code>ping</code> process does not stop by itself, you can stop it with <code>Ctrl</code>+<code>C</code>.) Make sure you get some response! Then, verify that you can SSH into your Pi with</p>
+<p>substituting the IP address you found in place of <code>Y.Y.Y.Y</code> above. (If the <code>ping</code> process does not stop by itself, you can stop it with <code>Ctrl</code>+<code>C</code>.) Make sure you get some response!</p>
+<p>Then, verify that you can SSH into your Pi with</p>
 <pre><code>ssh pi@Y.Y.Y.Y</code></pre>
 <p>again, substituting the IP address you found in place of <code>Y.Y.Y.Y</code>, and use <code>raspberry</code> as the password.</p>
 <p>On the Pi, run</p>
