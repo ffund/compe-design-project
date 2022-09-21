@@ -542,9 +542,9 @@ To try this third approach, create a new file and open it for editing:
 nano gpio-input-3.py
 ```
 
+\newpage
 Put the following code into this file, then save it and close `nano`:
 
-\newpage
 
 ```python
 import RPi.GPIO as GPIO
@@ -599,6 +599,8 @@ while True:
 However, your friend says, it always prints either 1 or 0 points, no matter how many times the button is pressed.
 
 What will you tell your friend? Explain to your friend why their code behaves like this. (You don't need to suggest any fix - just explain the problem.)
+
+\newpage
 
 Your friend takes your advice under consideration, and develops this alternative version:
 
@@ -703,7 +705,7 @@ Connect the Pi to the breadboard circuit so that the LED is *always on*:
 * Use a M-F jumper cable to connect any **3.3V** pin on the Pi, to the "free" end of the current-limiting resistor.
 
 You should see the LED turn on, and stay on.
-
+\newpage
 First, measure the voltage drop across the LED:
 
 * Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for measuring *voltage*. 
@@ -732,7 +734,7 @@ Then, remove the probes and turn the multimeter dial back to the **off** setting
 
 ### Measuring voltage with the Analog Discovery 2
 
-The Analog Discovery 2 can also be used to measure voltage at any point in the circuit, using its voltmeter tool.
+The Analog Discovery 2 can also be used to measure voltage anywhere in a circuit, with its voltmeter tool.
 
 You can follow along with [this video](https://stream.nyu.edu/media/Using+the+voltmeter+on+the+Analog+Discovery+2/1_sn7wyb91) as you work on this section.
 
@@ -741,7 +743,7 @@ You can follow along with [this video](https://stream.nyu.edu/media/Using+the+vo
 Connect your Analog Discovery 2 to your circuit as follows:
 
 * Put any GND pin on the Analog Discovery 2 (marked with a down arrow) into the breadboard row that is connected to GND on the Pi. (You'll always connect the GND pin on the Discovery 2 to the GND in the external circuit you want to measure, so that they have a **common ground**.)
-* Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row with the positive leg of the LED, and connect the 1- pin to the breadboard row with the negative leg of the LED.
+* Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row with the positive leg of the LED, and connect the 1- pin to the row with the negative leg.
 * Open the Waveforms application on your laptop. From the Welcome screen, click on Voltmeter.
 * Press the Run button to start measuring the voltage. (If you press the same button, now labeled Stop, again, it will stop measuring. There is also a "Single" button that will acquire a single measurement and then stop.)
 * Observe the DC voltage measurement on Channel 1. (Three values are calculated automatically: DC, True RMS, AC RMS. We are measuring a DC voltage, so we will ignore the other values.)
@@ -781,7 +783,7 @@ Open a new file called `gpio-out.py` for editing:
 ```
 nano gpio-out.py
 ```
-
+\newpage
 Put the following Python code in this file:
 
 ```python
@@ -898,7 +900,7 @@ Create an `index.html` file with the following contents:
    </body>
 </html>
 ```
-
+\newpage
 Then, create a file `flask-led.py` with the following contents:
 
 
@@ -948,7 +950,7 @@ if __name__ == "__main__":
     app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
 ```
 
-
+\newpage
 In this update,
 
 * we imported our `virtualhat` library, and made sure that its `setup()` function will run before we interact with the virtual LED or light sensor. 
@@ -1004,6 +1006,7 @@ You will need to modify this file so that:
 * When the `led_on()` function is called, the LED connected to GPIO 17 will turn on if it is not already on.
 * When the `led_off()` function is called, the LED connected to GPIO 17 will turn off if it is not already off.
 
+\newpage
 To test your modifications, install the modified library with
 
 ```

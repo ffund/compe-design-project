@@ -520,8 +520,7 @@ Can&#39;t initialise pigpio library</code></pre>
 <li>Use a M-F jumper cable to connect any <strong>GND</strong> pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)</li>
 <li>Use a M-F jumper cable to connect any <strong>3.3V</strong> pin on the Pi, to the “free” end of the current-limiting resistor.</li>
 </ul>
-<p>You should see the LED turn on, and stay on.</p>
-<p>First, measure the voltage drop across the LED:</p>
+<p>You should see the LED turn on, and stay on. First, measure the voltage drop across the LED:</p>
 <ul>
 <li>Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for measuring <em>voltage</em>.</li>
 <li>Set the dial on the multimeter to the setting for measuring <em>voltage</em>.</li>
@@ -542,7 +541,7 @@ Can&#39;t initialise pigpio library</code></pre>
 <p><strong>Lab report</strong>: What was the voltage drop across the LED when the LED was on? What was the current through the LED in this circuit? Show how you would compute the <em>expected</em> current range based on the nominal LED FV (2.5-3.0V) - is your measured current similar?</p>
 <hr />
 <h3 id="measuring-voltage-with-the-analog-discovery-2">Measuring voltage with the Analog Discovery 2</h3>
-<p>The Analog Discovery 2 can also be used to measure voltage at any point in the circuit, using its voltmeter tool.</p>
+<p>The Analog Discovery 2 can also be used to measure voltage anywhere in a circuit, with its voltmeter tool.</p>
 <p>You can follow along with <a href="https://stream.nyu.edu/media/Using+the+voltmeter+on+the+Analog+Discovery+2/1_sn7wyb91">this video</a> as you work on this section.</p>
 <div style="max-width:1280px">
 <div style="position:relative;padding-bottom:56.25%">
@@ -553,7 +552,7 @@ Can&#39;t initialise pigpio library</code></pre>
 <p>Connect your Analog Discovery 2 to your circuit as follows:</p>
 <ul>
 <li>Put any GND pin on the Analog Discovery 2 (marked with a down arrow) into the breadboard row that is connected to GND on the Pi. (You’ll always connect the GND pin on the Discovery 2 to the GND in the external circuit you want to measure, so that they have a <strong>common ground</strong>.)</li>
-<li>Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row with the positive leg of the LED, and connect the 1- pin to the breadboard row with the negative leg of the LED.</li>
+<li>Identify the analog Channel 1 pins on the Analog Discovery 2. Connect the 1+ pin to the breadboard row with the positive leg of the LED, and connect the 1- pin to the row with the negative leg.</li>
 <li>Open the Waveforms application on your laptop. From the Welcome screen, click on Voltmeter.</li>
 <li>Press the Run button to start measuring the voltage. (If you press the same button, now labeled Stop, again, it will stop measuring. There is also a “Single” button that will acquire a single measurement and then stop.)</li>
 <li>Observe the DC voltage measurement on Channel 1. (Three values are calculated automatically: DC, True RMS, AC RMS. We are measuring a DC voltage, so we will ignore the other values.)</li>
