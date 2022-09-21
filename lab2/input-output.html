@@ -163,8 +163,8 @@
 <p>For this lab, you’ll use the Digilent Analog Discovery 2 measurement instrument, which requires that some software be installed on your laptop.</p>
 <p>You can download and install Digilent Waveforms from <a href="https://mautic.digilentinc.com/waveforms-download">the Digilent website</a>, if you don’t mind sharing your information with them and letting them send you email. Or if you prefer, I have prepared some direct download links for you instead:</p>
 <ul>
-<li><a href="https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe">Windows 64 bit installer</a> and <a href="https://www.youtube.com/watch?v=Sz0nDa8TVYw&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=3&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
-<li><a href="https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3.dmg">Mac installer</a> and <a href="https://www.youtube.com/watch?v=4-O6-vTMIHg&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=4&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
+<li><a href="https://s3-us-west-2.amazonaws.com/digilent/Software/Waveforms2015/3.18.1/digilent.waveforms_v3.18.1_64bit.exe">Windows 64 bit installer</a> and <a href="https://www.youtube.com/watch?v=Sz0nDa8TVYw&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=3&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
+<li><a href="https://s3-us-west-2.amazonaws.com/digilent/Software/Waveforms2015/3.18.1/digilent.waveforms_v3.18.1.dmg">Mac installer</a> and <a href="https://www.youtube.com/watch?v=4-O6-vTMIHg&amp;list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&amp;index=4&amp;ab_channel=Digilent%2CInc.">video of install process</a></li>
 </ul>
 <h3 id="install-software-on-pi">Install software on Pi</h3>
 <p>You’ll also need to install some software libraries and applications on your Pi. Use SSH to connect to your Pi, and run these commands in the terminal on your Pi.</p>
@@ -204,14 +204,17 @@ make hf
 make install</code></pre>
 <p>Then, return to your home directory again:</p>
 <pre><code>cd</code></pre>
+<p>Finally, we are going to download and install a Python script that shows us the mode (INPUT, OUTPUT, or ALT) of every GPIO pin. We will call this script using the command <code>gpio-readall</code> when we need to check pin state.</p>
+<pre><code>sudo wget -O /usr/local/bin/gpio-readall https://raw.githubusercontent.com/ffund/gpioreadall/main/gpioreadall.py
+sudo chmod a+x /usr/local/bin/gpio-readall</code></pre>
 <h3 id="prepare-a-directory">Prepare a directory</h3>
 <p>On your Pi, create a new directory in which you’ll save all the code you use in this lab:</p>
 <pre><code>mkdir ~/lab-gpio</code></pre>
 <h3 id="check-default-inputoutput-configuration">Check default input/output configuration</h3>
 <p>On your Pi, run</p>
-<pre><code>gpio readall</code></pre>
-<p>This should show the pinout of the Pi, with Broadcom numbering, physical pin numbering, WiringPi numbering, and the current mode of each pin.</p>
-<p>Take a screenshot showing the full <code>gpio readall</code> output - this shows the default configuration of the pins on boot.</p>
+<pre><code>gpio-readall</code></pre>
+<p>This should show the pinout of the Pi, with Broadcom numbering, physical pin numbering, and the current mode of each pin.</p>
+<p>Take a screenshot showing the full <code>gpio-readall</code> output - this shows the default configuration of the pins on boot.</p>
 <p>Also try the</p>
 <pre><code>pinout</code></pre>
 <p>command. This is a useful reference that shows you a color-coded graphical representation of the Pi, with its pinout.</p>
@@ -253,7 +256,7 @@ make install</code></pre>
 <li>Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for continuity testing.</li>
 <li>Set the dial on the multimeter to the continuity testing setting. The icon for continuity testing mode usually looks like a soundwave.</li>
 <li>The dial setting for continuity testing is used for several multimeter modes. Use the mode select button (yellow button on the multimeter in our lab kit) to switch between modes until the continuity testing icon appears on the display.</li>
-<li>Then, connect the probes across two push button terminals, as shown in the figures on the following page. When there is continuity across the probes, the multimeter will beep.</li>
+<li>Test the multimeter - touch the probes to one another, and make sure that they beep. Then, connect the probes across two push button terminals, as shown in the figures on the following page. When there is continuity across the probes, the multimeter will beep.</li>
 </ul>
 <p>If necessary, rotate the push button and test again until you get the continuity results indicated in the figures below.</p>
 <figure>
@@ -266,7 +269,7 @@ make install</code></pre>
 <img src="images/button-2continuity_bb.svg" width="310" alt="Testing push button terminals for continuity." /><figcaption aria-hidden="true">Testing push button terminals for continuity.</figcaption>
 </figure>
 <hr />
-<p><strong>Lab report</strong>: Upload a photo of your breadboard, with the push button and resistors in place. Annotate the photo to indicate which pairs of pins on the push button are always connected internally, and which are only connected when the push button is pressed. (<em>Make sure that the colored sticker with your number on it is visible in the photo.</em>)</p>
+<p><strong>Lab report</strong>: Upload a photo of your breadboard, with the push button and resistors in place. Annotate the photo to indicate which pairs of pins on the push button are always connected internally, and which are only connected when the push button is pressed.</p>
 <p><strong>Lab report</strong> (<strong>Individual work</strong>): Draw a schematic of a circuit for the push button switch, but with a pull-up resistor instead of a pull-down resistor. Also answer the following questions about the circuit with the pull-up resistor:</p>
 <ul>
 <li>What will be the reading at the input pin when the switch is open? What will be the reading at the input pin when the switch is closed?</li>
@@ -351,43 +354,30 @@ Can&#39;t initialise pigpio library</code></pre>
 <li>The setting you would use to adjust the vertical (voltage axis) zoom</li>
 </ul>
 <hr />
-<h3 id="use-gpio-to-read-input">Use <code>gpio</code> to read input</h3>
-<p>In a terminal on your Pi, run</p>
-<pre><code>gpio -g mode 17 in</code></pre>
-<p>to set this pin to input mode using the <code>gpio</code> utility. Then, you can read the pin value with</p>
-<pre><code>gpio -g read 17</code></pre>
-<p>Try pressing the button while your repeat this command.</p>
-<p>You can also see when the status of the pin changes using the <code>wfi</code> (<strong>w</strong>ait <strong>f</strong>or <strong>i</strong>nterrupt) command. Run</p>
-<pre><code>gpio -g wfi 17 rising</code></pre>
-<p>and observe how this command returns only when the pin changes from a LOW to HIGH value. Run</p>
-<pre><code>gpio -g wfi 17 falling</code></pre>
-<p>and observe how this command returns only when pin changes from a HIGH to LOW value. Run</p>
-<pre><code>gpio -g wfi 17 both</code></pre>
-<p>and observe how this command returns when the pin changes status in either direction.</p>
 <h3 id="use-python-to-read-input">Use Python to read input</h3>
-<p>We can also use the <code>RPi.GPIO</code> library in Python to read the value of the input pin.</p>
+<p>We can use the <code>RPi.GPIO</code> library in Python to read the value of the input pin.</p>
 <p>First, on your Pi, navigate to the directory you created earlier:</p>
 <pre><code>cd ~/lab-gpio</code></pre>
 <p>Then, create a new file and open it for editing:</p>
 <pre><code>nano gpio-input-1.py</code></pre>
 <p>Put the following code into this file, then save it and close <code>nano</code>:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a><span class="im">import</span> time</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true"></a></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true"></a>    i <span class="op">=</span> GPIO.<span class="bu">input</span>(pin)</span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true"></a>    <span class="bu">print</span>(i)</span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true"></a></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true"></a>  GPIO.cleanup()</span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true"></a></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true"></a>    i <span class="op">=</span> GPIO.<span class="bu">input</span>(pin)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true"></a>    <span class="bu">print</span>(i)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true"></a></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
 <p>Run the Python script with</p>
 <pre><code>python3 gpio-input-1.py</code></pre>
 <p>This script will read the value of the input pin every second, in an infinite loop, until you press <code>Ctrl</code>+<code>C</code>. Try pressing the button while this script is running, and observe the output. Then, stop the script with <code>Ctrl</code>+<code>C</code>.</p>
@@ -395,65 +385,106 @@ Can&#39;t initialise pigpio library</code></pre>
 <p>To try the interrupt approach, create a new file and open it for editing:</p>
 <pre><code>nano gpio-input-2.py</code></pre>
 <p>Put the following code into this file, then save it and close <code>nano</code>:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a><span class="im">import</span> time</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true"></a></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
-<span id="cb26-10"><a href="#cb26-10" aria-hidden="true"></a>  GPIO.wait_for_edge(pin, GPIO.RISING)</span>
-<span id="cb26-11"><a href="#cb26-11" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button is pressed&quot;</span>)</span>
-<span id="cb26-12"><a href="#cb26-12" aria-hidden="true"></a>  sys.exit()</span>
-<span id="cb26-13"><a href="#cb26-13" aria-hidden="true"></a></span>
-<span id="cb26-14"><a href="#cb26-14" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
-<span id="cb26-15"><a href="#cb26-15" aria-hidden="true"></a>  GPIO.cleanup()</span>
-<span id="cb26-16"><a href="#cb26-16" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true"></a>  GPIO.wait_for_edge(pin, GPIO.RISING)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button is pressed&quot;</span>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true"></a>  sys.exit()</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
 <p>Run the Python script with</p>
 <pre><code>python3 gpio-input-2.py</code></pre>
 <p>and test it by pressing the button.</p>
 <p>This script will <em>block</em> execution of the program until the button is pressed. In other words, the line following the call to <code>wait_for_edge()</code> will only run after the button is pressed (and a rising edge is detected).</p>
+<blockquote>
+<p>Note: You may notice that sometimes, when you press the button, more than one edge is detected. This can occur when the the contacts are physically moving into place, and they “bounce” between being in contact and out of contact. For this reason it is known as switch “bounce”. There are various ways of dealing with this, but we won’t tackle this problem today.</p>
+</blockquote>
 <p>Finally, we’ll try one more approach: when you want to use an <em>interrupt</em> to detect a change in state, but you also want your script to continue doing other things while waiting for the button press.</p>
 <p>In other words, you want to detect the button press in a <em>non-blocking</em> way.</p>
 <p>To try this third approach, create a new file and open it for editing:</p>
 <pre><code>nano gpio-input-3.py</code></pre>
 <p>Put the following code into this file, then save it and close <code>nano</code>:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="im">import</span> time</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM) </span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true"></a> </span>
-<span id="cb29-9"><a href="#cb29-9" aria-hidden="true"></a><span class="kw">def</span> callback_fn(input_pin): </span>
-<span id="cb29-10"><a href="#cb29-10" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button press on pin&quot;</span>, input_pin)</span>
-<span id="cb29-11"><a href="#cb29-11" aria-hidden="true"></a></span>
-<span id="cb29-12"><a href="#cb29-12" aria-hidden="true"></a>GPIO.add_event_detect(pin, </span>
-<span id="cb29-13"><a href="#cb29-13" aria-hidden="true"></a>  GPIO.RISING,  </span>
-<span id="cb29-14"><a href="#cb29-14" aria-hidden="true"></a>  callback<span class="op">=</span>callback_fn)</span>
-<span id="cb29-15"><a href="#cb29-15" aria-hidden="true"></a></span>
-<span id="cb29-16"><a href="#cb29-16" aria-hidden="true"></a><span class="cf">try</span>:</span>
-<span id="cb29-17"><a href="#cb29-17" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb29-18"><a href="#cb29-18" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Hello!&quot;</span>)</span>
-<span id="cb29-19"><a href="#cb29-19" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="cb29-20"><a href="#cb29-20" aria-hidden="true"></a></span>
-<span id="cb29-21"><a href="#cb29-21" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
-<span id="cb29-22"><a href="#cb29-22" aria-hidden="true"></a>  GPIO.cleanup()</span>
-<span id="cb29-23"><a href="#cb29-23" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM) </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>pin <span class="op">=</span> <span class="dv">17</span> <span class="co"># BCM17</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true"></a> </span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true"></a><span class="kw">def</span> callback_fn(input_pin): </span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Button press on pin&quot;</span>, input_pin)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true"></a></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true"></a>GPIO.add_event_detect(pin, </span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true"></a>  GPIO.RISING,  </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true"></a>  callback<span class="op">=</span>callback_fn)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;Hello!&quot;</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
 <p>Run the Python script with</p>
 <pre><code>python3 gpio-input-3.py</code></pre>
 <p>and test it by pressing the button. Notice that in this case, the script can do other work (it prints “Hello!” every second), while still detecting the button press event whenever it occurs.</p>
 <hr />
-<p><strong>Lab report</strong>: Modify the <code>gpio-input-3.py</code> script to count the number of times a rising edge is detected (i.e. the number of button presses), and print this number each time the button is pressed. Test your modified script. Upload</p>
-<ul>
-<li>your modified code and</li>
-<li>a screenshot showing the output when your run this code in the terminal (and press the button a few times).</li>
-</ul>
-<p>Hint: In Python, if you want to modify a global variable inside a function, declare the variable as <code>global</code> inside the function before you use it.</p>
-<p>Note: your code should be “clean” and well-organized, in addition to being <em>correct</em>.</p>
+<p><strong>Lab report</strong> (individual work): Your friend is developing an interactive game using the Raspberry Pi platform. As part of their game, players press a button and earn points. Your friend is writing code to (1) print the number of points earned at 1 second intervals, and (2) increment the number of points when a button is pressed.</p>
+<p>Your friend shows you their first attempt, which looks like this (after the setup process):</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>points <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a>i <span class="op">=</span> GPIO.<span class="bu">input</span>(pin)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true"></a>points <span class="op">=</span> points <span class="op">+</span> i</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Number of points: </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> points)</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true"></a>  time.sleep(<span class="dv">1</span>)</span></code></pre></div>
+<p>However, your friend says, it always prints either 1 or 0 points, no matter how many times the button is pressed.</p>
+<p>What will you tell your friend? Explain to your friend why their code behaves like this. (You don’t need to suggest any fix - just explain the problem.)</p>
+<p>Your friend takes your advice under consideration, and develops this alternative version:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a>points <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true"></a>  i <span class="op">=</span> GPIO.<span class="bu">input</span>(pin)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true"></a>  points <span class="op">=</span> points <span class="op">+</span> i</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Number of points: </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> points)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true"></a>  time.sleep(<span class="dv">1</span>)</span></code></pre></div>
+<p>However, your friend says - it doesn’t work well. Sometimes the button press is detected and the number of points is incremented, but sometimes it isn’t.</p>
+<p>What will you tell your friend? Explain to your friend why their code behaves like this. (You don’t need to suggest any fix - just explain the problem.)</p>
+<p>Next, your friend tries:</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a>points <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true"></a>  GPIO.wait_for_edge(pin, GPIO.RISING)</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true"></a>  points <span class="op">=</span> points <span class="op">+</span> i</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Number of points: </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> points)</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true"></a>  time.sleep(<span class="dv">1</span>)</span></code></pre></div>
+<p>This version doesn’t miss any button presses, according to your friend! But, when button presses are infrequent, it doesn’t print the number of points earned every second like they wanted.</p>
+<p>What will you tell your friend? Explain to your friend why their code behaves like this. (You don’t need to suggest any fix - just explain the problem.)</p>
+<p>Finally, your friend tries:</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a><span class="kw">global</span> points</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>points <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a><span class="kw">def</span> callback_fn(input_pin): </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>  <span class="kw">global</span> points</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a>  points <span class="op">=</span> points <span class="op">+</span> <span class="dv">1</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true"></a>GPIO.add_event_detect(pin, </span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true"></a>  GPIO.BOTH,  </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true"></a>  callback<span class="op">=</span>callback_fn)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true"></a></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true"></a>  <span class="bu">print</span>(<span class="st">&quot;Number of points: </span><span class="sc">%d</span><span class="st">&quot;</span> <span class="op">%</span> points)</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true"></a>  time.sleep(<span class="dv">1</span>)</span></code></pre></div>
+<p>Your friend says it <em>almost</em> works, but it seems to count each button press exactly twice! And it’s definitely not due to contact “bounce” - they looked at the signal using a scope and the edges were nice and clean.</p>
+<p>What will you tell your friend? Explain to your friend why their code behaves like this. (You don’t need to suggest any fix - just explain the problem.)</p>
 <hr />
 <h3 id="disconnect-your-circuit">Disconnect your circuit</h3>
 <p>Carefully disconnect your Pi from the push button circuit.</p>
@@ -545,45 +576,35 @@ Can&#39;t initialise pigpio library</code></pre>
 <li>Use a M-F jumper cable to connect any <strong>GND</strong> pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)</li>
 <li>Use a M-F jumper cable to connect the “free” end of the current-limiting resistor to the <strong>BCM 17</strong> pin on the Pi.</li>
 </ul>
-<h3 id="use-gpio-for-output">Use <code>gpio</code> for output</h3>
-<p>Open a terminal on your Pi and run</p>
-<pre><code>gpio -g mode 17 out</code></pre>
-<p>to set this pin to output mode using the <code>gpio</code> utility.</p>
-<p>Set the pin to HIGH:</p>
-<pre><code>gpio -g write 17 1</code></pre>
-<p>and observe the LED turn on. Then set the pin to LOW:</p>
-<pre><code>gpio -g write 17 0</code></pre>
-<p>and observe the LED turn off.</p>
-<p>To set the pin back to input mode (its default state), run</p>
-<pre><code>gpio -g mode 17 input</code></pre>
 <h3 id="use-python-for-output">Use Python for output</h3>
-<p>We will also practice using Python to blink the LED.</p>
+<p>We will practice using Python to blink the LED.</p>
 <p>Open a new file called <code>gpio-out.py</code> for editing:</p>
 <pre><code>nano gpio-out.py</code></pre>
 <p>Put the following Python code in this file:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true"></a><span class="im">import</span> time</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true"></a></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true"></a>pin   <span class="op">=</span> <span class="dv">17</span>          <span class="co"># BCM17</span></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)    <span class="co"># Use BCM pin numbering</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.OUT) <span class="co"># set pin to work in output mode</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true"></a></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true"></a>    GPIO.output(pin, GPIO.HIGH)</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true"></a>    GPIO.output(pin, GPIO.LOW)</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true"></a></span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true"></a>  GPIO.output(pin, GPIO.LOW)</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true"></a>  GPIO.cleanup()  </span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true"></a></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true"></a>pin   <span class="op">=</span> <span class="dv">17</span>          <span class="co"># BCM17</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)    <span class="co"># Use BCM pin numbering</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true"></a>GPIO.setup(pin, GPIO.OUT) <span class="co"># set pin to work in output mode</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true"></a></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true"></a>    GPIO.output(pin, GPIO.HIGH)</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true"></a>    GPIO.output(pin, GPIO.LOW)</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true"></a>    time.sleep(<span class="fl">0.5</span>)</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true"></a></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true"></a>  GPIO.output(pin, GPIO.LOW)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true"></a>  GPIO.cleanup()  </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
 <p>This script uses the RPi.GPIO library, sets the pin to output mode, then toggles between HIGH and LOW output every half second. It also includes logic to turn off the LED and exit gracefully in case of a keyboard interrupt (i.e. if <code>Ctrl</code>+<code>C</code> is pressed).</p>
 <p>Save the file and quit <code>nano</code>, then run</p>
 <pre><code>python3 gpio-out.py</code></pre>
 <p>to run your code. Observe as the LED turns on, then off.</p>
+<p>You can also open a second terminal on your Pi, and run <code>gpio-readall</code> again. Note that the state of BCM pin 17 has changed to OUT, and its currect output value (0 or 1) at the time you run this command is also shown.</p>
 <p>Use <code>piscope</code> to view GPIO pin status in real time. Observe the line for BCM pin 17; can you see it toggle on and off?</p>
 <p>Then, use <code>Ctrl</code>+<code>C</code> in the terminal window where your <code>pi-gpio-out.py</code> program is running, to stop it.</p>
 <hr />

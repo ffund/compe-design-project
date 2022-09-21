@@ -121,8 +121,8 @@ For this lab, you'll use the Digilent Analog Discovery 2 measurement instrument,
 
 You can download and install Digilent Waveforms from [the Digilent website](https://mautic.digilentinc.com/waveforms-download), if you don't mind sharing your information with them and letting them send you email. Or if you prefer, I have prepared some direct download links for you instead:
 
-* [Windows 64 bit installer](https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3_64bit.exe) and [video of install process](https://www.youtube.com/watch?v=Sz0nDa8TVYw&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=3&ab_channel=Digilent%2CInc.)
-* [Mac installer](https://digilent.s3-us-west-2.amazonaws.com/Software/Waveforms2015/3.16.3/digilent.waveforms_v3.16.3.dmg) and [video of install process](https://www.youtube.com/watch?v=4-O6-vTMIHg&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=4&ab_channel=Digilent%2CInc.)
+* [Windows 64 bit installer](https://s3-us-west-2.amazonaws.com/digilent/Software/Waveforms2015/3.18.1/digilent.waveforms_v3.18.1_64bit.exe) and [video of install process](https://www.youtube.com/watch?v=Sz0nDa8TVYw&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=3&ab_channel=Digilent%2CInc.)
+* [Mac installer](https://s3-us-west-2.amazonaws.com/digilent/Software/Waveforms2015/3.18.1/digilent.waveforms_v3.18.1.dmg) and [video of install process](https://www.youtube.com/watch?v=4-O6-vTMIHg&list=PLSTiCUiN_BoLtf_bWtNzhb3VUP-KDvv91&index=4&ab_channel=Digilent%2CInc.)
 
 
 ### Install software on Pi
@@ -215,7 +215,12 @@ Then, return to your home directory again:
 cd
 ```
 
+Finally, we are going to download and install a Python script that shows us the mode (INPUT, OUTPUT, or ALT) of every GPIO pin. We will call this script using the command `gpio-readall` when we need to check pin state.
 
+```
+sudo wget -O /usr/local/bin/gpio-readall https://raw.githubusercontent.com/ffund/gpioreadall/main/gpioreadall.py
+sudo chmod a+x /usr/local/bin/gpio-readall
+```
 
 ### Prepare a directory
 
@@ -230,12 +235,12 @@ mkdir ~/lab-gpio
 On your Pi, run
 
 ```
-gpio readall
+gpio-readall
 ```
 
-This should show the pinout of the Pi, with Broadcom numbering, physical pin numbering,  WiringPi numbering, and the current mode of each pin.
+This should show the pinout of the Pi, with Broadcom numbering, physical pin numbering, and the current mode of each pin.
 
-Take a screenshot showing the full `gpio readall` output - this shows the default configuration of the pins on boot.
+Take a screenshot showing the full `gpio-readall` output - this shows the default configuration of the pins on boot.
 
 Also try the 
 
@@ -295,7 +300,7 @@ Follow along with [the demo video](https://stream.nyu.edu/media/Measuring+contin
 * Put the black multimeter probe into the COM port, and the red multimeter probe into the appropriate port for continuity testing. 
 * Set the dial on the multimeter to the continuity testing setting. The icon for continuity testing mode usually looks like a soundwave.
 * The dial setting for continuity testing is used for several multimeter modes. Use the mode select button (yellow button on the multimeter in our lab kit) to switch between modes until the continuity testing icon appears on the display. 
-* Then, connect the probes across two push button terminals, as shown in the figures on the following page. When there is continuity across the probes, the multimeter will beep. 
+* Test the multimeter - touch the probes to one another, and make sure that they beep. Then, connect the probes across two push button terminals, as shown in the figures on the following page. When there is continuity across the probes, the multimeter will beep. 
 
 If necessary, rotate the push button and test again until you get the continuity results indicated in the figures below. 
 
@@ -316,7 +321,7 @@ If necessary, rotate the push button and test again until you get the continuity
 
 ---
 
-**Lab report**: Upload a photo of your breadboard, with the push button and resistors in place. Annotate the photo to indicate which pairs of pins on the push button are always connected internally, and which are only connected when the push button is pressed. (*Make sure that the colored sticker with your number on it is visible in the photo.*)
+**Lab report**: Upload a photo of your breadboard, with the push button and resistors in place. Annotate the photo to indicate which pairs of pins on the push button are always connected internally, and which are only connected when the push button is pressed.
 
 
 **Lab report** (**Individual work**): Draw a schematic of a circuit for the push button switch, but with a pull-up resistor instead of a pull-down resistor. Also answer the following questions about the circuit with the pull-up resistor:
@@ -437,46 +442,9 @@ Connect your Analog Discovery 2 to your circuit as follows:
 
 \newpage
 
-### Use `gpio` to read input
-
-In a terminal on your Pi, run
-
-```
-gpio -g mode 17 in
-```
-
-to set this pin to input mode using the `gpio` utility. Then, you can read the pin value with
-
-```
-gpio -g read 17
-```
-
-Try pressing the button while your repeat this command. 
-
-You can also see when the status of the pin changes using the `wfi` (**w**ait **f**or **i**nterrupt) command. Run
-
-```
-gpio -g wfi 17 rising
-```
-
-and observe how this command returns only when the pin changes from a LOW to HIGH value. Run
-
-```
-gpio -g wfi 17 falling
-```
-
-and observe how this command returns only when pin changes from a HIGH to LOW value. Run
-
-```
-gpio -g wfi 17 both
-```
-
-and observe how this command returns when the pin changes status in either direction. 
-
-
 ### Use Python to read input
 
-We can also use the `RPi.GPIO` library in Python to read the value of the input pin.
+We can use the `RPi.GPIO` library in Python to read the value of the input pin.
 
 First, on your Pi, navigate to the directory you created earlier:
 
@@ -562,6 +530,7 @@ and test it by pressing the button.
 
 This script will *block* execution of the program until the button is pressed. In other words, the line following the call to `wait_for_edge()` will only run after the button is pressed (and a rising edge is detected).
 
+> Note: You may notice that sometimes, when you press the button, more than one edge is detected. This can occur when the the contacts are physically moving into place, and they "bounce" between being in contact and out of contact. For this reason it is known as switch "bounce". There are various ways of dealing with this, but we won't tackle this problem today.
 
 Finally, we'll try one more approach: when you want to use an *interrupt* to detect a change in state, but you also want your script to continue doing other things while waiting for the button press. 
 
@@ -614,14 +583,81 @@ and test it by pressing the button. Notice that in this case, the script can do 
 
 ---
 
-**Lab report**: Modify the `gpio-input-3.py` script to count the number of times a rising edge is detected (i.e. the number of button presses), and print this number each time the button is pressed. Test your modified script. Upload
+**Lab report** (individual work): Your friend is developing an interactive game using the Raspberry Pi platform. As part of their game, players press a button and earn points. Your friend is writing code to (1) print the number of points earned at 1 second intervals, and (2) increment the number of points when a button is pressed.
 
-* your modified code and 
-* a screenshot showing the output when your run this code in the terminal (and press the button a few times).
+Your friend shows you their first attempt, which looks like this (after the setup process):
 
-Hint: In Python, if you want to modify a global variable inside a function, declare the variable as `global` inside the function before you use it.
+```python
+points = 0
+i = GPIO.input(pin)
+points = points + i
+while True:
+  print("Number of points: %d" % points)
+  time.sleep(1)
+```
 
-Note: your code should be "clean" and well-organized, in addition to being *correct*.
+However, your friend says, it always prints either 1 or 0 points, no matter how many times the button is pressed.
+
+What will you tell your friend? Explain to your friend why their code behaves like this. (You don't need to suggest any fix - just explain the problem.)
+
+Your friend takes your advice under consideration, and develops this alternative version:
+
+```python
+points = 0
+while True:
+  i = GPIO.input(pin)
+  points = points + i
+  print("Number of points: %d" % points)
+  time.sleep(1)
+```
+
+
+However, your friend says - it doesn't work well. Sometimes the button press is detected and the number of points is incremented, but sometimes it isn't.
+
+What will you tell your friend? Explain to your friend why their code behaves like this. (You don't need to suggest any fix - just explain the problem.)
+
+Next, your friend tries:
+
+
+```python
+points = 0
+while True:
+  GPIO.wait_for_edge(pin, GPIO.RISING)
+  points = points + i
+  print("Number of points: %d" % points)
+  time.sleep(1)
+```
+
+
+This version doesn't miss any button presses, according to your friend! But, when button presses are infrequent, it doesn't print the number of points earned every second like they wanted. 
+
+What will you tell your friend? Explain to your friend why their code behaves like this. (You don't need to suggest any fix - just explain the problem.)
+
+Finally, your friend tries:
+
+```python
+global points
+points = 0
+
+def callback_fn(input_pin): 
+  global points
+  points = points + 1
+
+GPIO.add_event_detect(pin, 
+  GPIO.BOTH,  
+  callback=callback_fn)
+
+while True:
+  print("Number of points: %d" % points)
+  time.sleep(1)
+```
+
+Your friend says it *almost* works, but it seems to count each button press exactly twice! And it's definitely not due to contact "bounce" - they looked at the signal using a scope and the edges were nice and clean. 
+
+What will you tell your friend? Explain to your friend why their code behaves like this. (You don't need to suggest any fix - just explain the problem.)
+
+
+
 
 ---
 
@@ -734,42 +770,11 @@ Connect your Raspberry Pi or Pi Zero to your circuit:
 * Use a M-F jumper cable to connect any **GND** pin on the Pi, to the short end of the LED. (By convention, use black or brown for GND.)
 * Use a M-F jumper cable to connect the "free" end of the current-limiting resistor to the **BCM 17** pin on the Pi.
 
-### Use `gpio` for output
-
-
-Open a terminal on your Pi and run
-
-```
-gpio -g mode 17 out
-```
-
-to set this pin to output mode using the `gpio` utility.
-
-Set the pin to HIGH:
-
-```
-gpio -g write 17 1
-```
-
-and observe the LED turn on. Then set the pin to LOW:
-
-```
-gpio -g write 17 0
-```
-
-and observe the LED turn off.
-
-To set the pin back to input mode (its default state), run
-
-
-```
-gpio -g mode 17 input
-```
 
 ### Use Python for output
 
 
-We will also practice using Python to blink the LED. 
+We will practice using Python to blink the LED. 
 
 Open a new file called `gpio-out.py` for editing:
 
@@ -812,6 +817,8 @@ python3 gpio-out.py
 ```
 
 to run your code. Observe as the LED turns on, then off.
+
+You can also open a second terminal on your Pi, and run `gpio-readall` again. Note that the state of BCM pin 17 has changed to OUT, and its currect output value (0 or 1) at the time you run this command is also shown.
 
 Use `piscope` to view GPIO pin status in real time. Observe the line for BCM pin 17; can you see it toggle on and off?
 
