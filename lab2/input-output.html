@@ -731,8 +731,11 @@ if __name__ == &quot;__main__&quot;:
 </ul>
 <p>To test your modifications, install the modified library with</p>
 <pre><code>sudo python3 setup.py install</code></pre>
-<p>Set the GPIO pin to input mode, so that you can make sure your <code>setup()</code> function works:</p>
-<pre><code>gpio -g mode 17 input</code></pre>
+<p>Set the GPIO pin to input mode, so that you can make sure your <code>setup()</code> function works - open an interactive <code>python3</code> terminal and run:</p>
+<pre><code>import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.IN)
+GPIO.cleanup()</code></pre>
 <p>Then, go back to your Flask app directory and run your Flask app again:</p>
 <pre><code>cd ~/lab-gpio/flask-gpio
 sudo python3 flask-led.py</code></pre>

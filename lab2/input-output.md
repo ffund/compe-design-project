@@ -1013,10 +1013,13 @@ To test your modifications, install the modified library with
 sudo python3 setup.py install
 ```
 
-Set the GPIO pin to input mode, so that you can make sure your `setup()` function works:
+Set the GPIO pin to input mode, so that you can make sure your `setup()` function works - open an interactive `python3` terminal and run:
 
 ```
-gpio -g mode 17 input
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(17, GPIO.IN)
+GPIO.cleanup()
 ```
 
 Then, go back to your Flask app directory and run your Flask app again:
