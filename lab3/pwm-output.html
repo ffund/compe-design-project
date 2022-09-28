@@ -185,7 +185,7 @@ nano pwm-soft.py</code></pre>
 <p>Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by <code>htop</code>) as you increase the frequency? Take a screenshot for your lab report. (Make sure to give it a moment to “settle” after opening <code>htop</code>!)</p>
 <hr />
 <p><strong>Lab report</strong>: As you increase the frequency of a software PWM signal, the CPU usage increases. Use screenshots of <code>htop</code> output to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
-<p><strong>Lab report</strong>: Show the <code>gpio readall</code> output while the software PWM script is running. What mode is BCM pin 13 in?</p>
+<p><strong>Lab report</strong>: Show the <code>gpio-readall</code> output while the software PWM script is running. What mode is BCM pin 13 in?</p>
 <hr />
 <h3 id="observe-pwm-signal-in-piscope">Observe PWM signal in <code>piscope</code></h3>
 <p>The best way to debug PWM signals is visually, so let’s do that now! In <code>pwm-soft.py</code>, set the frequency of the signal back to 50Hz. Then run <code>piscope</code> to see the PWM output:</p>

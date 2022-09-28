@@ -168,7 +168,7 @@ Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. W
 **Lab report**: As you increase the frequency of a software PWM signal, the CPU usage increases. Use screenshots of `htop` output to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.
 
 
-**Lab report**: Show the `gpio readall` output while the software PWM script is running. What mode is BCM pin 13 in?
+**Lab report**: Show the `gpio-readall` output while the software PWM script is running. What mode is BCM pin 13 in?
 
 ---
 
