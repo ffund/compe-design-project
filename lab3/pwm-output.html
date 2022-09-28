@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Pulse width output</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Pulse width output</h1>
+</header>
+<p>In this lab exercise, we’ll practice using pulse width modulation (PWM), to control the average output voltage of a GPIO output pin and to work with other parts that require a PWM signal, like servo motors and piezo buzzers. We will also practice debugging circuits that use pulse width.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>Find these parts, and set them aside until you need them:</p>
+<ul>
+<li>Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH.</li>
+<li>Breadboard and jumper cables</li>
+<li>Analog Discovery 2</li>
+<li>10mm RGB LED</li>
+<li>Three 470Ω resistors and three 220Ω resistors</li>
+<li>Micro servo motor</li>
+</ul>
+<p>(You kit has a piezo buzzer and some other assorted resistors, but we won’t use them today.)</p>
+<h3 id="rgb-led">RGB LED</h3>
+<p>An RGB LED has three small LEDs inside it: a red one, a green one, and a blue one. The bulb may be “diffused”, or frosted, so that when more than one of the LEDs is on, the colors will appear to blend together. If the bulb is clear, it is easier to distinguish the individual LEDs.</p>
+<p>It comes in two main variations:</p>
+<ul>
+<li>Common cathode: one cathode and three anodes, one for each color. (The RGB LED in our kit is common cathode.)</li>
+<li>Common anode: one anode and three cathodes, one for each color.</li>
+</ul>
+<p>We can create a “mixed” color by applying a pulse width modulation (PWM) signal to the three color pins; the color of the LED will depend on the duty cycle of each signal. For example, we can create an aqua color by applying a high duty cycle PWM signal to the green and blue pins, and a low duty cycle PWM signal to the red pin.</p>
+<h3 id="servo-motor">Servo motor</h3>
+<p>Servo motors are used for angular positioning. A standard servo is supposed to turn 90° in either direction, for 180° of range; in practice, many servo motors won’t get the full range. You might use a servo motor to move a robot arm, or to control a camera angle.</p>
+<p>Inside the case, a servo motor has:</p>
+<ul>
+<li>a small DC motor. When a voltage is applied, this motor can spin fast, but has very low torque (ability to move things).</li>
+<li>several stages of gears (plastic or metal). These are fitted to the motor shaft, so that at the output, the speed is reduced but the torque is increased.</li>
+<li>a potentiometer.</li>
+<li>a control circuit.</li>
+</ul>
+<p>When the motor moves, it turns the potentiometer wiper, so that the output of the potentiometer varies according to the motor position. The control circuit compares the position according to the potentiometer output and your desired position according to the control signal, and moves the motor until they match.</p>
+<p>Most servo motors use the same standard control signal: a PWM signal with a 20ms period, and the pulse width varies between 1-2ms to determine the angle.</p>
+<h3 id="piezo-buzzer">Piezo buzzer</h3>
+<p>A piezo is a component made of piezoelectric material, which generates a voltage when the material is deformed. It also works the other way - the material deforms when a voltage is applied to it. This property can be used to generate audible sound from a piezo element, by applying a time-varying voltage so that the material moves and creates sound waves.</p>
+<p>A piezo buzzer is known as a <em>passive buzzer</em>. Another kind of buzzer, called an <em>active buzzer</em>, includes all the circuitry necessary to “drive” the buzzer on the component, so it only needs a DC voltage to turn on. However, with an active buzzer we cannot control the pitch of the sound. A passive buzzer (like the one used in this lab) requires a time-varying signal to generate a tone, but we can control the pitch of the sound by changing the frequency of the drive signal.</p>
+<p>Since the piezo itself generates a voltage, it’s important to be careful when working with it in a circuit. Resistors and diodes in various configurations can be used to prevent any voltage generated by the piezo from creating an overvoltage condition at a GPIO pin, for example. We will not use any diodes in our circuit today, so it’s important to take other steps to protect your GPIO pins. While the piezo is connected to your circuit:</p>
+<ul>
+<li>do not press or hit the piezo</li>
+<li>do not drop the piezo</li>
+<li>avoid large vibrations (i.e. don’t bang the table that the piezo is on)</li>
+</ul>
+<h2 id="preparation">Preparation</h2>
+<h3 id="prepare-a-directory">Prepare a directory</h3>
+<p>On your Pi, create a new directory in which you’ll save all the code you use in this lab:</p>
+<pre><code>mkdir ~/lab-pwm</code></pre>
+<h2 id="rgb-led-1">RGB LED</h2>
+<h3 id="preparing-your-circuit---rgb-led">Preparing your circuit - RGB LED</h3>
+<p>You willl need:</p>
+<ul>
+<li>One breadboard (any size)</li>
+<li>One RGB LED</li>
+<li>Three 470Ω resistors (you may change the resistor values later, but use these to start)</li>
+<li>Jumper cables</li>
+</ul>
+<h3 id="use-software-pwm-in-python">Use Software PWM in Python</h3>
+<p>Next, we’ll practice using PWM in Python. We’ll try two “types” of PWM:</p>
+<ul>
+<li>Software PWM, which uses the pin in output mode and requires the CPU to toggle it on and off at the desired times</li>
+<li>Hardware PWM, which uses the PWM peripheral built in to the Raspberry Pi (but only on supported pins)</li>
+</ul>
+<p>With software PWM, we configure the pin as a regular GPIO output, then toggle it high and low to create a PWM signal. We can generate a software PWM signal on any pin.</p>
+<p>Create a new file inside the <code>lab-pwm</code> directory:</p>
+<pre><code>cd ~/lab-pwm
+nano pwm-soft.py</code></pre>
+<p>Put the following code in this file. This code will start a software PWM signal on BCM pin 13, with a 50 Hz frequency and a 50% duty cycle:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>pwm_pin <span class="op">=</span> <span class="dv">13</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>GPIO.setup(pwm_pin, GPIO.OUT)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a><span class="co"># first arg is pin number, second is frequency in Hz</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>pwm_out <span class="op">=</span> GPIO.PWM(pwm_pin, <span class="dv">50</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a><span class="co"># argument is duty cycle, out of 100 parts</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>pwm_out.start(<span class="dv">50</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a><span class="co"># observe output for 60 seconds</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>time.sleep(<span class="dv">120</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>GPIO.cleanup()</span></code></pre></div>
+<p>Run it with</p>
+<pre><code>python3 pwm-soft.py</code></pre>
+<p>While your <code>pwm-soft.py</code> script is running, open a second terminal window on the Pi and run</p>
+<pre><code>gpio-readall</code></pre>
+<p>and note the state of BCM pin 13 - it should be in output mode.</p>
+<p>The RPi.GPIO library used <strong>software PWM</strong> - i.e. rapidly toggling GPIO outputs on and off to create a PWM signal. While this enables us to use <em>any</em> GPIO pin for PWM output, it also uses a lot of CPU. Run</p>
+<pre><code>htop</code></pre>
+<p>to see the overall CPU usage (in a bar graph near the top) and a list of the processes using CPU - look for the Python process and the <code>pigpiod</code> processes, in particular. How much CPU (expressed as a percent) is used overall, and how much by the Python process? Take a screenshot for your lab report. (Make sure the screenshot reflects a “typical” value and not an extreme but transient value.) Use <code>q</code> to quit the <code>htop</code> process when you are finished.</p>
+<p>Modify the Python script to increase the PWM frequency to 500Hz, then to 5KHz. What do you observe (in terms of CPU usage as measured by <code>htop</code>) as you increase the frequency? Take a screenshot for your lab report. (Make sure to give it a moment to “settle” after opening <code>htop</code>!)</p>
+<hr />
+<p><strong>Lab report</strong>: As you increase the frequency of a software PWM signal, the CPU usage increases. Use screenshots of <code>htop</code> output to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
+<p><strong>Lab report</strong>: Show the <code>gpio readall</code> output while the software PWM script is running. What mode is BCM pin 13 in?</p>
+<hr />
+<h3 id="observe-pwm-signal-in-piscope">Observe PWM signal in <code>piscope</code></h3>
+<p>The best way to debug PWM signals is visually, so let’s do that now! In <code>pwm-soft.py</code>, set the frequency of the signal back to 50Hz. Then run <code>piscope</code> to see the PWM output:</p>
+<ul>
+<li>Open a VNC connection to your Pi</li>
+<li>In the terminal in the VNC session, run <code>sudo pigpiod</code></li>
+<li>In the terminal in the VNC session, run <code>piscope</code></li>
+<li>Find the PWM line on BCM pin 13</li>
+</ul>
+<p>While the <code>pwm-soft.py</code> script is running, zoom in on the <code>piscope</code> output so that you can accurately measure the timing on each pin, and take a screenshot for your lab report. Annotate the screenshot to show how you would measure the PWM parameters: period, duty cycle, and pulse width.</p>
+<p>Also, try setting</p>
+<ul>
+<li>a 10% duty cycle with 20ms period</li>
+<li>a 90% duty cycle with 20ms period</li>
+<li>a 50% duty cycle with 2ms period</li>
+</ul>
+<p>and for each, take a <code>piscope</code> screenshot. Annotate each screenshot to show the period, duty cycle, and pulse width.</p>
+<p>Then, try setting it back to 50% duty cycle and gradually increase the frequency of the signal until it becomes noticeably “messy”. (You can try the 500Hz, then 5KHz frequencies, as you did earlier; but you can also try other frequencies if you like.) Take screenshots for your lab report.</p>
+<p>When you are finished with this section, exit <code>piscope</code> using the X in the top right corner, and <em>then</em> close your VNC session.</p>
+<hr />
+<p><strong>Lab report</strong>: Show a screenshot of the <code>piscope</code> display, annotated to show how you measure the period, duty cycle, and pulse width, for each of the following cases:</p>
+<ul>
+<li>50% duty cycle with 20ms period</li>
+<li>10% duty cycle with 20ms period</li>
+<li>90% duty cycle with 20ms period</li>
+<li>50% duty cycle with 2ms period</li>
+</ul>
+<p><strong>Lab report</strong>: As you increase the frequency of a software PWM signal, the CPU is no longer able to satisfy the specific timing requests as precisely, and so the PWM output becomes more “messy”. Use screenshots of the <code>piscope</code> window to demonstrate this effect (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
+<hr />
+<h3 id="use-hardware-pwm-in-python">Use Hardware PWM in Python</h3>
+<p>Alternatively, we can use the <code>pigpio</code> library in Python to configure hardware PWM on the Pi.</p>
+<p>Create a new file:</p>
+<pre><code>cd ~/lab-pwm
+nano pwm-hard.py</code></pre>
+<p>with the following contents:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="im">import</span> pigpio</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true"></a>pwm_pin <span class="op">=</span> <span class="dv">13</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true"></a>pi <span class="op">=</span> pigpio.pi()</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true"></a><span class="co"># first arg is pin number,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true"></a><span class="co"># second arg is frequency in Hz,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true"></a><span class="co"># third arg is number of ON units out of 1000000</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true"></a>pi.hardware_PWM(pwm_pin, <span class="dv">50</span>, <span class="dv">500000</span>) </span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true"></a>time.sleep(<span class="dv">120</span>)</span></code></pre></div>
+<p>To use the <code>pigpio</code> library, you must have <code>pigpiod</code> running. You may have started it already for <code>piscope</code>, but if not, run</p>
+<pre><code>sudo pigpiod</code></pre>
+<p>Then, run your Python script with</p>
+<pre><code>python3 pwm-hard.py</code></pre>
+<p><strong>Note</strong>: If your <code>pigpio</code> program doesn’t work as expected, you can try restarting <code>pigpiod</code>:</p>
+<pre><code>sudo killall pigpiod
+sudo pigpiod</code></pre>
+<p>While your <code>pwm-hard.py</code> script is running, open a second terminal window on the Pi and run</p>
+<pre><code>gpio-readall</code></pre>
+<p>and note the state of BCM pin 13 - it should now be in alternate functionality mode (in contrast to the software PWM example, where it was in output mode).</p>
+<p>Change the frequency of the PWM signal, to the same values you tested in the previous section: 500Hz, then 5kHZ. Use <code>htop</code> again to check the CPU usage for each frequency (make sure to give it a moment to “settle” after opening <code>htop</code>!). However, since the <code>pigpio</code> library also uses the <code>pigpiod</code> daemon, to check CPU usage with hardware PWM you should look at the CPU usage of both <code>python</code> and <code>pigpiod</code> while your Python script is running.</p>
+<p>Now, open <code>piscope</code> again. For each frequency you considered, take a screenshot of the <code>piscope</code> display showing about 10-20 cycles of PWM pulses. Is the high-frequency signal also less “clean” in the hardware PWM case?</p>
+<hr />
+<p><strong>Lab report</strong>: As you increase the frequency of a hardware PWM signal, the CPU usage is not affected. Use screenshots of <code>htop</code> output to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
+<p><strong>Lab report</strong>: As you increase the frequency of a hardware PWM signal, the PWM peripheral is still able to produce a “clean” output signal despite the tighter time constraints. Use screenshots of the <code>piscope</code> window to demonstrate this (make sure to indicate on each screenshot what PWM frequency it is from). Describe your observations (with specific reference to the screenshots), and explain.</p>
+<p><strong>Lab report</strong>: Show the <code>gpio-readall</code> output while the hardware PWM script is running. What mode is BCM pin 13 in? Annotate your screenshot to highlight this value.</p>
+<p><strong>Lab report</strong>: Compare the behavior of the software PWM and hardware PWM script: is the PWM signal still generated on the output line when the script finishes running after 120 seconds?</p>
+<hr />
+<h3 id="pwm-signal-to-control-rgb-led">PWM signal to control RGB LED</h3>
+<p>Now that we understand how to configure a PWM output, we can use it to set the color of an RGB LED.</p>
+<p>The RGB LED is a common cathode 10mm LED with a diffused bulb, and forward voltage of around 2.0V on the red pin and 3.0V on the blue and green pins.</p>
+<p>Use the following diagram to carefully identify the pins on your RGB LED. The longest pin is the common cathode (negative LED terminal for all three colors), and from there, you can identify the other pins (one positive LED terminal for each color):</p>
+<figure>
+<img src="images/rgb-led.jpg" width="250" alt="Pins on the RGB LED.)" /><figcaption aria-hidden="true">Pins on the RGB LED.)</figcaption>
+</figure>
+<p>Configure the LED and current-limiting resistors in the breadboard, as shown in the diagram.</p>
+<figure>
+<img src="images/breadboard-rgb_bb.svg" width="450" alt="Breadboard diagram for RGB LED" /><figcaption aria-hidden="true">Breadboard diagram for RGB LED</figcaption>
+</figure>
+<p>Next, connect your Raspberry Pi to the RGB LED:</p>
+<figure>
+<img src="images/pi-rgb_bb.svg" width="450" alt="Connection diagram for RGB LED connection to the Pi." /><figcaption aria-hidden="true">Connection diagram for RGB LED connection to the Pi.</figcaption>
+</figure>
+<ul>
+<li>Connect <strong>GND</strong> to the common cathode pin. Use a brown or black wire for the GND connection (if you have one), to make it easier to “read” your breadboard circuit.</li>
+<li>Connect the red pin to <strong>BCM 18</strong> (through the series resistor). Use a red wire for this connection (if you have one), to make it easier to “read” your breadboard circuit.</li>
+<li>Connect the green pin to <strong>BCM 12</strong> (through the series resistor). Use a green wire for this connection (if you have one), to make it easier to “read” your breadboard circuit.</li>
+<li>Connect the blue pin to <strong>BCM 13</strong> (through the series resistor). Use a blue wire for this connection (if you have one), to make it easier to “read” your breadboard circuit.</li>
+</ul>
+<p>Test your circuit by configuring the three GPIO pins to output mode. Then, write HIGH or LOW values to turn the RGB LED red, then green, then blue in turn.</p>
+<p>Create a new file:</p>
+<pre><code>cd ~/lab-pwm
+nano pwm-rgb.py</code></pre>
+<p>and in this file, write Python code to make the RGB LED gradually change its color from red, to purple, to blue, to purple, and back to red. Make sure the transition appears smooth!</p>
+<hr />
+<p><strong>Lab report</strong>: Show your <code>pwm-rgb.py</code> script. Also upload a short (less than 30 seconds) video of your LED while the script is running.</p>
+<hr />
+<h2 id="servo-motor-1">Servo motor</h2>
+<p>Some components use a very specific PWM signal as a control signal. For example, a servo motor is typically controlled by sending a PWM signal with 20ms period, and pulse width between 1-2ms to set the position of the servo. A standard servo can rotate from 0 to 180 degrees (i.e. 90 degrees in each direction).</p>
+<p>First, make sure that pin 13 is turned “off”, by setting it to input mode. Open an interactive Python terminal with</p>
+<pre><code>python3</code></pre>
+<p>then run</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true"></a>GPIO.setup(<span class="dv">13</span>, GPIO.IN)</span></code></pre></div>
+<p>Your servo will have come in a small bag with a variety of plastic attachments, called “horns”, that can fit on top. Attach one of the horns with two long ends (not the X-shaped horn) to the top of the servo, so that you can see how its position changes according to the control signal that you send to the servo.</p>
+<p>Then, connect your servo to your Pi. You can connect it directly using jumper cables from the servo to the Pi, without a breadboard. But, be very carefully when connecting or disconnecting these cables so that you do not accidentally create a short circuit! Always disconnect the end that’s plugged in to your Pi <em>first</em>; only then disconnect the end that’s plugged in to the servo.</p>
+<ul>
+<li>The brown wire on your servo should be connected to GND on your Pi.</li>
+<li>The red (supply voltage) wire on your servo should be connected to 5V on your Pi. (The servo may move a little when you first connect it.)</li>
+<li>The orange (control signal) wire on your servo should be connected to BCM 13 (PWM 1) on your Pi.</li>
+</ul>
+<p>Note that even though the servo runs on 5V power, the 3.3V signal from your Pi should be sufficient for the control signal.</p>
+<p>Next, configure pin 13 in PWM mode, with a 20ms period and 1.5ms pulse width. You can re-use your <code>pwm-hard.py</code> script for this.</p>
+<p>Then, vary the PWM duty cycle so that the pulse width varies from 1ms to 2ms. Observe the position of the servo “horn” as you change the pulse width.</p>
+<p><strong>Note</strong>: if your servo is buzzing or clicking when you set a pulse width close to either extreme (1 or 2ms), it’s struggling to get to a position that it can’t quite reach. Don’t let it run like this for too long, or you could damage it; set the pulse width to a more moderate value.</p>
+<p>Now, you are going to write a function that can be used to move the servo to the desired position. Create a new file</p>
+<pre><code>cd ~/lab-pwm
+nano pwm-servo.py</code></pre>
+<p>and place the following code inside:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="im">import</span> pigpio</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true"></a>pwm_pin <span class="op">=</span> <span class="dv">13</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true"></a>pi <span class="op">=</span> pigpio.pi()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true"></a><span class="kw">def</span> position_servo(angle):</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true"></a>    <span class="cf">pass</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true"></a>position_servo(<span class="dv">90</span>)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true"></a>time.sleep(<span class="dv">5</span>)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true"></a>position_servo(<span class="dv">45</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true"></a>time.sleep(<span class="dv">5</span>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true"></a>position_servo(<span class="dv">25</span>)</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true"></a>time.sleep(<span class="dv">5</span>)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true"></a>position_servo(<span class="dv">125</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true"></a>time.sleep(<span class="dv">5</span>)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true"></a>position_servo(<span class="dv">90</span>)</span></code></pre></div>
+<p>Then, fill in the <code>position_servo</code> function so that the servo motor moves to the indicated position when the function is called.</p>
+<hr />
+<p><strong>Lab report</strong>: Upload your <code>pwm-servo.py</code> with the <code>position_servo</code> function implemented. For full credit, your code should be neat, well documented, and follow best practices for readability and maintainability.</p>
+<hr />
+</body>
+</html>
