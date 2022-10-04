@@ -45,7 +45,7 @@ The datasheet for a photoresistor will typically include the following key detai
 * A formula or a curve that shows how the resistance varies as the light level (measured in lux) changes.
 * Lag time or response time - how much time elapses between exposure to light and change in resistance?
 
-Photoresistors are not typically used in consumer products, because they are made from Cadmium Sulfide (CdS). Since 2006, CdS is not permitted in many types of electronic and electrical equipment in the EU because of the Restriction of Hazardous Substances (RoHS) directive, which seeks to reduce the volume of toxic electronic waste. A RoHS-compliant alternative is the *phototransistor*, which we'll discuss next1
+Photoresistors are not typically used in consumer products, because they are made from Cadmium Sulfide (CdS). Since 2006, CdS is not permitted in many types of electronic and electrical equipment in the EU because of the Restriction of Hazardous Substances (RoHS) directive, which seeks to reduce the volume of toxic electronic waste. A RoHS-compliant alternative is the *phototransistor*, which we'll discuss next!
 
 ### Phototransistor
 
@@ -120,7 +120,7 @@ You won't need the multimeter again for this assignment - you can return it now.
 Prepare your circuit using the small orange ceramic 0.1uF capacitor and 1kΩ fixed resistors for both the charge and discharge resistors, following this schematic:
 
 
-![Schematic for photoresistor input using capacitor discharge timing.](images/schematic-rc.svg){ width=300px }
+![Schematic for photoresistor input using capacitor discharge timing.](images/schematic-rc.svg){ width=500px }
 
 You can use any two available GPIO pins on your Pi *except* GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.
 
@@ -133,7 +133,7 @@ Connect the Analog Discovery 2 to your breadboard circuit as follows:
 * Analog Channel 1 on the Discovery 2 across the capacitor: 1- (orange and white striped wire) to the GND side of the capacitor, and 1+ (solid orange striped wire) to the positive side of the capacitor
 * DIO 0 (pink wire labeled 0) to the GPIO charge pin.
 
-![Schematic including Analog Discovery 2 connection.](images/schematic-rc-scope.svg){ width=300px }
+![Schematic including Analog Discovery 2 connection.](images/schematic-rc-scope.svg){ width=500px }
 
 Then, open the Waveforms application on your computer and click on Scope to open the scope tool. Configure it to monitor these signals:
 
@@ -247,7 +247,7 @@ You will need:
 Prepare this circuit with the phototransistor, resistors, and capacitors, and connect the Pi:
 
 
-![Schematic for phototransistor input using capacitor discharge timing.](images/schematic-rc-transistor.svg){ width=300px }
+![Schematic for phototransistor input using capacitor discharge timing.](images/schematic-rc-transistor.svg){ width=500px }
 
 You can use any available GPIO pin on your Pi *except* GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.
 

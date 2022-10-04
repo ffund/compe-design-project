@@ -116,7 +116,7 @@
 <li>A formula or a curve that shows how the resistance varies as the light level (measured in lux) changes.</li>
 <li>Lag time or response time - how much time elapses between exposure to light and change in resistance?</li>
 </ul>
-<p>Photoresistors are not typically used in consumer products, because they are made from Cadmium Sulfide (CdS). Since 2006, CdS is not permitted in many types of electronic and electrical equipment in the EU because of the Restriction of Hazardous Substances (RoHS) directive, which seeks to reduce the volume of toxic electronic waste. A RoHS-compliant alternative is the <em>phototransistor</em>, which we’ll discuss next1</p>
+<p>Photoresistors are not typically used in consumer products, because they are made from Cadmium Sulfide (CdS). Since 2006, CdS is not permitted in many types of electronic and electrical equipment in the EU because of the Restriction of Hazardous Substances (RoHS) directive, which seeks to reduce the volume of toxic electronic waste. A RoHS-compliant alternative is the <em>phototransistor</em>, which we’ll discuss next!</p>
 <h3 id="phototransistor">Phototransistor</h3>
 <p>A phototransistor is used in a way that is very similar to the photoresistor! But while the photoresistor varies its resistance depending on how much light is incident on it, the phototransistor varies the <em>current</em> from collector to emitter depending on how much light is incident on it.</p>
 <p>The phototransistor we’ll use in today’s lab is a BJT NPN type transistor. Unlike a conventional resistor of this type, only the collector and emitter pins, but no base pin, are drawn out of the package. That’s because the collector-emitter current depends on the light incident on the base, not on the voltage at the base!</p>
@@ -162,7 +162,7 @@
 <h3 id="prepare-your-circuit-and-connect-your-pi">Prepare your circuit and connect your Pi</h3>
 <p>Prepare your circuit using the small orange ceramic 0.1uF capacitor and 1kΩ fixed resistors for both the charge and discharge resistors, following this schematic:</p>
 <figure>
-<img src="images/schematic-rc.svg" width="300" alt="Schematic for photoresistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for photoresistor input using capacitor discharge timing.</figcaption>
+<img src="images/schematic-rc.svg" width="500" alt="Schematic for photoresistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for photoresistor input using capacitor discharge timing.</figcaption>
 </figure>
 <p>You can use any two available GPIO pins on your Pi <em>except</em> GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.</p>
 <h3 id="connect-the-analog-discovery-2">Connect the Analog Discovery 2</h3>
@@ -173,7 +173,7 @@
 <li>DIO 0 (pink wire labeled 0) to the GPIO charge pin.</li>
 </ul>
 <figure>
-<img src="images/schematic-rc-scope.svg" width="300" alt="Schematic including Analog Discovery 2 connection." /><figcaption aria-hidden="true">Schematic including Analog Discovery 2 connection.</figcaption>
+<img src="images/schematic-rc-scope.svg" width="500" alt="Schematic including Analog Discovery 2 connection." /><figcaption aria-hidden="true">Schematic including Analog Discovery 2 connection.</figcaption>
 </figure>
 <p>Then, open the Waveforms application on your computer and click on Scope to open the scope tool. Configure it to monitor these signals:</p>
 <ul>
@@ -254,7 +254,7 @@ nano resistor-pulse-width.py</code></pre>
 <h3 id="prepare-your-circuit-and-connect-your-pi-and-analog-discovery-2">Prepare your circuit and connect your Pi and Analog Discovery 2</h3>
 <p>Prepare this circuit with the phototransistor, resistors, and capacitors, and connect the Pi:</p>
 <figure>
-<img src="images/schematic-rc-transistor.svg" width="300" alt="Schematic for phototransistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for phototransistor input using capacitor discharge timing.</figcaption>
+<img src="images/schematic-rc-transistor.svg" width="500" alt="Schematic for phototransistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for phototransistor input using capacitor discharge timing.</figcaption>
 </figure>
 <p>You can use any available GPIO pin on your Pi <em>except</em> GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.</p>
 <p>Connect the Analog Discovery 2 to your breadboard circuit as follows:</p>
