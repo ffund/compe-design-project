@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Pulse width input</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Pulse width input</h1>
+</header>
+<p>In this lab exercise, we’ll practice reading input values from sensors that can be represented as a pulse width, using an RC circuit.</p>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>You will submit your lab work in Gradescope. You will upload screenshots/photos and answer some questions as described in the Gradescope assignment. You do not have to write anything else (e.g. no description of procedure, etc.)</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion and comparison. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner.</li>
+<li>For your lab report, you must submit data, code, screenshots, and photos from your own experiment. You are not allowed to use your lab partner’s data, code, screenshots, or photos.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>Find these parts, and set them aside until you need them:</p>
+<ul>
+<li>Pi, SD card, and power supply. You can insert the SD card, connect the power supply, and log in to your Pi over SSH.</li>
+<li>Breadboard and jumper cables</li>
+<li>Analog Discovery 2</li>
+<li>Photoresistor</li>
+<li>Phototransistor</li>
+<li>One 0.1uF capacitor (small, orange) and one 10uF capacitor (larger)</li>
+<li>Two 470Ω resistors, two 1kΩ resistors, and two 10kΩ resistors</li>
+</ul>
+<p>For part of this lab, you will briefly use a multimeter. You don’t need to get one right now - borrow a multimeter when you get up to that part, and then return it to the front desk right afterwards.</p>
+<h3 id="photoresistor">Photoresistor</h3>
+<p>A photoresistor, or light-dependent resistor, has variable resistance depending on how much light it is exposed to. The more light it is exposed to, the lower its resistance.</p>
+<p>The datasheet for a photoresistor will typically include the following key details about its behavior:</p>
+<ul>
+<li>Peak spectral response - what is the frequency (color of light) to which it is most responsive? It may also include a curve of sensitivity vs. wavelength, showing how sensitive the photoresistor is to different colors of light.</li>
+<li>Light resistance - what is the resistance across the terminals when the photoresistor is exposed to light?</li>
+<li>Dark resistance - what is the resistance across the terminals when the photoresistor is not exposed to light?</li>
+<li>A formula or a curve that shows how the resistance varies as the light level (measured in lux) changes.</li>
+<li>Lag time or response time - how much time elapses between exposure to light and change in resistance?</li>
+</ul>
+<p>Photoresistors are not typically used in consumer products, because they are made from Cadmium Sulfide (CdS). Since 2006, CdS is not permitted in many types of electronic and electrical equipment in the EU because of the Restriction of Hazardous Substances (RoHS) directive, which seeks to reduce the volume of toxic electronic waste. A RoHS-compliant alternative is the <em>phototransistor</em>, which we’ll discuss next1</p>
+<h3 id="phototransistor">Phototransistor</h3>
+<p>A phototransistor is used in a way that is very similar to the photoresistor! But while the photoresistor varies its resistance depending on how much light is incident on it, the phototransistor varies the <em>current</em> from collector to emitter depending on how much light is incident on it.</p>
+<p>The phototransistor we’ll use in today’s lab is a BJT NPN type transistor. Unlike a conventional resistor of this type, only the collector and emitter pins, but no base pin, are drawn out of the package. That’s because the collector-emitter current depends on the light incident on the base, not on the voltage at the base!</p>
+<p>The longer “leg” of the phototransistor is the collector pin. The shorter “leg”", which is also on the side of the phototransistor that is slightly flattened, is the emitter pin.</p>
+<h2 id="preparation">Preparation</h2>
+<h3 id="prepare-a-directory">Prepare a directory</h3>
+<p>On your Pi, create a new directory in which you’ll save all the code you use in this lab:</p>
+<pre><code>mkdir ~/lab-pulse-in</code></pre>
+<h2 id="prepare-your-analog-discovery-2">Prepare your Analog Discovery 2</h2>
+<p>Connect your Analog Discovery 2 to your computer. We will use this measurement instrument to monitor the analog voltage across the capacitor while the experiment is ongoing. Open the Waveforms app.</p>
+<h2 id="reading-resistive-sensor-using-rc-timing-circuit">Reading resistive sensor using RC timing circuit</h2>
+<p>In this experiment, we will use the discharge time of a capacitor to read values from a resistive sensor as a <em>digital</em> pulse width.</p>
+<p>You will need:</p>
+<ul>
+<li>One capacitor in the range 1-10μF</li>
+<li>One capacitor in the range 10-100nF</li>
+<li>Two 470Ω resistors, two 1kΩ resistors, and two 10kΩ resistors</li>
+<li>One photoresistor</li>
+</ul>
+<h3 id="get-to-know-your-resistive-sensor">Get to know your resistive sensor</h3>
+<p>When working with a resistive sensor, a good starting point is to use a multimeter to understand the range of resistance values you are likely to see.</p>
+<p>Configure your multimeter in ohmmeter mode:</p>
+<ul>
+<li>Put the black probe in the common port</li>
+<li>Put the red probe in the port with the Ω symbol</li>
+<li>Turn the dial to the setting with the Ω symbol</li>
+</ul>
+<p>Then, touch the probes of the multimeter to each end of your photoresistor. It may take a moment for the value to settle; make a note of the resistance. This is the resistance under your current ambient light conditions.</p>
+<p>Repeat this procedure, but:</p>
+<ul>
+<li>measure “light mode” resistance - shine a light (e.g. your phone flashlight) on the photoresistor while measuring its resistance</li>
+<li>measure “dark mode” resistance - cover the photoresistor with your hand while measuring its resistance</li>
+</ul>
+<p>You won’t need the multimeter again for this assignment - you can return it now.</p>
+<hr />
+<p><strong>Lab report</strong>: Report the resistance of your photoresistor (make sure to include units!):</p>
+<ul>
+<li>In your current ambient light settings</li>
+<li>In “light mode”</li>
+<li>In “dark mode”</li>
+</ul>
+<hr />
+<h3 id="prepare-your-circuit-and-connect-your-pi">Prepare your circuit and connect your Pi</h3>
+<p>Prepare your circuit using the small orange ceramic 0.1uF capacitor and 1kΩ fixed resistors for both the charge and discharge resistors, following this schematic:</p>
+<figure>
+<img src="images/schematic-rc.svg" width="300" alt="Schematic for photoresistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for photoresistor input using capacitor discharge timing.</figcaption>
+</figure>
+<p>You can use any two available GPIO pins on your Pi <em>except</em> GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.</p>
+<h3 id="connect-the-analog-discovery-2">Connect the Analog Discovery 2</h3>
+<p>Connect the Analog Discovery 2 to your breadboard circuit as follows:</p>
+<ul>
+<li>GND on the Discovery 2 (black wire) to GND on your circuit</li>
+<li>Analog Channel 1 on the Discovery 2 across the capacitor: 1- (orange and white striped wire) to the GND side of the capacitor, and 1+ (solid orange striped wire) to the positive side of the capacitor</li>
+<li>DIO 0 (pink wire labeled 0) to the GPIO charge pin.</li>
+</ul>
+<figure>
+<img src="images/schematic-rc-scope.svg" width="300" alt="Schematic including Analog Discovery 2 connection." /><figcaption aria-hidden="true">Schematic including Analog Discovery 2 connection.</figcaption>
+</figure>
+<p>Then, open the Waveforms application on your computer and click on Scope to open the scope tool. Configure it to monitor these signals:</p>
+<ul>
+<li>First, click on Digital in the Scope window toolbar. The Digital window will open at the bottom of the display.</li>
+<li>Click the + button on the Digital window to add a digital channel. Choose Signal, then DIO 0 and click Add.</li>
+</ul>
+<p>You will see the analog signal across the capacitor at the top of the display, and the digital signal from the GPIO pin used to charge the capacitor at the bottom of the display.</p>
+<h3 id="procedure-for-reading-light-levels-using-pulse-width">Procedure for reading light levels using pulse width</h3>
+<p>To read the ambient light levels from the photoresistor, we will use the following approach:</p>
+<ol type="1">
+<li>First, discharge capacitor through the discharge resistor. Set GPIO_A as INPUT, which effectively disconnects R_CHARGE and R_VAR from the circuit. Then, set GPIO_B as OUTPUT and LOW.</li>
+<li>Next, charge capacitor through the photoresistor. Set GPIO_B as input, which effectively disconnects R_DISCHARGE. Then, set GPIO_A as OUTPUT and HIGH. Start a timer, and when GPIO_B reads HIGH (indicating that the voltage across the capacitor is sufficiently high to be read as logic HIGH by the Pi), stop the timer.</li>
+</ol>
+<p>Since the time for the capacitor to charge depends on τ=(R1+RVAR)C, we can use this circuit to detect changes in RVAR - when the resistance is high, it will take longer to see a HIGH input on GPIO_B.</p>
+<p>Connect the circuit using the larger capacitor (1-10μF) and the 10kΩ fixed resistors.</p>
+<p>Open a new file <code>resistor-pulse-width.py</code> inside your <code>lab-pulse-in</code> directory:</p>
+<pre><code>cd ~/lab-pulse-in
+nano resistor-pulse-width.py</code></pre>
+<p>and place the following code inside this file:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a><span class="co"># Use BCM pin numbering</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a><span class="co"># Set these values yourself</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>GPIO_A <span class="op">=</span>       <span class="co"># pin number for charging capacitor</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>GPIO_B <span class="op">=</span>       <span class="co"># pin number for discharging capacitor</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>TIMEOUT <span class="op">=</span>      <span class="co"># timeout (ms) after which to return, if no rising edge</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a><span class="cf">try</span>:</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>  <span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>    <span class="co"># let capacitor discharge</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a>    GPIO.setup(GPIO_A,GPIO.IN)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a>    GPIO.setup(GPIO_B,GPIO.OUT)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a>    GPIO.output(GPIO_B, GPIO.LOW)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a>    time.sleep(TIMEOUT<span class="op">/</span><span class="fl">1000.0</span>) <span class="co"># let it discharge, time in seconds</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a>    <span class="co"># charge through variable resistor</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a>    GPIO.setup(GPIO_B,GPIO.IN)</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a>    GPIO.setup(GPIO_A, GPIO.OUT)</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a>    start <span class="op">=</span> time.time()</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a>    GPIO.output(GPIO_A, GPIO.HIGH)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a>    GPIO.wait_for_edge(GPIO_B, GPIO.RISING, timeout<span class="op">=</span>TIMEOUT)</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a>    end <span class="op">=</span> time.time()</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a>    <span class="bu">print</span>(<span class="st">&quot;</span><span class="sc">%f</span><span class="st"> seconds, </span><span class="sc">%f</span><span class="st"> us&quot;</span> <span class="op">%</span> (end<span class="op">-</span>start, <span class="dv">1000000</span><span class="op">*</span>(end<span class="op">-</span>start)))</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true"></a><span class="cf">except</span> <span class="pp">KeyboardInterrupt</span>:</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true"></a>  GPIO.cleanup()</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true"></a>  sys.exit()</span></code></pre></div>
+<p>Add values for the <code>GPIO_A</code>, <code>GPIO_B</code>, and <code>TIMEOUT</code> variables. For the initial <code>TIMEOUT</code> value, you can use 4xRC of the discharge circuit, but you may experiment with this value as you run your code and visualize the results in the scope. (The ceramic capacitor has a small number printed on it; you can look this up online to find out its capacitance.)</p>
+<p>Then, run your script with</p>
+<pre><code>python3 resistor-pulse-width.py</code></pre>
+<p>Observe how the time measurement printed in the terminal changes as you change the ambient lighting conditions (cover the photoresistor, shine a light on the photoresistor, etc).</p>
+<p>In the Scope window, zoom in so that your display shows one charge and discharge cycle. Take a screenshot for your lab report.</p>
+<p>Repeat this procedure, but with different fixed resistors (try 470Ω and then 10kΩ) and with the larger electrolytic capacitor (be careful about polarity - this capacitor has a positive and negative side)! Record your observations in each case. (You may have to adjust the timeout value in your code, in order for the charge and discharge cycles to complete.) You will eventually have six total combinations (three resistor options, two capacitor options), and a screenshot of a complete charge and discharge cycle for each one.</p>
+<hr />
+<p><strong>Lab report</strong>: Show one screenshot of the Scope display (for the circuit with 1kΩ resistors and orange ceramic capacitor) under ambient light conditions, bright light conditions, and dark conditions. Annotate each screenshot to mark:</p>
+<ul>
+<li>the time when you start to charge the capacitor</li>
+<li>the time when the voltage across the capacitor is enough for the GPIO input pin to read it as HIGH</li>
+<li>the time when you start to dischange the capacitor</li>
+</ul>
+<p>Make sure each screenshot is clearly labeled!</p>
+<p><strong>Lab report</strong> Show screenshots of the light level reading (in the Python terminal) and the pulse width (in the Scope display) under dark and light conditions, for the circuits with different capacitor and resistor combinations. Explain the advantages and disadvantages of a large capacitor/large fixed resistor vs. a small capacitor/small fixed resistor.</p>
+<p>Make sure each screenshot is clearly labeled!</p>
+<hr />
+<h2 id="reading-current-varying-sensor-using-rc-timing-circuit.">Reading current varying sensor using RC timing circuit.</h2>
+<p>In this experiment, we will use the discharge time of a capacitor to read values from a resistive sensor as a <em>digital</em> pulse width.</p>
+<p>You will need:</p>
+<ul>
+<li>One capacitor in the range 10-100nF</li>
+<li>One 470Ω resistor</li>
+<li>One 10kΩ resistor</li>
+<li>One phototransistor</li>
+</ul>
+<h3 id="prepare-your-circuit-and-connect-your-pi-and-analog-discovery-2">Prepare your circuit and connect your Pi and Analog Discovery 2</h3>
+<p>Prepare this circuit with the phototransistor, resistors, and capacitors, and connect the Pi:</p>
+<figure>
+<img src="images/schematic-rc-transistor.svg" width="300" alt="Schematic for phototransistor input using capacitor discharge timing." /><figcaption aria-hidden="true">Schematic for phototransistor input using capacitor discharge timing.</figcaption>
+</figure>
+<p>You can use any available GPIO pin on your Pi <em>except</em> GPIO2 or GPIO3 - these have permanent built-in pull-up resistors that cannot be turned off, so they are not suitable for this circuit.</p>
+<p>Connect the Analog Discovery 2 to your breadboard circuit as follows:</p>
+<ul>
+<li>GND on the Discovery 2 (black wire) to GND on your circuit</li>
+<li>Analog Channel 1 on the Discovery 2 across the capacitor: 1- (orange and white striped wire) to the GND side of the capacitor, and 1+ (solid orange striped wire) to the positive side of the capacitor</li>
+</ul>
+<h3 id="procedure-for-reading-light-levels-using-pulse-width-1">Procedure for reading light levels using pulse width</h3>
+<p>To read the ambient light levels from the photoresistor, we will use the following approach:</p>
+<ol type="1">
+<li>First, charge the capacitor by setting the GPIO as OUTPUT HIGH. (Some current from the GPIO output will flow through the phototransistor which is in parallel with the capacitor, but that’s OK.)</li>
+<li>Then, we will “remove” the GPIO pin from driving the circuit by setting it as INPUT, and start a timer. Now the capacitor can discharge through the loop which includes the phototransistor. The phototransistor limits the rate at which current can flow in the loop, effectively limiting the discharge rate of the capacitor.</li>
+<li>Stop the timer when the GPIO reads LOW (indicating that the voltage across the capacitor is sufficiently small to be read as logic LOW by the Pi).</li>
+</ol>
+<p>Since the time for the capacitor to discharge depends on the variable current flow through the phototransistor, we can use this circuit to detect changes in light level. When there is more light incident on the phototransistor, more current will flow. When the phototransistor is covered so that it is dark, less current will flow.</p>
+<p>Open a new file <code>transistor-pulse-width.py</code> inside your <code>lab-pulse-in</code> directory:</p>
+<pre><code>cd ~/lab-pulse-in
+nano transistor-pulse-width.py</code></pre>
+<p>and place the following code inside this file:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="im">import</span> RPi.GPIO <span class="im">as</span> GPIO</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="im">import</span> time</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="im">import</span> sys</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>pin   <span class="op">=</span>  <span class="co"># fill this in!</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a>chrg_time <span class="op">=</span> <span class="dv">1</span> <span class="co"># you can change this</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a>GPIO.setmode(GPIO.BCM)    <span class="co"># Use BCM pin numbering</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a>    GPIO.setup(pin, GPIO.OUT, initial<span class="op">=</span>GPIO.HIGH) <span class="co"># set pin to work in output mode</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a>    time.sleep(chrg_time) <span class="co">#</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a>    start <span class="op">=</span> time.time()</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a>    GPIO.setup(pin, GPIO.IN)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="cf">while</span> GPIO.<span class="bu">input</span>(pin) <span class="op">==</span> GPIO.HIGH:</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>        <span class="cf">pass</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a>    <span class="bu">print</span>(time.time() <span class="op">-</span> start)</span></code></pre></div>
+<hr />
+<p><strong>Lab report</strong>: Take a screenshot from your scope, showing one complete charge and discharge cycle. Annotate the screenshot to show: when the GPIO pin goes HIGH, when the GPIO pin goes to INPUT, and when the input reads LOW. Also indicate the pulse width (in units of time) that would be measured in this case.</p>
+<hr />
+<h2 id="flask-ui-for-light-sensor-circuit">Flask UI for light sensor circuit</h2>
+<p>Finally, we’ll set up a browser-based UI for a light sensor circuit using Flask.</p>
+<p>Create a new directory called <code>flask-photo</code> in your <code>lab-pulse-in</code> directory, then navigate to it:</p>
+<pre><code>mkdir ~/lab-pulse-in/flask-photo
+cd ~/lab-pulse-in/flask-photo</code></pre>
+<p>We’ll use the <code>virtualhat</code> library again - download and install it with</p>
+<pre><code>git clone https://github.com/ffund/virtualhat
+cd virtualhat
+sudo python3 setup.py install
+cd ~/lab-pulse-in/flask-photo</code></pre>
+<p>Create an <code>index.html</code> file with the following contents:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+   &lt;head&gt;
+    &lt;title&gt;Hello Flask!&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot;&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+   &lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;Hello Flask&lt;/h1&gt;
+      &lt;a href=&quot;/light&quot; class=&quot;btn btn-primary&quot; role=&quot;button&quot;&gt;Light level&lt;/a&gt;
+   &lt;/div&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>We’ll create a new HTML page that will load when the user presses the “Light level” button. This file will be a <em>template</em>, which means that it contains a variable whose value will be filled in by the Flask app.</p>
+<p>By default, Flask looks for templates in a <code>templates</code> subdirectory (relative to where the Flask app is), so let’s make that now:</p>
+<pre><code>mkdir ~/lab-pulse-in/flask-photo/templates</code></pre>
+<p>And inside the templates directory, create <code>light.html</code>:</p>
+<pre><code>cd templates
+nano light.html</code></pre>
+<p>with the following contents:</p>
+<pre><code>&lt;!DOCTYPE html&gt;
+   &lt;head&gt;
+    &lt;title&gt;Hello Flask!&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css&quot;&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+   &lt;div class=&quot;container&quot;&gt;
+    &lt;h1&gt;Light level&lt;/h1&gt;
+  &lt;p&gt;Light level is: {{ level }}!&lt;/p&gt;
+      &lt;a href=&quot;/&quot; class=&quot;btn btn-primary&quot; role=&quot;button&quot;&gt;Home&lt;/a&gt;
+   &lt;/div&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Then, navigate back to the <code>flask-photo</code> directory:</p>
+<pre><code>cd ~/lab-pulse-in/flask-photo</code></pre>
+<p>and create a file <code>flask-light.py</code> with the following contents:</p>
+<pre><code>from flask import Flask, redirect, render_template
+import virtualhat
+
+virtualhat.setup()
+
+app = Flask(__name__, static_folder=&#39;&#39;)
+
+@app.route(&quot;/&quot;)
+def hello():
+    return app.send_static_file(&#39;index.html&#39;)
+
+@app.route(&quot;/light&quot;)
+def light_level():
+    light_level=virtualhat.read_light_level()
+    return render_template(&#39;light.html&#39;, level=light_level)
+
+if __name__ == &quot;__main__&quot;:
+    app.run(host=&#39;0.0.0.0&#39;, port=80, debug=True, threaded=True)</code></pre>
+<p>Run your Flask app with</p>
+<pre><code>sudo python3 flask-light.py</code></pre>
+<p>Now, you should be able to view the Flask page in your browser. Open a browser on any device on the same network as your Pi, and in the address bar, type either the Pi’s IP address, or the hostname you use to access the Pi over SSH. Once you have verified that you can access this page, you can stop the Flask app with <code>Ctrl</code>+<code>C</code>.</p>
+<p>The Flask app calls functions from the <code>virtualhat</code> library to check the “virtual” sensor level. Your task is to <em>modify</em> the <code>virtualhat</code> library so that your Flask app will <em>actually</em> read the sensor value. (You won’t modify the HTML or Python source code of the Flask app.)</p>
+<p>Navigate to the directory where the source code of the <code>virtualhat</code> library is located:</p>
+<pre><code>cd ~/lab-pulse-in/flask-photo/virtualhat</code></pre>
+<p>and then open the <code>virtualhat.py</code> file for editing.</p>
+<pre><code>nano virtualhat.py</code></pre>
+<p>All of the library functions are in this file.</p>
+<p>You will need to modify this file so that:</p>
+<ul>
+<li>When the <code>setup()</code> function is called, your GPIO pins will be configured.</li>
+<li>When the <code>read_light_level()</code> function is called, you will read the light level from the sensor by measuring the pulse width. Then, you’ll discharge the capacitor again. Calibrate your readings to that the <code>read_light_level()</code> function returns a value close to 0 when the sensor is covered, and a value close to 100 when you shine a light on it.</li>
+</ul>
+<p>You can use either circuit - the photoresistor or phototransistor - in your code. But, add a comment in this function indicating which one you chose to use.</p>
+<p>To test your modifications, install the modified library with</p>
+<pre><code>sudo python3 setup.py install</code></pre>
+<p>Then, go back to your Flask app directory and run your Flask app again:</p>
+<pre><code>cd ~/lab-pulse-in/flask-photo
+sudo python3 flask-light.py</code></pre>
+<p>Open the page in your browser again. Read the sensor value several times - try to cover and uncover the light and make sure the readings (on a scale of 0 to 100) are consistent with the actual ambient light levels.</p>
+<hr />
+<p><strong>Lab report</strong>: Upload your modified <code>virtualhat.py</code>. Also show a screenshot of your browser window with the sensor covered and with the sensor exposed to bright light.</p>
+<hr />
+<h2 id="graceful-shutdown">Graceful shutdown</h2>
+<p>Finally, disconnect the Pi from the breadboard, and shut it down with</p>
+<pre><code>sudo shutdown now</code></pre>
+<p>Wait until the disk activity LED stops flashing completely before you disconnect the Pi from the power supply.</p>
+</body>
+</html>

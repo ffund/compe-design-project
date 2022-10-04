@@ -2,6 +2,16 @@
 title: Pulse width
 ---
 
+<!-- 
+Note: 
+1 Megaohm resistor in parallel 
+1 100k resistor in series for volume control
+
+or
+
+1 470k resistor in parallel
+1 220k resistor in series for volume control
+-->
 
 In this lab exercise, we'll practice using pulse width:
 
@@ -259,8 +269,6 @@ gpio -g mode 13 in
 \newpage
 
 ### Use Software PWM in Python
-
-Next, we
 
 Next, we'll practice using PWM in Python. We'll try two "types" of PWM:
 

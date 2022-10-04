@@ -22,6 +22,16 @@
 <header id="title-block-header">
 <h1 class="title">Pulse width</h1>
 </header>
+<!-- 
+Note: 
+1 Megaohm resistor in parallel 
+1 100k resistor in series for volume control
+
+or
+
+1 470k resistor in parallel
+1 220k resistor in series for volume control
+-->
 <p>In this lab exercise, we’ll practice using pulse width:</p>
 <ul>
 <li>in an output signal, to control the average output voltage</li>
@@ -202,7 +212,6 @@ gpio -g pwm 13 10
 <p>When we are finished with the hardware PWM, we can set the pin mode back to input (its default state):</p>
 <pre><code>gpio -g mode 13 in</code></pre>
 <h3 id="use-software-pwm-in-python">Use Software PWM in Python</h3>
-<p>Next, we</p>
 <p>Next, we’ll practice using PWM in Python. We’ll try two “types” of PWM:</p>
 <ul>
 <li>Software PWM, which uses the pin in output mode and requires the CPU to toggle it on and off at the desired times</li>
