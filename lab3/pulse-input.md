@@ -300,6 +300,8 @@ while True:
 
 **Lab report**: Take a screenshot from your scope, showing one complete charge and discharge cycle. Annotate the screenshot to show: when the GPIO pin goes HIGH, when the GPIO pin goes to INPUT, and when the input reads LOW. Also indicate the pulse width (in units of time) that would be measured in this case.
 
+**Lab report**: Take a screenshot from your scope in ambient light conditions, bright light, and dark conditions. Annotate in each case to show the pulse width (in units of time) that would be measured.
+
 ---
 
 
