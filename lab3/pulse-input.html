@@ -290,6 +290,9 @@ nano transistor-pulse-width.py</code></pre>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a>    <span class="cf">while</span> GPIO.<span class="bu">input</span>(pin) <span class="op">==</span> GPIO.HIGH:</span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a>        <span class="cf">pass</span></span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a>    <span class="bu">print</span>(time.time() <span class="op">-</span> start)</span></code></pre></div>
+<p>Fill in the GPIO pin number. Then, run it with</p>
+<pre><code>python3 transistor-pulse-width.py</code></pre>
+<p>and observe the effect (in the terminal output and in the scope view) under ambient light, bright light, and dark conditions.</p>
 <hr />
 <p><strong>Lab report</strong>: Take a screenshot from your scope, showing one complete charge and discharge cycle. Annotate the screenshot to show: when the GPIO pin goes HIGH, when the GPIO pin goes to INPUT, and when the input reads LOW. Also indicate the pulse width (in units of time) that would be measured in this case.</p>
 <p><strong>Lab report</strong>: Take a screenshot from your scope in ambient light conditions, bright light, and dark conditions. Annotate in each case to show the pulse width (in units of time) that would be measured.</p>
