@@ -229,7 +229,7 @@
 <p>From the “Pin functions” table shown earlier, we know what each of the control pins do:</p>
 <ul>
 <li><strong>RS</strong> is used to select whether we are writing data to be displayed on the LCD (HIGH), or a command/instruction to the control IC (LOW). We will connect this to <strong>GPIO6</strong> on the Pi, and then we’ll configure it as a GPIO output pin so that we can toggle between data and command mode.</li>
-<li><strong>RW</strong> is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can’t read from the device on the Pi or BBB GPIO pins, because its 5V signal would damage the Pi - we will permanently connect this pin to <strong>GND</strong> on our breadboard.</li>
+<li><strong>RW</strong> is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can’t read from the device on the Pi GPIO pins, because its 5V signal would damage the Pi - we will permanently connect this pin to <strong>GND</strong> on our breadboard.</li>
 <li><strong>E</strong> is an enable signal used whenever we read or write data. We will connect this to <strong>GPIO5</strong> on the Pi, and then we’ll configure it as a GPIO output pin.</li>
 </ul>
 <p>Finally, we need to set up the data pins. The module supports two modes of operation:</p>
@@ -467,7 +467,7 @@ cd ~/lab-parallel</code></pre>
 <li>calls <code>lcd_init</code> to initialize the display</li>
 <li>makes several calls to <code>lcd_char</code> to send your net ID (e.g. xx123) to the display</li>
 </ul>
-<p>Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this photo, and your final <code>lcd-send.py</code>. (Note: for full credit, your code should be clean, organized, and well documented.)</p>
+<p>Take a photo of the display while your net ID appears on it. Upload this photo, and your final <code>lcd-send.py</code>. (Note: for full credit, your code should be clean, organized, and well documented.)</p>
 <hr />
 <h2 id="flask-ui-for-the-lcd-display">Flask UI for the LCD display</h2>
 <p>Finally, we’ll develop a browser-based UI to send text and commands to the display. You can follow along with <a href="https://stream.nyu.edu/media/16x2+LCD+Display+Flask+app+task+description/1_7p71bmfv">this video</a> as we set up the task.</p>
@@ -623,7 +623,5 @@ sudo python3 flask-lcd.py</code></pre>
 <pre class="text"><code>Welcome DP Corp employee (net ID)</code></pre>
 <p>Also show a photograph of your LCD display after you enter the following message in the web form:</p>
 <pre class="text"><code>The quick brown fox jumps over the lazy dog</code></pre>
-<p>The numbered sticker on the breadboard should be visible in your photos.</p>
-<hr />
 </body>
 </html>

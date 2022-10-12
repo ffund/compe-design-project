@@ -222,7 +222,7 @@ On your breadboard circuit, connect the R/W pin to the GND rail. Now, we can saf
 From the "Pin functions" table shown earlier, we know what each of the control pins do:
 
 * **RS** is used to select whether we are writing data to be displayed on the LCD (HIGH), or a command/instruction to the control IC (LOW).  We will connect this to **GPIO6** on the Pi, and then we'll configure it as a GPIO output pin so that we can toggle between data and command mode.
-* **RW** is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can't read from the device on the Pi or BBB GPIO pins, because its 5V signal would damage the Pi - we will permanently connect this pin to 
+* **RW** is used to select whether to read from the device (HIGH), or write to it (LOW). Since we only want to write to the device - we can't read from the device on the Pi GPIO pins, because its 5V signal would damage the Pi - we will permanently connect this pin to 
 **GND** on our breadboard.
 * **E** is an enable signal used whenever we read or write data. We will connect this to **GPIO5** on the Pi, and then we'll configure it as a GPIO output pin.
 
@@ -566,7 +566,7 @@ To fill in the `lcd_char` function, note that the `ord` function in Python accep
 * calls `lcd_init` to initialize the display
 * makes several calls to `lcd_char` to send your net ID (e.g. xx123) to the display
 
-Take a photo of the display while your net ID appears on it. (Make sure the numbered sticker on your breadboard appears in the photo.) Upload this photo, and your final `lcd-send.py`. (Note: for full credit, your code should be clean, organized, and well documented.)
+Take a photo of the display while your net ID appears on it. Upload this photo, and your final `lcd-send.py`. (Note: for full credit, your code should be clean, organized, and well documented.)
 
 
 ---
@@ -814,6 +814,4 @@ Also show a photograph of your LCD display after you enter the following message
 The quick brown fox jumps over the lazy dog
 ```
 
-The numbered sticker on the breadboard should be visible in your photos.
 
----
