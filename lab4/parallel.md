@@ -167,7 +167,7 @@ Connect your LCD display to the supply voltage and GND rails on the breadboard, 
 
 * Pin 1 (VSS) and pin 16 (BL- or K) are connected to the ground rail.
 * Pin 2 (VDD) is connected to the 5V power rail. 
-* Pin 16 (BL+ or A) is connected to the 5V power rail through a 220Ω series resistor.
+* Pin 15 (BL+ or A) is connected to the 5V power rail through a 220Ω series resistor.
 
 Then, you can connect a GND pin from your Pi to the GND rail, and a 5V pin from your Pi to the 5V power rail. Be careful to avoid accidental short circuits!
 
