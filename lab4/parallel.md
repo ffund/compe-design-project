@@ -441,7 +441,9 @@ To test it, let's temporarily add an `lcd_byte` call to our `main` function. Sen
 lcd_byte(0b01001110, LCD_CHR)
 ```
 
-Let's inspect this signal in piscope. In a VNC session, run 
+Let's inspect this signal. The instructions below are for `piscope`, but you can use the Logic Analyzer tool on the Analog Discovery 2 if you prefer. (If you use the AD2, you can use the row of "header" that came with it to more easily connect multiple DIO pins on the AD2 to the adjacent breadboard rows.)
+
+If you are using `piscope`: in a VNC session, run 
 
 ```
 sudo pigpiod
@@ -455,16 +457,16 @@ piscope
 
 Watch the LCD control lines (GPIO 5, 6) and data lines (GPIO 22, 23, 24, 25) and run `lcd-send.py` again. You should see the following signal appear on the bus when you run your script:
 
-![Sending the letter `N` to the data register.](images/piscope-pattern.png){ width=200px }
-
-
-However, nothing will appear on the display (yet) because we haven't initialized it properly. We'll do that in the next section!
+![Sending the letter `N` to the data register.](images/piscope-pattern.png){ width=180px }
 
 \newpage
 
+However, nothing will appear on the display (yet) because we haven't initialized it properly. We'll do that in the next section!
+
+
 ---
 
-**Lab report**: Change the call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` display showing the byte. Annotate this screenshot as follows:
+**Lab report**: Change the call to the `send_byte` function - send the first character of your net ID (in lowercase), instead of the capital `N`. Take a screenshot of your `piscope` or AD2 display showing the byte. Annotate this screenshot as follows:
 
 * Label each line: E, RS, DB7 (MSB), DB6, DB5, DB4 (LSB)
 * Each time E is high, indicate the four-bit nibble that is sent (as e.g. `0100` and `1110`) 
@@ -476,7 +478,7 @@ However, nothing will appear on the display (yet) because we haven't initialized
 
 When watching a digital communication bus in `piscope`, it's up to you to identify what's happening on the bus! With the Analog Discovery 2, however, you can use the Logic Analyzer application and it will "decode" the bus for you.
 
-I'm not going to ask you to do that yourself this week, but please watch [this video](https://stream.nyu.edu/media/16x2+LCD+Display+Logic+Analyzer/1_r00rm6wr) which shows what it looks like and how it works.
+I'm not going to ask you to "decode" the parallel bus using the AD2 this week, but please watch [this video](https://stream.nyu.edu/media/16x2+LCD+Display+Logic+Analyzer/1_r00rm6wr) which shows what it looks like and how it works.
 
 <div style="max-width:1280px"><div style="position:relative;padding-bottom:56.25%"><iframe id="kaltura_player" src="https://cdnapisec.kaltura.com/p/1674401/sp/167440100/embedIframeJs/uiconf_id/23435151/partner_id/1674401?iframeembed=true&playerId=kaltura_player&entry_id=1_r00rm6wr&flashvars[streamerType]=auto&amp;flashvars[localizationCode]=en&amp;flashvars[leadWithHTML5]=true&amp;flashvars[sideBarContainer.plugin]=true&amp;flashvars[sideBarContainer.position]=left&amp;flashvars[sideBarContainer.clickToClose]=true&amp;flashvars[chapters.plugin]=true&amp;flashvars[chapters.layout]=vertical&amp;flashvars[chapters.thumbnailRotator]=false&amp;flashvars[streamSelector.plugin]=true&amp;flashvars[EmbedPlayer.SpinnerTarget]=videoHolder&amp;flashvars[dualScreen.plugin]=true&amp;flashvars[LeadWithHLSOnFlash]=true&amp;flashvars[Kaltura.addCrossoriginToIframe]=true&amp;&wid=1_om5s0hgr" width="1280" height="720" allowfullscreen webkitallowfullscreen mozAllowFullScreen allow="autoplay *; fullscreen *; encrypted-media *" sandbox="allow-forms allow-same-origin allow-scripts allow-top-navigation allow-pointer-lock allow-popups allow-modals allow-orientation-lock allow-popups-to-escape-sandbox allow-presentation allow-top-navigation-by-user-activation" frameborder="0" title="Kaltura Player" style="position:absolute;top:0;left:0;width:100%;height:100%"></iframe></div></div>
 
