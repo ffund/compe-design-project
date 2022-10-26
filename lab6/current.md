@@ -24,7 +24,7 @@ In this experiment, we will use a BJT transistor to switch a digital output on a
 * Breadboard and jumper cables
 * Digital multimeter
 * 2N3904 BJT NPN transistor. (The label is printed on the flat side of the transistor; you may have to hold the transistor at an angle in order to read it.)
-* 5mm white LED with ~25mA maximum current rating and ~3V forward voltage.
+* 5mm white LED with ~20mA maximum current rating and ~3V forward voltage.
 * Active buzzer. This part has the driver circuitry inside , so you don't need a PWM signal to drive it (unlike the passive piezo buzzers we've discussed before, which *do* require a PWM signal). Note that this part is polarized - there is a small **+** marking on the top to indicate the positive side.
 * 220Ω, 4.7kΩ, and 47kΩ resistors
 
