@@ -262,7 +262,7 @@ and verify that the message (and rectangular border) appears on the display.
 ---
 
 
-**Lab report**: Take a photo of your breadboard with the OLED module attached, showing your message "Hello [net ID]" on the display. (Make sure the colored sticker on your breadboard is visible in the photo!)
+**Lab report**: Take a photo of your breadboard with the OLED module attached, showing your message "Hello [net ID]" on the display.
 
 ---
 
