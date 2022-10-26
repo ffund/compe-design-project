@@ -149,7 +149,7 @@
 <pre><code>lsmod | grep i2c</code></pre>
 <p>This lists all currently loaded kernel modules (including communication bus drivers) and then filters the output to show only those with <code>i2c</code> in the name. You should see an entry for <code>i2c_dev</code> and <code>i2c_bcm2835</code>.</p>
 <p>Also, you should see in the output of</p>
-<pre><code>gpio readall</code></pre>
+<pre><code>gpio-readall</code></pre>
 <p>that the two I2C pins are now in ALT mode.</p>
 <h3 id="install-software">Install software</h3>
 <p>We will use some software tools and libraries to work with I2C. Install these (and a graphics library that will make it easier to draw to the display!) with</p>

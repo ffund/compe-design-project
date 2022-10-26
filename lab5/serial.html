@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>serial.md</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../style/pandoc.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="serial-communication-with-uart">Serial communication with UART</h1>
+<p>In this lab, we’ll learn how to connect external parts to a single board computer using a digital communication bus, specifically: using a UART communication bus. At the end of this lab, you should be able to:</p>
+<ul>
+<li>Connect a peripheral device or sensor to a Raspberry Pi for serial communication.</li>
+<li>Use a datasheet to identify the registers, and values to write to those registers, to configure and use a peripheral device or sensor.</li>
+<li>Inspect the digital waveform transmitted over a bus, and identify important features (most and least significant bits, start condition, address, clock, etc.)</li>
+</ul>
+<h2 id="notes">Notes</h2>
+<ul>
+<li>In this lab, you will create some breadboard circuits with exposed pins and wires. Please be especially careful not to accidentally create connections that shouldn’t be connected (e.g. short circuits). Also, check your work carefully before connecting any breadboard circuit to a board, to avoid damaging the board.</li>
+<li>Read each subsection of this lab manual in its entirety before you start following the instructions in it. Some instructions are modified by explanations that come afterwards.</li>
+<li>Although you may work with a partner, this collaboration is limited to discussion. Your partner is not allowed to construct or modify your circuit, log in to your Pi, or run commands or write code on your Pi. Similarly, you are not allowed to do these things for your partner. (You <em>are</em> encouraged to collaborate by screen-sharing or showing video of your circuit to debug and discuss problems together.)</li>
+<li>For your lab report, you must submit data, code, and screenshots from your own experiment. You are not allowed to use your lab partner’s data, code, or screenshots.</li>
+<li>For any question in the lab report that is marked “Individual work”, you should <em>not</em> collaborate with your lab partner or anyone else (even via discussion). You can use your notes, the lab manual, or the lecture slides and video to help you answer these questions.</li>
+</ul>
+<h2 id="parts">Parts</h2>
+<p>In this demo, we’ll use the following parts:</p>
+<ul>
+<li>Pi, SD card, and power supply. We will insert the SD card, connect the power supply, and log in to the Pi over SSH.</li>
+<li>Breadboard and jumper cables</li>
+<li>HC-05 bluetooth module (this is not in your kit)</li>
+</ul>
+<h3 id="hc-05-bluetooth-module">HC-05 Bluetooth module</h3>
+<p>The HC-05 module is a Bluetooth device with a UART interface. The photograph below shows an HC-05 module, with key components indicated.</p>
+<figure>
+<img src="images/hc-05.png" style="width:70.0%" alt="Bluetooth module." /><figcaption aria-hidden="true">Bluetooth module.</figcaption>
+</figure>
+<p>The HC-05 is often sold on a board (shown on the right in the photograph above), with important pins broken out and with an LED that shows Bluetooth status. Bluetooth devices go through several stages to set up a connection, and the LED tells us what stage the device is in:</p>
+<ul>
+<li><strong>Discovery</strong>: When a Bluetooth device is “discoverable,” other Bluetooth devices can detect it. (The LED on the HC-05 blinks fast in this stage.)</li>
+<li><strong>Pairing</strong>: The process of creating a persistent link between two Bluetooth devices. This may involve authentication, which typically involves entering a passkey (default passkey is 1234 on the HC-05 module). This stage only occurs once; future connections between the devices are typically authenticated automatically. (The LED on the HC-05 blinks slowly when it is paired, but not connected.)</li>
+<li><strong>Connection</strong>: The devices may send and receive data to one another. (The LED on the HC-05 double-blinks slowly when it is connected.)</li>
+</ul>
+<p>We’ll learn more about the HC-05 in the rest of this demo.</p>
+<h2 id="serial-communication-with-hc-05">Serial communication with HC-05</h2>
+<h3 id="enable-serial-interface-on-the-pi">Enable serial interface on the Pi</h3>
+<p>By default, the hardware UART peripheral on the Pi is connected to a “login console”, for convenient debugging. With the serial login console, you can connect your Pi to your computer over USB with a <a href="https://www.adafruit.com/product/954">USB to TTL serial cable</a>, and use it to get a terminal session on your Pi over USB.</p>
+<p>However, we want to use the hardware UART peripheral on the Pi to connect to an external peripheral, so we will disable the serial login console. In a terminal session on the Pi, run</p>
+<pre><code>sudo raspi-config</code></pre>
+<p>Choose . When asked “Would you like a login shell to be available over serial”, choose . Then, when asked “Would you like the serial port hardware to be enabled”, choose .</p>
+<h3 id="connect-hc-05-to-the-pi">Connect HC-05 to the Pi</h3>
+<p>Connect the HC-05 board to the Pi as shown in the following breadboard diagram.</p>
+<figure>
+<embed src="images/uart-hc05_bb.pdf" style="width:90.0%" /><figcaption aria-hidden="true">Connect HC-05 bluetooth module to the Pi.</figcaption>
+</figure>
+<ul>
+<li>The VCC module on the HC-05 is connected to the 3.3V pin on the Pi. (Some HC-05 modules require 5V to operate, some only accept 3.3V, but the one we’re using will work at either voltage level. We’ll use 3.3V because the Pi’s GPIO pins are not 5V tolerant. However, the module’s communication range may be better when operating at 5V.)</li>
+<li>The GND pin on the HC-05 is connected to the GND pin on the Pi.</li>
+<li>The TX pin on the HC-05 is connected to GPIO15 (UART RX) on the Pi.</li>
+<li>The RX pin on the HC-05 is connected to GPIO14 (UART TX) on the Pi.</li>
+<li>The STATE pin on the HC-05 is connected to GPIO23 on the Pi.</li>
+<li>The KEY pin on the HC-05 is connected to GPIO24 on the Pi.</li>
+</ul>
+<h3 id="use-command-mode-on-the-hc-05">Use “command mode” on the HC-05</h3>
+<p>The bluetooth module can be configured by opening a serial console in “command mode” and entering configuration commands in this console. To use command mode, the KEY pin should be HIGH <em>before</em> the HC-05 module is powered on.</p>
+<p>We have connected the KEY pin to a GPIO pin on the Pi, and now we will use an interactive Python terminal to set that pin as OUTPUT and HIGH. Run</p>
+<pre><code>python3</code></pre>
+<p>Import some libraries:</p>
+<pre><code>import serial
+import RPi.GPIO as GPIO
+GPIO.setmode(GPIO.BCM)</code></pre>
+<p>and define the pin mapping for the two GPIO pins, STATE and KEY:</p>
+<pre><code>HC05_ST = 23
+HC05_KE = 24</code></pre>
+<p>To use the “command” mode on the HC-05, we’ll set the KEY pin to HIGH. Configure this pin in OUTPUT mode, and then write a HIGH value to it:</p>
+<pre><code>GPIO.setup(HC05_KE, GPIO.OUT)
+GPIO.output(HC05_KE, GPIO.HIGH)</code></pre>
+<p>To use command mode, the HC-05 should have the KEY pin set HIGH <em>before</em> it turns on. So now we’ll need to power cycle the module, by removing the 3.3V pin connecting the Pi to the breadboard and then putting it back.</p>
+<p>When the HC-05 powers on in command mode, the LED on board will blink slowly, every second.</p>
+<p>We’ll use the Python serial interface library to work with the UART. To open a connection to a UART device, we need to specify the location in the filesystem that it is mapped to, and the connection parameters. The UART is mapped to <code>/dev/ttyS0</code> on the Pi, and by default, the HC-05 uses a 38400 baud rate in command mode. So we can open the serial interface with:</p>
+<pre><code>ser = serial.Serial(&#39;/dev/ttyS0&#39;, baudrate=38400)</code></pre>
+<p>Now, we can test the connection with the “test” command described in the HC-05 datasheet:</p>
+<pre><code>ser.write(b&quot;AT\r\n&quot;)
+ser.readline()</code></pre>
+<p>The <code>write</code> command will return the number of bytes written to the serial link - 4 bytes in this case. The <code>readline</code> command will read a message terminating in <code>\r\n</code> from the serial link. The response from the HC-05 should be <code>OK</code>:</p>
+<pre><code>&gt;&gt;&gt; ser.write(b&quot;AT\r\n&quot;)
+4
+&gt;&gt;&gt; ser.readline()
+b&#39;OK\r\n&#39;</code></pre>
+<p>We can use AT commands to query the device and find out about its configuration. For example, let’s find out the device’s address:</p>
+<pre><code>ser.write(b&quot;AT+ADDR?\r\n&quot;)
+ser.readline()
+ser.readline()</code></pre>
+<p>the name by which it will appear to other devices:</p>
+<pre><code>ser.write(b&quot;AT+NAME?\r\n&quot;)
+ser.readline()
+ser.readline()</code></pre>
+<p>the PIN code used to authenticate when pairing:</p>
+<pre><code>ser.write(b&quot;AT+ PSWD?\r\n&quot;)
+ser.readline()
+ser.readline()</code></pre>
+<p>and the UART settings (when not in command mode):</p>
+<pre><code>ser.write(b&quot;AT+ UART?\r\n&quot;)
+ser.readline()
+ser.readline()</code></pre>
+<p>We can also use AT commands to set configuration values. For example:</p>
+<pre><code>ser.write(b&quot;AT+NAME=HC-05\r\n&quot;)
+ser.readline()
+
+ser.write(b&quot;AT+NAME?\r\n&quot;)
+ser.readline()
+ser.readline()</code></pre>
+<p>To leave command mode, let’s set the KEY line LOW:</p>
+<pre><code>GPIO.output(HC05_KE, GPIO.LOW)</code></pre>
+<p>then reset the HC-05:</p>
+<pre><code>ser.write(b&quot;AT+RESET\r\n&quot;)</code></pre>
+<h3 id="pair-your-pi-with-the-hc-05">Pair your Pi with the HC-05</h3>
+<p>We will use the Pi Zero W, which has Bluetooth built in, to test the Bluetooth wireless link. You will need several open terminals on the Pi (over SSH), and we’ll also monitor the serial interface using piscope over a VNC session.</p>
+<p>Make sure the red LED on the HC-05 is blinking fast. This indicates it is in discoverable state, and not already paired to another device. You won’t be able to pair with the HC-05 if it is already paired to another device.</p>
+<p>In a terminal on your Pi, run</p>
+<pre><code>hcitool scan</code></pre>
+<p>to find out the MAC address of your HC-05 device. You should see output similar to the following:</p>
+<pre><code>Scanning ...
+  10:14:06:30:00:72 HC-05</code></pre>
+<p>Note your HC-05’s MAC address (in this example, <code>10:14:06:30:00:72</code>, but every individual module has a different address.)</p>
+<p>Now that we have discovered the HC-05, the next step is pairing. On your Raspberry Pi, run</p>
+<pre><code>bluetoothctl</code></pre>
+<p>At the <code>[bluetooth]#</code> prompt, type</p>
+<pre><code>discoverable on
+pairable on
+agent on
+default-agent</code></pre>
+<p>Scan for the HC-05 module:</p>
+<pre><code>scan on</code></pre>
+<p>Wait until you see at least one line of output with your HC-05 module’s MAC address in it. Then, pair your Pi with the module:</p>
+<pre><code>pair 10:14:06:30:00:72</code></pre>
+<p>You should see some output like:</p>
+<pre><code>Attempting to pair with 10:14:06:30:00:72
+[CHG] Device 10:14:06:30:00:72 Connected: yes
+Request PIN code
+[agent] Enter PIN code: </code></pre>
+<p>Enter pin 1234 when requested, and hit Enter. Once it is paired, the LED on the HC-05 will blink slowly, indicating that it is in “paired” mode.</p>
+<p><strong>Note</strong>: If you have previously paired with the HC-05, you will see a message “Failed to pair: org.bluez.Error.AlreadyExists” when you try to pair. You can remove the previous entry with</p>
+<pre><code>remove 10:14:06:30:00:72</code></pre>
+<p>in the <code>bluetoothctl</code> terminal, then try to <code>pair</code> again.</p>
+<h3 id="bluetooth-communication">Bluetooth communication</h3>
+<p>Your HC-05 is “paired” but still not “connected”. You can verify this by checking the value of the STATE line. In your Python terminal, configure the STATE pin as INPUT and read its value:</p>
+<pre><code>GPIO.setup(HC05_ST, GPIO.IN)
+GPIO.input(HC05_ST)</code></pre>
+<p>Once the Pi’s built-in Bluetooth is paired with the HC-05, you are ready to connect. Open a second terminal on the Pi, and in this one, run</p>
+<pre><code>sudo rfcomm connect 0 10:14:06:30:00:72</code></pre>
+<p>You should see a message like</p>
+<pre><code>Connected /dev/rfcomm0 to 10:14:06:30:00:72 on channel 1
+Press CTRL-C for hangup</code></pre>
+<p>and in the <code>bluetoothcl</code> terminal, you may notice a line like</p>
+<pre><code>Device 10:14:06:30:00:72 Connected: yes</code></pre>
+<p>The LED on the device will change from a slow blink to a slow double-blink, and the STATE line will go HIGH:</p>
+<pre><code>GPIO.input(HC05_ST)</code></pre>
+<h3 id="send-data-between-pi-built-in-bluetooth-and-hc-05">Send data between Pi built-in Bluetooth and HC-05</h3>
+<p>The Pi’s built-in Bluetooth device is now connected to the HC-05, and we can exchange data between them.</p>
+<p>In your Python session, close the previous serial session with</p>
+<pre><code>ser.close()</code></pre>
+<p>and open a new one with a 9600 baud rate, for “normal” operation:</p>
+<pre><code>ser = serial.Serial(&#39;/dev/ttyS0&#39;, baudrate=9600)</code></pre>
+<p>Leave this running.</p>
+<p>Open another Python terminal on the Pi:</p>
+<pre><code>python3</code></pre>
+<p>and in this terminal, open the serial console for the built-in Bluetooth device:</p>
+<pre><code>import serial
+ser = serial.Serial(&#39;/dev/rfcomm0&#39;, baudrate=9600)</code></pre>
+<p>Now, we can send messages over the Bluetooth link. Try</p>
+<pre><code>ser.write(b&quot;PI\r\n&quot;)</code></pre>
+<p>in the built-in Bluetooth terminal, and</p>
+<pre><code>ser.readline()</code></pre>
+<p>in the HC-05 terminal.</p>
+<h3 id="inspect-signals-in-piscope">Inspect signals in piscope</h3>
+<p>The message <code>PI</code> is mapped using ASCII to the following bit arrays: <code>01010000 01001001</code>.</p>
+<p>We can observe the message, the start bit, and the stop bit in the piscope window.</p>
+<p>Since we sent this message from the built-in Bluetooth to the HC-05, and the HC-05 is connected to the UART lines on GPIO14 and GPIO15, we expect to see the signal on GPIO15 (the RX line).</p>
+<p>First, note that each bit is held for 1/9600 seconds:</p>
+<figure>
+<img src="images/piscope-uart-rx.png" alt="Each bit is held for 1/9600 seconds" /><figcaption aria-hidden="true">Each bit is held for 1/9600 seconds</figcaption>
+</figure>
+<p>Also, we can identify each bit, as well as the start and stop bit. The start bit is LOW, the stop bit is HIGH, and we are using one stop bit per byte (8N1 mode is the default in the serial library).</p>
+<p>By convention, the byte is sent LSB first.</p>
+<figure>
+<img src="images/piscope-uart-annotate.png" alt="The “PI” message, on the RX line of the UART hardware peripheral. The start bit is denoted “ST” and the stop bit is denoted “SP”." /><figcaption aria-hidden="true">The “PI” message, on the RX line of the UART hardware peripheral. The start bit is denoted “ST” and the stop bit is denoted “SP”.</figcaption>
+</figure>
+<h3 id="close-the-connection">Close the connection</h3>
+<p>To close the serial connections, run</p>
+<pre><code>ser.close()</code></pre>
+<p>in each Python terminal, then</p>
+<pre><code>quit()</code></pre>
+<p>to exit Python.</p>
+<p>You can stop the <code>rfcomm</code> process with .</p>
+<p>In the <code>bluetoothctl</code> terminal, use</p>
+<pre><code>exit</code></pre>
+<p>to quit.</p>
+<h3 id="lab-report-questions">Lab report questions</h3>
+<p><strong>Lab report</strong> (individual work): As part of the demo, I will send a secret message from my phone to the HC-05 module. Take a screenshot of the Piscope display showing the waveform that carries this message. Annotate it, as shown in Figure 4 above, and also indicate the text of the message in ASCII characters.</p>
+<p><strong>Lab report</strong> (individual work): Suppose that instead of using</p>
+<pre><code>ser = serial.Serial(&#39;/dev/ttyS0&#39;, baudrate=9600)</code></pre>
+<p>to open the serial interface to the HC-05, I accidentally use</p>
+<pre><code>ser = serial.Serial(&#39;/dev/ttyS0&#39;, baudrate=38400)</code></pre>
+<p>Re-annotate the Piscope screenshot from the previous question (the one with the secret message) to show the bits I would read from the serial interface. You can assume that the UART samples the bit exactly in middle of what it thinks is the bit time. Mark each point where the serial device will sample the RX line. What byte(s) and what ASCII character(s) would I read from the serial interface, if I accidentally used the wrong baud rate?</p>
+<p><strong>Lab report</strong>: One way to explore the UART interface on the Pi is with a loopback test, where you connect the serial interface to itself. (Very carefully!!!) connect the UART RX pin on the Pi to the UART TX pin on the same Pi - but make sure not to connect the GND pin accidentally!</p>
+<p>Write a Python script to send “Hello [your name]” (substitute your own name) over this serial loopback interface, using the <code>serial</code> library in Python. Then, read and print the line that was sent over the serial interface. Run the script, and take a screenshot of the output. Also capture this exchange in Piscope, and take a screenshot.</p>
+</body>
+</html>

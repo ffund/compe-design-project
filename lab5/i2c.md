@@ -101,7 +101,7 @@ This lists all currently loaded kernel modules (including communication bus driv
 Also, you should see in the output of 
 
 ```
-gpio readall
+gpio-readall
 ```
 
 that the two I2C pins are now in ALT mode.

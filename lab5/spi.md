@@ -89,7 +89,7 @@ This lists all currently loaded kernel modules (including communication bus driv
 Also, you should see in the output of 
 
 ```
-gpio readall
+gpio0readall
 ```
 
 that the clock, data out, and data in pins of SPI0 are in ALT mode. The two chip select pins of SPI0 will be in OUTPUT mode.
