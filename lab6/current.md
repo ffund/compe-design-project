@@ -143,7 +143,7 @@ Finally, connect your Pi -
 
 <!-- ![5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn't need an external PWM signal.](images/buzzer_bb.svg) -->
 
-Verify that you can turn the fan on and off by writing HIGH or LOW to the GPIO output. Then, use the digital multimeter to measure the base current and the collector current in the fan circuit.
+Verify that you can turn the fan on and off by writing HIGH or LOW to the GPIO output. Then, use the digital multimeter to measure the base current and the collector current in the fan circuit while it is on.
 
 ---
 
