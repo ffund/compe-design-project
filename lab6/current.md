@@ -23,13 +23,15 @@ In this experiment, we will use a BJT transistor to switch a digital output on a
 * A Pi, SD card, and power supply
 * Breadboard and jumper cables
 * Digital multimeter
-* 2N3904 BJT NPN transistor. (The label is printed on the flat side of the transistor; you may have to hold the transistor at an angle in order to read it.)
+* 2N3904 BJT NPN transistor. (Make sure you have the right part! The label is printed on the flat side of the transistor; you may have to hold the transistor at an angle in order to read it.)
 * 5mm white LED with ~20mA maximum current rating and ~3V forward voltage.
-* Active buzzer. This part has the driver circuitry inside , so you don't need a PWM signal to drive it (unlike the passive piezo buzzers we've discussed before, which *do* require a PWM signal). Note that this part is polarized - there is a small **+** marking on the top to indicate the positive side.
+* Fan (5V, draws up to 200mA). This fan is a brushless DC motor with internal driving circuitry. This internal circuitry protects against a reverse voltage spike, so we won't need a separate flyback diode. 
 * 220Ω, 4.7kΩ, and 47kΩ resistors
 
 
 ## Driving current using a transistor
+
+### LED circuit
 
 First, we'll work with a basic LED circuit.
 
@@ -41,18 +43,17 @@ Use the diagram from the datasheet (also shown here) to identify the base, colle
 * 4.7kΩ resistor in series with the base pin
 * Negative side (short leg) of LED in series with the 220Ω resistor 
 
-Finally, connect it to your Pi as pictured - 
+Finally, connect it to your Pi - 
 
 * GND to the emitter pin of the transistor
 * 5V supply to the positive side (long leg) of LED. 
 * Any available GPIO pin to the 4.7kΩ resistor
 
-Configure the GPIO pin as output HIGH (you can use the `gpio` utility), and watch the LED turn on.  Then configure the GPIO pin as output LOW and watch the LED turn off.
+Configure the GPIO pin as output HIGH, and watch the LED turn on.  Then set the output to LOW and watch the LED turn off. (You can write your own Python code to do this.)
 
 \newpage
 
 
-### Voltage and current measurement
 
 
 Use your digital multimeter to measure the voltage:
@@ -116,19 +117,42 @@ Replace the 4.7kΩ between the GPIO pin and the transistor base with a 47kΩ res
 
 \newpage
 
-### Buzzer circuit
+### Fan circuit
 
-Put the 4.7kΩ resistor back in place of the 47kΩ. Replace the LED in your schematic with the 5V buzzer. (Make sure to note the polarity of the buzzer!)
+With the GPIO pin set LOW, remove the LED circuit from your breadboard. Prepare the fan circuit as follows:
 
-![5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn't need an external PWM signal.](images/buzzer_bb.svg)
+* 220Ω resistor in series with the base pin
+* Black (negative) wire from fan in series with the collector pin
 
-Verify that you can turn the buzzer on and off by writing HIGH or LOW to the GPIO output.
+<!-- 
+Connect a flyback diode in parallel with the fan:
 
-Then, remove the wire that connects the 5V supply pin to the positive leg of the buzzer. Instead, connect the 3.3V supply pin to the positive leg of the buzzer. Try to turn the buzzer on and off by writing HIGH or LOW to the GPIO output.
+* the silver stripe on the diode (cathode) should be connected to the red (positive) wire of the fan
+* the side of the diode with no silver stripe (anode) should be connected to the black (negative)  wire of the fan
+
+-->
+
+Finally, connect your Pi - 
+
+* GND to the emitter pin of the transistor
+* 5V supply to the red (positive) wire of the fan
+* Any available GPIO pin to the 220Ω resistor
+
+
+![5V fan circuit.](images/fan_nodiode_bb.svg){ width=65% }
+
+<!-- ![5V buzzer circuit. This is an active buzzer, meaning that it contains internal circuitry to drive the buzzer; it doesn't need an external PWM signal.](images/buzzer_bb.svg) -->
+
+Verify that you can turn the fan on and off by writing HIGH or LOW to the GPIO output. Then, use the digital multimeter to measure the base current and the collector current in the fan circuit.
 
 ---
 
-**Lab report** (individual work): The 5V buzzer requires a 5V signal to turn on. But with this transistor circuit, we can use a 3.3V GPIO pin to switch it on and off. How? Explain.
+**Lab report**: Show how you would analyze this circuit, to compute the base current and collector current. Compare these computed values to the measured values in your circuit.
+
+
+**Lab report**: If we would use the 4.7kΩ instead of the 220Ω resistor to limit the base current, would we still be operating in saturation mode? What would be the collector current with a 4.7kΩ base resistor? Explain.
+
+
+**Lab report** (individual work): The 5V fan requires a 5V signal to turn on. But with this transistor circuit, we can use a 3.3V GPIO pin to switch it on and off. How? Explain.
 
 ---
-
