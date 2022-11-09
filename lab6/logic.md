@@ -60,15 +60,7 @@ For the rest of this assignment, we will view the low-voltage signal on Channel 
 
 The logic level translation circuits we are using will translate any type of signal: a single on-off signal (digital input or output), a PWM signal, a clock signal for a communication bus, or a data signal for a communication bus. For convenience, we'll set up two PWM signals - one at a high voltage level, one at a low voltage leve - to use throughout. A PWM signal is useful for logic level translation because we can verify that both the HIGH and LOW logic levels are transferred successfully to the new voltage.
 
-First, on your Pi, set up the low-voltage signal. We will use a PWM signal on GPIO12 with a 100ms period and a 60% duty cycle:
-
-```
-gpio -g mode 12 pwm  
-gpio pwm-ms     # For 10 Hz (100 ms period)
-gpio pwmc 1920  # Set the PWM clock to 1920
-gpio pwmr 1000  # Set the "range" to 1000
-gpio -g pwm 12 600   # 60ms out of 100ms
-```
+First, on your Pi, set up the low-voltage signal. Write a couple of lines of Python code to generate a hardware PWM signal on GPIO12 with a 100ms period and a 60% duty cycle.
 
 Connect the 1+ (orange) pin on the Discovery 2 to GPIO12, run the scope, and verify that the PWM signal you see on CH1 matches the expected parameters. Take a screenshot for your lab report, then disconnect the 1+ pin from your Pi.
 
