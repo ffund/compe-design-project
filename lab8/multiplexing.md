@@ -245,7 +245,7 @@ pigs m 10 0 # pin10 - mosi - to alt0
 pigs m 11 0 # pin11 - sclk- to alt0
 ``` 
 
-to set the pin modes. You can then use `gpio readall` and verify that the SPI pins are in ALT0 mode.
+to set the pin modes. You can then use `gpio-readall` and verify that the SPI pins are in ALT0 mode.
 
 Finally, send a byte to the LED array using the hardware SPI device. 
 
