@@ -242,7 +242,7 @@ Refer to Table 1 in the TMP36 datasheet, part of which is reproduced below.
 
 At ambient temperatures of 25°C, the output of the TMP36 should be 750mV. The range is 100mV to 2000mV, and the scaling factor is 10mV/°C for temperatures between -40°C and +125°C. 
 
-This means that at -40°C the output will be 100mV, and for each degree above -40°C, the output voltage increases 10mV, up to 2000mV at +125°C.
+This means that at -40°C the output will be 100mV, and for each degree above -40°C, the output voltage increases 10mV, up to 2000mV (at +150°C - although this high temperature is outside the specifications.).
 
 ![TMP36 relationship between temperature and output voltage.](images/tmp35_36_37_table.svg){ width=90% }
 
