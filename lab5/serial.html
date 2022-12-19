@@ -58,7 +58,7 @@
 <p>By default, the hardware UART peripheral on the Pi is connected to a “login console”, for convenient debugging. With the serial login console, you can connect your Pi to your computer over USB with a <a href="https://www.adafruit.com/product/954">USB to TTL serial cable</a>, and use it to get a terminal session on your Pi over USB.</p>
 <p>However, we want to use the hardware UART peripheral on the Pi to connect to an external peripheral, so we will disable the serial login console. In a terminal session on the Pi, run</p>
 <pre><code>sudo raspi-config</code></pre>
-<p>Choose . When asked “Would you like a login shell to be available over serial”, choose . Then, when asked “Would you like the serial port hardware to be enabled”, choose .</p>
+<p>Choose . When asked “Would you like a login shell to be available over serial”, choose No. Then, when asked “Would you like the serial port hardware to be enabled”, choose Yes. Apply the changes, then reboot your Pi.</p>
 <h3 id="connect-hc-05-to-the-pi">Connect HC-05 to the Pi</h3>
 <p>Connect the HC-05 board to the Pi as shown in the following breadboard diagram.</p>
 <figure>
@@ -75,7 +75,7 @@
 <h3 id="use-command-mode-on-the-hc-05">Use “command mode” on the HC-05</h3>
 <p>The bluetooth module can be configured by opening a serial console in “command mode” and entering configuration commands in this console. To use command mode, the KEY pin should be HIGH <em>before</em> the HC-05 module is powered on.</p>
 <p>We have connected the KEY pin to a GPIO pin on the Pi, and now we will use an interactive Python terminal to set that pin as OUTPUT and HIGH. Run</p>
-<pre><code>python3</code></pre>
+<pre><code>sudo python3</code></pre>
 <p>Import some libraries:</p>
 <pre><code>import serial
 import RPi.GPIO as GPIO

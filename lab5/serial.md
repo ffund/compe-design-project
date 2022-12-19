@@ -56,7 +56,7 @@ However, we want to use the hardware UART peripheral on the Pi to connect to an 
 sudo raspi-config
 ``` 
 
-Choose \menu{Interfacing Options > Serial}. When asked "Would you like a login shell to be available over serial", choose \menu{No}. Then, when asked "Would you like the serial port hardware to be enabled", choose \menu{Yes}. 
+Choose \menu{Interfacing Options > Serial}. When asked "Would you like a login shell to be available over serial", choose No. Then, when asked "Would you like the serial port hardware to be enabled", choose Yes. Apply the changes, then reboot your Pi. 
 
 ### Connect HC-05 to the Pi
 
@@ -79,7 +79,7 @@ We have connected the KEY pin to a GPIO pin on the Pi, and now we will use an in
 
 
 ```
-python3
+sudo python3
 ```
 
 Import some libraries:
